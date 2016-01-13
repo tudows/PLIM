@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <%include layout/head.html%>
 </head>
 
 <body>
-    <% include layout.html %> 
     <div><%=message%></div>
+    <div>
+        <a href="/user/login">login</a>
+        <a href="/user/register">register</a>
+    </div>
 </body>
 
 </html>
