@@ -22,4 +22,4 @@ Log
 
 License
 ------------------------------
-[GNU](https://github.com/tudows/PLIM/blob/master/README.md)
+[GNU](https://github.com/tudows/PLIM/blob/master/LICENSE)
