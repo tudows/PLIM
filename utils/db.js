@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var uri = 'mongodb://localhost:27017/PLI';
+var uri = 'mongodb://root:zhengran14@localhost:27017/PLIM';
 var options = {
     server: {
         auto_reconnect: true,

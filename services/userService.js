@@ -15,11 +15,10 @@ exports.add = function(data, callback) {
 };
 
 exports.find = function(data, callback) {
-    var user = new User({
+    User.findOne({
         username: data.username,
         password: data.password
-    });
-    User.findOne(user, function(err, user){
+    }, function(err, user){
         if(!err){
             callback(null, user);
         } else {
