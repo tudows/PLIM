@@ -11,14 +11,14 @@ Log
 **2016-01-14:**
 * Construct a auto route match like the .Net MVC.
 * Change the mongodb connect to auth.
+* Add the angular to the project.
 
 **2016-01-13:**
-* Finish the study of git abdout how to push and pull the repositorie.<br>
-* Finish repositorie's creation on github and push all the project.
+* Finish repositorie's creation on github.
 * Officially changed the project's name to 'PLIM'.
 
 **2016-01-12:**
-* Finish the study of nodejs, express, ejs and mongoose.
+* Finish the construct of nodejs, express, ejs and mongoose.
 
 License
 ------------------------------
