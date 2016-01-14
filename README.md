@@ -6,7 +6,7 @@ This project use nodejs + express + ejs. And to the UI, use the AngularJS.<br>
 DateBase I use MongoDB, and nodejs use mongoose module.<br>
 The GPS is achieved by BaiduMap API.
 
-log:
+Log
 ------------------------------
 **2016-01-14:**
 * Construct a auto route match like the .Net MVC.
@@ -19,3 +19,7 @@ log:
 
 **2016-01-12:**
 * Finish the study of nodejs, express, ejs and mongoose.
+
+License
+------------------------------
+[GNU](https://github.com/tudows/PLIM/blob/master/README.md)
