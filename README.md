@@ -15,6 +15,7 @@ Log
 * Construct a auto route match like the .Net MVC.
 * Change the mongodb connect to auth.
 * Add the angular to the project.
+* Add the bower to manager the UI package.(jquery, angular, less)
 
 **2016-01-13:**
 * Finish repositorie's creation on github.
