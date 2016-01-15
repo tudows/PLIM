@@ -1,4 +1,4 @@
-var User = require('../models/user.js');
+var User = require('../models/user');
 
 exports.add = function(data, callback) {
     var user = new User({

@@ -31,15 +31,15 @@ module.exports = function(app, express) {
 }
 routeMVC = function(controllerName, methodName, req, res, next) {
     var controller, method;
-    console.log(controllerName, methodName);
     if (controllerName == null || controllerName.trim() == '') {
         controllerName = 'index';
     }
-    controller = require('./controllers/' + controllerName + 'Controller');
+    controller = require('../controllers/' + controllerName + 'Controller');
     if (methodName == null || methodName.trim() == '') {
         methodName = 'index';
     }
     methodName = methodName.replace(/[^a-z0-9A-Z_-]/i, '');
+    console.log('controller: ' + controllerName + ' method: ' + methodName);
     method = eval('controller.' + methodName);
-    method(req,res);
+    method(req, res);
 }

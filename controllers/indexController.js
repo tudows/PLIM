@@ -1,12 +1,12 @@
-// var express = require('express');
-// var router = express.Router();
+var session = require('../utils/sessionUtil');
 
-// router.use('/', function(req, res, next) {
-//     res.render('index', {'message': 'welcome'});
-// });
-
-// module.exports = router;
-
-exports.indexGet = function(data, callback) {
-    data.res.render('index', {'message': 'welcome'});
+exports.indexGet = function(req, res) {
+    session.get(req, 'username', function(err, reply){
+        if(reply) {
+            res.render('index', {'message': 'welcome ' + reply});
+        }
+        else {
+            res.render('index', {'message': 'welcome'});
+        }
+    });
 };
