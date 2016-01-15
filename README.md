@@ -10,12 +10,13 @@ Log
 ------------------------------
 **2016-01-15:**
 * Add the session module to the project.(The session is stored in the Redis and implemented via 'Hashing Ring'.)
+* Add the ui-bootstrap to the project.
 
 **2016-01-14:**
 * Construct a auto route match like the .Net MVC.
 * Change the mongodb connect to auth.
 * Add the angular to the project.
-* Add the bower to manager the UI package.(jquery, angular, less)
+* Add the bower to manager the UI package.(jquery, angular, less and bootstrap)
 
 **2016-01-13:**
 * Finish repositorie's creation on github.
