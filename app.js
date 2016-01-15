@@ -23,4 +23,8 @@ var server = app.listen(777, function() {
     var host = server.address().address;
     var port = server.address().port;
     console.log('listen start ! host: ' + host + ', port: ' + port);
+    
+    //init
+    // var initDAO = require('./dao/initDAO');
+    // initDAO.addRegionData();
 });

@@ -1,28 +1,30 @@
 var User = require('../models/user');
+var userDAO = require('../dao/userDAO');
 
 exports.add = function(data, callback) {
     var user = new User({
         username: data.username,
         password: data.password
     });
-    user.save(function(err, user){
+    userDAO.add(user, function(err, user){
         if(!err){
-            callback(null, user);
+            callback(true);
         } else {
-            callback(err, null);
+            callback(false);
         }
     });
 };
 
-exports.find = function(data, callback) {
-    User.findOne({
+exports.findOne = function(data, callback) {
+    var user = new User({
         username: data.username,
         password: data.password
-    }, function(err, user){
+    });
+    userDAO.findOne(user, function(err, user){
         if(!err){
-            callback(null, user);
+            callback(true);
         } else {
-            callback(err, null);
+            callback(false);
         }
     });
 };

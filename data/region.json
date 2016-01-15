@@ -1,0 +1,102 @@
+{
+    "regions": [
+        {
+            "no": "r001",
+            "nameEn": "East China",
+            "nameCn": "华东",
+            "pinyin": "HuaDong",
+            "provinces": [
+                {"no": "pHD001",    "nameEn": "Shandong",  "nameCn": "山东省", "pinyin": "ShanDong",   "type": "1",    "regionNo": "r001"},
+                {"no": "pHD002",    "nameEn": "Jiangsu",   "nameCn": "江苏省", "pinyin": "JiangSu",    "type": "1",    "regionNo": "r001"},
+                {"no": "pHD003",    "nameEn": "Anhui",     "nameCn": "安徽省", "pinyin": "AnHui",      "type": "1",    "regionNo": "r001"},
+                {"no": "pHD004",    "nameEn": "Zhejiang",  "nameCn": "浙江省", "pinyin": "ZheJiang",   "type": "1",    "regionNo": "r001"},
+                {"no": "pHD005",    "nameEn": "Fujian",    "nameCn": "福建省", "pinyin": "FuJian",     "type": "1",    "regionNo": "r001"},
+                {"no": "pHD006",    "nameEn": "Shanghai",  "nameCn": "上海市", "pinyin": "ShangHai",   "type": "2",    "regionNo": "r001"}
+            ]
+        },
+        {
+            "no": "r002",
+            "nameEn": "South China",
+            "nameCn": "华南",
+            "pinyin": "HuaNan",
+            "provinces": [
+                {"no": "pHN001",    "nameEn": "Guangdong",  "nameCn": "广东省",            "pinyin": "GuangDong",  "type": "1",    "regionNo": "r002"},
+                {"no": "pHN002",    "nameEn": "Guangxi",    "nameCn": "广西壮族自治区",    "pinyin": "GuangXi",    "type": "3",    "regionNo": "r002"},
+                {"no": "pHN003",    "nameEn": "Hainan",     "nameCn": "海南省",            "pinyin": "HaiNan",     "type": "1",    "regionNo": "r002"}
+            ]
+        },
+        {
+            "no": "r003",
+            "nameEn": "Central China",
+            "nameCn": "华中",
+            "pinyin": "HuaZhong",
+            "provinces": [
+                {"no": "pHZ001",    "nameEn": "Hubei",      "nameCn": "湖北省",    "pinyin": "HuBei",      "type": "1","regionNo": "r003"},
+                {"no": "pHZ002",    "nameEn": "Hunan",      "nameCn": "湖南省",    "pinyin": "HuNan",      "type": "1","regionNo": "r003"},
+                {"no": "pHZ003",    "nameEn": "Henan",      "nameCn": "河南省",    "pinyin": "HeNan",      "type": "1","regionNo": "r003"},
+                {"no": "pHZ004",    "nameEn": "Jiangxi",    "nameCn": "江西省",    "pinyin": "JiangXi",    "type": "1","regionNo": "r003"}
+            ]
+        },
+        {
+            "no": "r004",
+            "nameEn": "North China",
+            "nameCn": "华北",
+            "pinyin": "HuaBei",
+            "provinces": [
+                {"no": "pHB001",    "nameEn": "Beijing",        "nameCn": "北京市",        "pinyin": "BeiJing",    "type": "2",    "regionNo": "r004"},
+                {"no": "pHB002",    "nameEn": "Tianjin",        "nameCn": "天津市",        "pinyin": "TianJin",    "type": "2",    "regionNo": "r004"},
+                {"no": "pHB003",    "nameEn": "Hebei",          "nameCn": "河北省",        "pinyin": "HeBei",      "type": "1",    "regionNo": "r004"},
+                {"no": "pHB004",    "nameEn": "Shanxi",         "nameCn": "山西省",        "pinyin": "ShanXi",     "type": "1",    "regionNo": "r004"},
+                {"no": "pHB005",    "nameEn": "Inner Mongolia", "nameCn": "内蒙古自治区",  "pinyin": "NeiMengGu",  "type": "3",    "regionNo": "r004"}
+            ]
+        },
+        {
+            "no": "r005",
+            "nameEn": "Northwest China",
+            "nameCn": "西北",
+            "pinyin": "XiBei",
+            "provinces": [
+                {"no": "pXB001",    "nameEn": "Ningxia",    "nameCn": "宁夏回族自治区",     "pinyin": "NingXia",    "type": "3",    "regionNo": "r005"},
+                {"no": "pXB002",    "nameEn": "Xinjiang",   "nameCn": "新疆维吾尔族自治区",  "pinyin": "XinJiang",  "type": "3",    "regionNo": "r005"},
+                {"no": "pXB003",    "nameEn": "Shanxi",     "nameCn": "陕西省",            "pinyin": "ShanXi",     "type": "1",    "regionNo": "r005"},
+                {"no": "pXB004",    "nameEn": "Qinghai",    "nameCn": "青海省",            "pinyin": "QingHai",    "type": "1",    "regionNo": "r005"},
+                {"no": "pXB005",    "nameEn": "Gansu",      "nameCn": "甘肃省",            "pinyin": "GanSu",      "type": "1",    "regionNo": "r005"}
+            ]
+        },
+        {
+            "no": "r006",
+            "nameEn": "Southwest China",
+            "nameCn": "西南",
+            "pinyin": "HuaZhong",
+            "provinces": [
+                {"no": "pXN001",    "nameEn": "Sichuan",    "nameCn": "四川省",        "pinyin": "SiChuan",    "type": "1",    "regionNo": "r006"},
+                {"no": "pXN002",    "nameEn": "Yunnan",     "nameCn": "云南省",        "pinyin": "YunNan",     "type": "1",    "regionNo": "r006"},
+                {"no": "pXN003",    "nameEn": "Guizhou",    "nameCn": "贵州省",        "pinyin": "GuiZhou",    "type": "1",    "regionNo": "r006"},
+                {"no": "pXN004",    "nameEn": "Tibet",      "nameCn": "西藏自治区",    "pinyin": "XiZang",     "type": "3",    "regionNo": "r006"},
+                {"no": "pXN005",    "nameEn": "Chongqing",  "nameCn": "重庆市",        "pinyin": "ChongQing",  "type": "2",    "regionNo": "r006"}
+            ]
+        },
+        {
+            "no": "r007",
+            "nameEn": "Northeast China",
+            "nameCn": "东北",
+            "pinyin": "HuaZhong",
+            "provinces": [
+                {"no": "pDB001",    "nameEn": "Liaoning",       "nameCn": "辽宁省",    "pinyin": "LiaoNing",       "type": "1",    "regionNo": "r007"},
+                {"no": "pDB002",    "nameEn": "Jilin",          "nameCn": "吉林省",    "pinyin": "JiLin",          "type": "1",    "regionNo": "r007"},
+                {"no": "pDB003",    "nameEn": "Heilongjiang",   "nameCn": "黑龙江省",  "pinyin": "HeiLongJiang",   "type": "1",    "regionNo": "r007"}
+            ]
+        },
+        {
+            "no": "r008",
+            "nameEn": "Other",
+            "nameCn": "其他",
+            "pinyin": "QiTa",
+            "provinces": [
+                {"no": "pQT001",    "nameEn": "Hong Kong",  "nameCn": "香港", "pinyin": "XiangGang",  "type": "4",    "regionNo": "r008"},
+                {"no": "pQT001",    "nameEn": "Macao",      "nameCn": "澳门", "pinyin": "AoMen",      "type": "4",    "regionNo": "r008"},
+                {"no": "pQT001",    "nameEn": "Taiwan",     "nameCn": "台湾", "pinyin": "TaiWan",     "type": "4",    "regionNo": "r008"}
+            ]
+        }
+    ]
+}

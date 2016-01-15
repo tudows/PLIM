@@ -6,10 +6,10 @@ exports.loginGet = function(req, res) {
 };
 exports.loginPost = function(req, res) {
     var message = 'null';
-    userService.find({'username': req.body.username, 'password': req.body.password}, function(err, result) {
-        if (!err) {
-            message = 'welcome ' + result;
-            console.log(result.username + ' login success');
+    userService.findOne({'username': req.body.username, 'password': req.body.password}, function(result) {
+        if (result) {
+            message = 'welcome ' + req.body.username;
+            console.log(req.body.username + ' login success');
             session.set(req, 'username', req.body.username);
         }
         else {
@@ -24,13 +24,18 @@ exports.registerGet = function(req, res) {
     res.render('user/register');
 };
 exports.registerPost = function(req, res) {
-    userService.add({'username': req.body.username, 'password': req.body.password}, function(err, result) {
-        if (!err) {
-            console.log(req.body.username + ' register success');
+    userService.add({'username': req.body.username, 'password': req.body.password}, function(result) {
+        if (result) {
+            session.del(req, 'username');
+            res.redirect('/user/login');
         }
         else {
-            console.log('register fail');
+            res.render('user/register');
         }
     });
-    res.redirect('/user/login');
+};
+
+exports.logoutGet = function(req, res) {
+    session.del(req, 'username');
+    res.redirect('/');
 };

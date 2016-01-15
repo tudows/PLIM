@@ -116,6 +116,14 @@ module.exports.get = function (req, name, callback) {
         callback();
     }
 };
+module.exports.del = function (req, name, val) {
+    var id = req.cookies[config.getConfigs('radisConfig.cfg').session_key];
+    if (id) {
+        redisMatrix.hdelRedis(id, name, function (err, reply) {
+
+        });
+    }
+};
 
 module.exports.getById = function (id, name, callback) {
     if (id) {
