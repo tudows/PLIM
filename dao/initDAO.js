@@ -1,12 +1,30 @@
 var Region = require('../models/region');
 var Province = require('../models/province');
+var RegionType = require('../models/provinceType');
 
 exports.addRegionData = function() {
     console.log('地区数据初始化开始。。。');
     console.log('读取json文件。。。');
-    var regions = require('../data/region.json').regions;
+    var json = require('../data/region.json');
     console.log('读取完毕。。。');
+    
+    console.log('开始插入地区类型。。。');
+    var provinceTypes = json.regionTypes;
+    for (var i = 0, len = provinceTypes.length; i < len; i++) {
+        var provinceType = provinceTypes[i];
+        var pt = new RegionType({
+            no: provinceType.no,
+            nameCn: provinceType.nameCn,
+            nameEn: provinceType.nameEn
+        });
+        pt.save(function(err, user) {
+            if(err) {}
+        });
+    }
+    console.log('地区类型插入完毕。。。');
+    
     console.log('开始插入地区数据。。。');
+    var regions = json.regions;
     for (var i = 0, len = regions.length; i < len; i++) {
         var region = regions[i];
         var r = new Region({
@@ -26,6 +44,8 @@ exports.addRegionData = function() {
                 nameEn: province.nameEn,
                 nameCn: province.nameCn,
                 pinyin: province.pinyin,
+                abridge: province.abridge,
+                abridgePinYin: province.abridgePinYin,
                 type: province.type,
                 regionNo: province.regionNo
             });

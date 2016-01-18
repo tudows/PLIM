@@ -6,6 +6,8 @@ var provinceSchema = new Schema({
     nameEn: String,
     nameCn: String,
     pinyin: String,
+    abridge: String,
+    abridgePinYin: String,
     type: Number,
     regionNo: String
 });

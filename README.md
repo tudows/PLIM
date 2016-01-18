@@ -8,6 +8,9 @@ The GPS is achieved by BaiduMap API.
 
 Log
 ------------------------------
+**2016-01-18:**
+* Add the BaiduMap to the project.
+
 **2016-01-15:**
 * Add the session module to the project.(The session is stored in the Redis and implemented via 'Hashing Ring'.)
 * Add the ui-bootstrap to the project.

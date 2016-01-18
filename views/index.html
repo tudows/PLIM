@@ -3,9 +3,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <!--<%include layout/head/default.html%>-->
-    	<style type="text/css">
-	body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    <%include layout/head/default.html%>
+    <style type="text/css">
+        body, html,#allmap {
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+            margin:0;
+            font-family:"微软雅黑";
+        }
 	</style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=hDMeBeFR3ccORh6CsKzOGIsc"></script>
 </head>
@@ -19,12 +25,40 @@
         <a href="/user/logout">logout</a>
     </div>
     
+    <div ng-app="search" ng-controller="searchCtrl">
+        <input type="text" name="city" ng-model="city"/>
+        <input type="text" name="location" ng-model="location"/>
+        <p>你搜索的是：<span>{{city + ' ' + location}}</span></p>
+        <input type="button" value="搜索" ng-click="search()"/>
+        <input type="button" value="list" ng-click="list()"/>
+    </div>
+    
     <div id="allmap"></div>
     
     <script>
+        var app = angular.module('search', []);
+        app.controller('searchCtrl', function($scope) {
+            $scope.city = "上海市";
+            $scope.location = "长宁区";
+            $scope.search = function() {
+                var local = new BMap.LocalSearch($scope.city, {
+                    renderOptions: {map: map,autoViewport: true}, pageCapacity: 8
+                });      
+                local.search($scope.location);
+            }
+            $scope.list = function() {
+                var polyline = new BMap.Polyline([
+                    new BMap.Point(121.48, 31.22),
+                    new BMap.Point(121.49, 31.23)],
+                    {strokeColor:"green", strokeWeight:6, strokeOpacity:0.5}
+                );    
+                map.addOverlay(polyline);
+            }
+        });
+        
         // 百度地图API功能
         var map = new BMap.Map("allmap");    // 创建Map实例
-        map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别
+        map.centerAndZoom(new BMap.Point(121.48, 31.22), 20);  // 初始化地图,设置中心点坐标和地图级别
         map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
         map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
         map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
