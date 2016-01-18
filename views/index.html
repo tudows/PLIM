@@ -6,8 +6,8 @@
     <%include layout/head/default.html%>
     <style type="text/css">
         body, html,#allmap {
-            width: 500px;
-            height: 500px;
+            width: 1000px;
+            height: 1000px;
             overflow: hidden;
             margin:0;
             font-family:"微软雅黑";
@@ -26,41 +26,89 @@
     </div>
     
     <div ng-app="search" ng-controller="searchCtrl">
-        <input type="text" name="city" ng-model="city"/>
-        <input type="text" name="location" ng-model="location"/>
-        <p>你搜索的是：<span>{{city + ' ' + location}}</span></p>
+        <select name="province" ng-model="province">
+            <option value="">--请选择--</option>
+            <option ng-repeat="province in provinces" value="{{province.no + '|' + province.nameCn}}">{{province.nameCn}}</option>
+        </select>
+        <p>你搜索的是：<span>{{province + ' ' + location}}</span></p>
+        <p>经纬度：<span>{{longitude + ',' + dimension}}</span></p>
         <input type="button" value="搜索" ng-click="search()"/>
-        <input type="button" value="list" ng-click="list()"/>
+        <input type="button" value="显示输电线路" ng-click="showPowerLine()"/>
+        <table class="table table-striped">
+            <tr>
+                <td>startLongitude</td>
+                <td>startDimension</td>
+                <td>endLongitude</td>
+                <td>endDimension</td>
+            </tr>
+            <tr ng-repeat="powerLine in powerLines">
+                <td>{{ powerLine.location.startLongitude }}</td>
+                <td>{{ powerLine.location.startDimension }}</td>
+                <td>{{ powerLine.location.endLongitude }}</td>
+                <td>{{ powerLine.location.endDimension }}</td>
+            </tr>
+        </table>
     </div>
     
     <div id="allmap"></div>
     
     <script>
         var app = angular.module('search', []);
-        app.controller('searchCtrl', function($scope) {
-            $scope.city = "上海市";
-            $scope.location = "长宁区";
+        app.controller('searchCtrl', function($scope, $http) {
+            $http.get("/region/listProvince").success(function(result) {
+                $scope.provinces = result;
+            });
+            $scope.longitude = _point.lng;
+            $scope.dimension = _point.lat;
             $scope.search = function() {
-                var local = new BMap.LocalSearch($scope.city, {
-                    renderOptions: {map: map,autoViewport: true}, pageCapacity: 8
-                });      
-                local.search($scope.location);
+                if ($scope.province) {
+                    map.clearOverlays();
+                    var myGeo = new BMap.Geocoder();
+                    myGeo.getPoint($scope.province.split('|')[1], function(point){
+                        if (point) {
+                            _point = point;
+                            map.centerAndZoom(point, 12);
+                            map.addOverlay(new BMap.Marker(point));
+                            // var local = new BMap.LocalSearch(map, {
+                            //     renderOptions: {map: map,autoViewport: true}, pageCapacity: 8
+                            // });      
+                            // local.search($scope.province.split('|')[1]);    
+                        }      
+                    }, $scope.province.split('|')[1]);
+                    $scope.longitude = _point.lng;
+                    $scope.dimension = _point.lat;
+                } else {
+                    alert("请选择省份");
+                }
             }
-            $scope.list = function() {
-                var polyline = new BMap.Polyline([
-                    new BMap.Point(121.48, 31.22),
-                    new BMap.Point(121.49, 31.23)],
-                    {strokeColor:"green", strokeWeight:6, strokeOpacity:0.5}
-                );    
-                map.addOverlay(polyline);
+            $scope.showPowerLine = function() {
+                $http.get("/powerLine/list?provinceNo=" + $scope.province.split('|')[0]).success(function(result) {
+                    $scope.powerLines = result;
+                    var points = [];
+                    for (var i = 0; i < result.length; i++) {
+                        points.push(new BMap.Point(
+                            result[i].location.startLongitude,
+                            result[i].location.startDimension));
+                        points.push(new BMap.Point(
+                            result[i].location.endLongitude,
+                            result[i].location.endDimension));
+                    }
+                    var polyline = new BMap.Polyline(points, {
+                        strokeColor:"green",
+                        strokeWeight:6,
+                        strokeOpacity:0.5
+                    });    
+                    map.addOverlay(polyline);
+                });
             }
         });
         
         // 百度地图API功能
         var map = new BMap.Map("allmap");    // 创建Map实例
-        map.centerAndZoom(new BMap.Point(121.48, 31.22), 20);  // 初始化地图,设置中心点坐标和地图级别
+        var _point = new BMap.Point(121.48, 31.22);
+        map.centerAndZoom(_point, 12);  // 初始化地图,设置中心点坐标和地图级别
         map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-        map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
+        map.setCurrentCity("上海");          // 设置地图显示的城市 此项是必须设置的
         map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
     </script>
 </body>

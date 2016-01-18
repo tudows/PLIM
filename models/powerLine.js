@@ -14,7 +14,13 @@ var powerLineSchema = new Schema({
     lastRepairDate: Date,
     lastRepairNo: String,
     lastMaintainDate: Date,
-    lastMaintainNo: String
+    lastMaintainNo: String,
+    location: {
+        startLongitude: Number,
+        startDimension: Number,
+        endLongitude: Number,
+        endDimension: Number
+    }
 });
 
 module.exports = mongoose.model('PowerLine', powerLineSchema);

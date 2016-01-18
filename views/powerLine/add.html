@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <%include ../layout/head/default.html%>
+</head>
+
+<body>
+    <div><%=message%></div>
+    <form class="form-inline" style="width: 800px" action="" method="post">
+        <div class="form-group">
+            <label style="width: 150px;" for="no">no</label>
+            <input type="text" class="form-control" name="no">
+            <label style="width: 150px;" for="modelNo">modelNo</label>
+            <input type="text" class="form-control" name="modelNo">
+        </div>
+        <div class="form-group">
+            <label style="width: 150px;" for="voltageClass">voltageClass</label>
+            <input type="text" class="form-control" name="voltageClass">
+            <label style="width: 150px;" for="serviceDate">serviceDate</label>
+            <input type="text" class="form-control" name="serviceDate">
+        </div>
+        <div class="form-group">
+            <label style="width: 150px;" for="repairDay">repairDay</label>
+            <input type="text" class="form-control" name="repairDay">
+            <label style="width: 150px;" for="maintainDay">maintainDay</label>
+            <input type="text" class="form-control" name="maintainDay">
+        </div>
+        <div class="form-group">
+            <label style="width: 150px;" for="designYear">designYear</label>
+            <input type="text" class="form-control" name="designYear">
+            <label style="width: 150px;" for="runningState">runningState</label>
+            <input type="text" class="form-control" name="runningState">
+        </div>
+        <div class="form-group">
+            <label style="width: 150px;" for="provinceNo">provinceNo</label>
+            <input type="text" class="form-control" name="provinceNo">
+        </div>
+        <div class="form-group">
+            <label style="width: 150px;" for="startLongitude">startLongitude</label>
+            <input type="text" class="form-control" name="startLongitude">
+            <label style="width: 150px;" for="startDimension">startDimension</label>
+            <input type="text" class="form-control" name="startDimension">
+        </div>
+        <div class="form-group">
+            <label style="width: 150px;" for="endLongitude">endLongitude</label>
+            <input type="text" class="form-control" name="endLongitude">
+            <label style="width: 150px;" for="endDimension">endDimension</label>
+            <input type="text" class="form-control" name="endDimension">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </form>
+</body>
+<html>

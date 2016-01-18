@@ -27,4 +27,6 @@ var server = app.listen(777, function() {
     //init
     // var initDAO = require('./dao/initDAO');
     // initDAO.addRegionData();
+    // initDAO.addPowerLineData();
+    
 });

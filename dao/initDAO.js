@@ -1,6 +1,7 @@
 var Region = require('../models/region');
 var Province = require('../models/province');
-var RegionType = require('../models/provinceType');
+var ProvinceType = require('../models/provinceType');
+var PowerLine = require('../models/powerLine');
 
 exports.addRegionData = function() {
     console.log('地区数据初始化开始。。。');
@@ -12,7 +13,7 @@ exports.addRegionData = function() {
     var provinceTypes = json.regionTypes;
     for (var i = 0, len = provinceTypes.length; i < len; i++) {
         var provinceType = provinceTypes[i];
-        var pt = new RegionType({
+        var pt = new ProvinceType({
             no: provinceType.no,
             nameCn: provinceType.nameCn,
             nameEn: provinceType.nameEn
@@ -58,4 +59,55 @@ exports.addRegionData = function() {
     }
     console.log('地区数据插入完毕。。。');
     console.log('初始化地区数据完成。。。');
+};
+
+exports.addPowerLineData = function() {
+    var powerLine = new PowerLine({
+        no: '1',
+        modelNo: '1',
+        voltageClass: '1',
+        serviceDate: new Date(),
+        repairDay: 1,
+        maintainDay: 1,
+        designYear: 1,
+        runningState: 1,
+        provinceNo: '1',
+        lastRepairDate: new Date(),
+        lastRepairNo: '1',
+        lastMaintainDate: new Date(),
+        lastMaintainNo: '1',
+        location: {
+            startLongitude: 121.48,
+            startDimension: 31.22,
+            endLongitude: 121.50,
+            endDimension: 31.25
+        }
+    });
+    powerLine.save(function(err, user) {
+        if(err) {}
+    });
+    var powerLine2 = new PowerLine({
+        no: '2',
+        modelNo: '2',
+        voltageClass: '2',
+        serviceDate: new Date(),
+        repairDay: 2,
+        maintainDay: 2,
+        designYear: 2,
+        runningState: 2,
+        provinceNo: '2',
+        lastRepairDate: new Date(),
+        lastRepairNo: '2',
+        lastMaintainDate: new Date(),
+        lastMaintainNo: '2',
+        location: {
+            startLongitude: 121.50,
+            startDimension: 31.25,
+            endLongitude: 121.55,
+            endDimension: 31.30
+        }
+    });
+    powerLine2.save(function(err, user) {
+        if(err) {}
+    });
 };
