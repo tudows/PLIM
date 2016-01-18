@@ -6,8 +6,8 @@
     <%include layout/head/default.html%>
     <style type="text/css">
         body, html,#allmap {
-            width: 1000px;
-            height: 1000px;
+            width: 700px;
+            height: 700px;
             overflow: hidden;
             margin:0;
             font-family:"微软雅黑";
@@ -67,8 +67,8 @@
                     myGeo.getPoint($scope.province.split('|')[1], function(point){
                         if (point) {
                             _point = point;
-                            map.centerAndZoom(point, 12);
-                            map.addOverlay(new BMap.Marker(point));
+                            map.centerAndZoom(_point, 12);
+                            map.addOverlay(new BMap.Marker(_point));
                             // var local = new BMap.LocalSearch(map, {
                             //     renderOptions: {map: map,autoViewport: true}, pageCapacity: 8
                             // });      
@@ -108,6 +108,7 @@
         var _point = new BMap.Point(121.48, 31.22);
         map.centerAndZoom(_point, 12);  // 初始化地图,设置中心点坐标和地图级别
         map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+        map.addOverlay(new BMap.Marker(_point));
         map.setCurrentCity("上海");          // 设置地图显示的城市 此项是必须设置的
         map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
     </script>
