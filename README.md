@@ -8,8 +8,8 @@ The GPS is achieved by BaiduMap API.
 
 Usage
 ------------------------------
-Please rename the "config/xxxConfig - 副本.json" to "config/xxxConfig.json".
-Change the database's ip, port username and password to your owen in the xxxConfig.json.
+* Please rename the "config/xxxConfig - 副本.json" to "config/xxxConfig.json".
+* Change the database's ip, port username and password to your owen in the xxxConfig.json.
 
 Log
 ------------------------------
