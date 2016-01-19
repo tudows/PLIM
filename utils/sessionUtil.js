@@ -1,5 +1,5 @@
 var crypto = require('crypto');
-var config = require('./configUtil');
+var config = require('../config/redisConfig.json');
 
 var EXPIRES = 20 * 60 * 1000;
 var redisMatrix = require('./redisMatrixUtil');
@@ -14,7 +14,7 @@ var sign = function (val, secret) {
 var generate = function () {
     var session = {};
     session.id = (new Date()).getTime() + Math.random().toString();
-    session.id = sign(session.id, config.getConfigs('radisConfig.cfg').SECRET);
+    session.id = sign(session.id, config.SECRET);
     session.expire = (new Date()).getTime() + EXPIRES;
     return session;
 };
@@ -38,7 +38,7 @@ var setHeader = function (req, res, next) {
         var cookies = res.getHeader('Set-Cookie');
         cookies = cookies || [];
         // console.log('writeHead, cookies: ' + cookies);
-        var session = serialize(config.getConfigs('radisConfig.cfg').session_key, req.session.id);
+        var session = serialize(config.session_key, req.session.id);
         // console.log('writeHead, session: ' + session);
         cookies = Array.isArray(cookies) ? cookies.concat(session) : [cookies, session];
         res.setHeader('Set-Cookie', cookies);
@@ -50,7 +50,7 @@ var setHeader = function (req, res, next) {
 
 exports = module.exports = function session() {
     return function session(req, res, next) {
-        var id = req.cookies[config.getConfigs('radisConfig.cfg').session_key];
+        var id = req.cookies[config.session_key];
         if (!id) {
             req.session = generate();
             id = req.session.id;
@@ -93,7 +93,7 @@ exports = module.exports = function session() {
 };
 
 module.exports.set = function (req, name, val) {
-    var id = req.cookies[config.getConfigs('radisConfig.cfg').session_key];
+    var id = req.cookies[config.session_key];
     if (id) {
         redisMatrix.hsetRedis(id, name, val, function (err, reply) {
 
@@ -107,7 +107,7 @@ module.exports.set = function (req, name, val) {
  @callback your callback
  */
 module.exports.get = function (req, name, callback) {
-    var id = req.cookies[config.getConfigs('radisConfig.cfg').session_key];
+    var id = req.cookies[config.session_key];
     if (id) {
         redisMatrix.hgetRedis(id, name, function (err, reply) {
             callback(err, reply);
@@ -117,7 +117,7 @@ module.exports.get = function (req, name, callback) {
     }
 };
 module.exports.del = function (req, name, val) {
-    var id = req.cookies[config.getConfigs('radisConfig.cfg').session_key];
+    var id = req.cookies[config.session_key];
     if (id) {
         redisMatrix.hdelRedis(id, name, function (err, reply) {
 

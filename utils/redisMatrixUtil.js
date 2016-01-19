@@ -2,9 +2,9 @@ var hashringUtils = require('./hashringUtil'),
     ring = hashringUtils.ring,
     node = hashringUtils.node;
 
-var config = require('./configUtil');
+var config = require('../config/redisConfig.json');
 
-var nodes = config.getConfigs('radisConfig.cfg').nodes;
+var nodes = config.nodes;
 for (var i = 0, len = nodes.length; i < len; i++) {
     var n = nodes[i];
     nodes[i] = new node({address: n.address, port: n.port});

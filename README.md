@@ -6,6 +6,11 @@ This project use nodejs + express + ejs. And to the UI, use the AngularJS.<br>
 DateBase I use MongoDB, and nodejs use mongoose module.<br>
 The GPS is achieved by BaiduMap API.
 
+Usage
+------------------------------
+Please rename the "config/xxxConfig - 副本.json" to "config/xxxConfig.json".
+Change the database's ip, port username and password to your owen in the xxxConfig.json.
+
 Log
 ------------------------------
 **2016-01-18:**

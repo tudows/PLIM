@@ -1,11 +1,8 @@
 var mongoose = require('mongoose');
-var uri = 'mongodb://root:zhengran14@localhost:27017/PLIM';
-var options = {
-    server: {
-        auto_reconnect: true,
-        poolSize: 10
-    }
-};
+var config = require('../config/mongodbConfig.json');
+
+var uri = config.uri;
+var options = config.options;
 
 // Build the connection string
 

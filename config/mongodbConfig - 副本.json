@@ -1,0 +1,9 @@
+{
+    "uri": "mongodb://username:password@localhost:27017/database",
+    "options": {
+        "server": {
+            "auto_reconnect": true,
+            "poolSize": 10
+        }
+    }
+}
