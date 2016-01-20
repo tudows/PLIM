@@ -50,9 +50,32 @@
         </table>
     </div>
     
+    <div>
+        定位
+        <p id="demo"></p>
+        <input type="button" onclick="getLocation()" value="定位"/>
+    </div>
+    
     <div id="allmap"></div>
     
     <script>
+        var x=document.getElementById("demo");
+        function getLocation()
+        {
+            if (navigator.geolocation)
+            {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+            else {
+                x.innerHTML="Geolocation is not supported by this browser.";
+            }
+        }
+        function showPosition(position)
+        {
+            x.innerHTML="Latitude: " + position.coords.latitude +
+            "<br />Longitude: " + position.coords.longitude;
+        }
+        
         var app = angular.module('search', []);
         app.controller('searchCtrl', function($scope, $http) {
             $http.get("/region/listProvince").success(function(result) {
