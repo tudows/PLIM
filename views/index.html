@@ -74,6 +74,9 @@
         {
             x.innerHTML="Latitude: " + position.coords.latitude +
             "<br />Longitude: " + position.coords.longitude;
+            map.clearOverlays();
+            map.centerAndZoom(new BMap.Point(position.coords.longitude, position.coords.latitude), 12);
+            map.addOverlay(new BMap.Marker(_point));
         }
         
         var app = angular.module('search', []);
