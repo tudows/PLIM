@@ -54,6 +54,7 @@
         定位
         <p id="demo"></p>
         <input type="button" onclick="getLocation()" value="定位"/>
+        <input type="text" value="15" id="scale"/>
     </div>
     
     <div id="allmap"></div>
@@ -75,7 +76,8 @@
             x.innerHTML="Latitude: " + position.coords.latitude +
             "<br />Longitude: " + position.coords.longitude;
             map.clearOverlays();
-            map.centerAndZoom(new BMap.Point(position.coords.longitude, position.coords.latitude), 12);
+            map.centerAndZoom(new BMap.Point(position.coords.longitude, position.coords.latitude),
+                document.getElementById("scale").value);
             map.addOverlay(new BMap.Marker(_point));
         }
         
