@@ -53,14 +53,14 @@
     <div>
         定位
         <p id="demo"></p>
-        <input type="button" onclick="getLocation()" value="定位"/>
+        <input type="button" onclick="var int = self.setInterval(getLocation(),500)" value="定位"/>
         <input type="text" value="15" id="scale"/>
     </div>
     
     <div id="allmap"></div>
     
     <script>
-        var x=document.getElementById("demo");
+        var x = document.getElementById("demo");
         function getLocation()
         {
             if (navigator.geolocation)
@@ -76,9 +76,10 @@
             x.innerHTML="Latitude: " + position.coords.latitude +
             "<br />Longitude: " + position.coords.longitude;
             map.clearOverlays();
-            map.centerAndZoom(new BMap.Point(position.coords.longitude, position.coords.latitude),
-                document.getElementById("scale").value);
-            map.addOverlay(new BMap.Marker(_point));
+            var point = new BMap.Point(position.coords.longitude, position.coords.latitude);
+            map.centerAndZoom(point, document.getElementById("scale").value);
+            var circle = new BMap.Circle(point, 10);
+            map.addOverlay(circle);
         }
         
         var app = angular.module('search', []);
