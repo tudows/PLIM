@@ -53,28 +53,30 @@
     <div>
         定位
         <p id="demo"></p>
-        <input type="button" onclick="var int = setInterval(getLocation, 500)" value="定位"/>
+        <input type="button" onclick="getLocation()" value="定位"/>
+        <input type="button" onclick="navigator.geolocation.clearWatch(watchID);" value="停止"/>
         <input type="text" value="15" id="scale"/>
     </div>
     
     <div id="allmap"></div>
     
     <script>
-        var x = document.getElementById("demo");
+        var x=document.getElementById("demo");
+        var watchID;
         function getLocation()
         {
             if (navigator.geolocation)
             {
-                navigator.geolocation.getCurrentPosition(showPosition);
+                watchID = navigator.geolocation.watchPosition(showPosition);
             }
-            else {
-                x.innerHTML="Geolocation is not supported by this browser.";
-            }
+            else{x.innerHTML="Geolocation is not supported by this browser.";}
         }
         function showPosition(position)
         {
             x.innerHTML="Latitude: " + position.coords.latitude +
-            "<br />Longitude: " + position.coords.longitude;
+            "<br />Longitude: " + position.coords.longitude +
+            "<br />Heading: " + position.coords.heading +
+            "<br />Speed: " + position.coords.speed;
             map.clearOverlays();
             var point = new BMap.Point(position.coords.longitude, position.coords.latitude);
             map.centerAndZoom(point, document.getElementById("scale").value);
