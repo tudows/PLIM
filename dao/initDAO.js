@@ -2,6 +2,8 @@ var Region = require('../models/region');
 var Province = require('../models/province');
 var ProvinceType = require('../models/provinceType');
 var PowerLine = require('../models/powerLine');
+var VoltageClass = require('../models/voltageClass');
+var VoltageClassUnit = require('../models/voltageClassUnit');
 
 exports.addRegionData = function() {
     console.log('地区数据初始化开始。。。');
@@ -111,3 +113,42 @@ exports.addPowerLineData = function() {
         if(err) {}
     });
 };
+
+exports.addVoltageClassData = function() {
+    console.log('电压等级数据初始化开始。。。');
+    console.log('读取json文件。。。');
+    var json = require('../data/voltageClass.json');
+    console.log('读取完毕。。。');
+    
+    console.log('开始插入电压等级单位。。。');
+    var voltageClassUnits = json.voltageClassUnits;
+    for (var i = 0, len = voltageClassUnits.length; i < len; i++) {
+        var voltageClassUnit = voltageClassUnits[i];
+        var vcu = new VoltageClassUnit({
+            no: voltageClassUnit.no,
+            unitEn: voltageClassUnit.unitEn,
+            unitCn: voltageClassUnit.unitCn
+        });
+        vcu.save(function(err, user) {
+            if(err) {}
+        });
+    }
+    console.log('电压等级单位插入完毕。。。');
+    
+    console.log('开始插入电压等级数据。。。');
+    var voltageClasses = json.voltageClasses;
+    for (var i = 0, len = voltageClasses.length; i < len; i++) {
+        var voltageClass = voltageClasses[i];
+        var vc = new VoltageClass({
+            no: voltageClass.no,
+            voltage: voltageClass.voltage,
+            unit: voltageClass.unit
+        });
+        vc.save(function(err, user) {
+            if(err) {}
+        });
+        console.log('\t电压等级' + voltageClass.no + '插入完毕');
+    }
+    console.log('电压等级数据插入完毕。。。');
+    console.log('初始化电压等级数据完成。。。');
+}

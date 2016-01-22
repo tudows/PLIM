@@ -1,0 +1,26 @@
+{
+    "voltageClassUnits": [
+        {"no": 1, "unitEn": "μV","unitCn": "微伏"},
+        {"no": 2, "unitEn": "mV","unitCn": "毫伏"},
+        {"no": 3, "unitEn": "V","unitCn": "伏"},
+        {"no": 4, "unitEn": "kV","unitCn": "千伏"},
+        {"no": 5, "unitEn": "MV","unitCn": "兆伏"}
+    ],
+    "voltageClasses": [
+        {"no": 1, "voltage": 12,"unit": 3},
+        {"no": 2, "voltage": 24,"unit": 3},
+        {"no": 3, "voltage": 36,"unit": 3},
+        {"no": 4, "voltage": 220,"unit": 3},
+        {"no": 5, "voltage": 380,"unit": 3},
+        {"no": 6, "voltage": 680,"unit": 3},
+        {"no": 7, "voltage": 6,"unit": 4},
+        {"no": 8, "voltage": 10,"unit": 4},
+        {"no": 9, "voltage": 35,"unit": 4},
+        {"no": 10, "voltage": 110,"unit": 4},
+        {"no": 11, "voltage": 220,"unit": 4},
+        {"no": 12, "voltage": 330,"unit": 4},
+        {"no": 13, "voltage": 500,"unit": 4},
+        {"no": 14, "voltage": 750,"unit": 4},
+        {"no": 15, "voltage": 1100,"unit": 4}
+    ]
+}
