@@ -3,6 +3,8 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var favicon = require('serve-favicon');
 var session = require('./utils/sessionUtil');
+var httpsModule = require('https');
+var fs = require('fs');
 
 var app = express();
 
@@ -19,10 +21,18 @@ app.use(session());
 
 require('./utils/routeUtil')(app, express);
 
-var server = app.listen(777, function() {
+var https = httpsModule.Server({
+     key: fs.readFileSync('./https/server.key'),
+     cert: fs.readFileSync('./https/server.crt')
+}, function(req, res) {
+    res.writeHead(200);
+    res.end('');
+});
+
+var server = https.listen(777, function() {
     var host = server.address().address;
     var port = server.address().port;
-    console.log('listen start ! host: ' + host + ', port: ' + port);
+    console.log('https listen start ! host: ' + host + ', port: ' + port);
     
     //init
     // var initDAO = require('./dao/initDAO');
