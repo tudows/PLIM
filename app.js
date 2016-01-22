@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var favicon = require('serve-favicon');
 var session = require('./utils/sessionUtil');
-var httpsModule = require('https');
+var https = require('https');
 var fs = require('fs');
 
 var app = express();
@@ -21,18 +21,12 @@ app.use(session());
 
 require('./utils/routeUtil')(app, express);
 
-var https = httpsModule.Server({
-     key: fs.readFileSync('./https/server.key'),
-     cert: fs.readFileSync('./https/server.crt')
-}, function(req, res) {
-    res.writeHead(200);
-    res.end('');
-});
+var config = require('./config/globalConfig.json');
 
-var server = https.listen(777, function() {
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log('https listen start ! host: ' + host + ', port: ' + port);
+var serverHttp = app.listen(config.httpPort, function() {
+    var host = serverHttp.address().address;
+    var port = serverHttp.address().port;
+    console.log('http listen start ! host: ' + host + ', port: ' + port);
     
     //init
     // var initDAO = require('./dao/initDAO');
@@ -40,4 +34,16 @@ var server = https.listen(777, function() {
     // initDAO.addPowerLineData();
     // initDAO.addVoltageClassData();
     
+});
+
+
+var options = {
+     key: fs.readFileSync(config.httpsConfig.keyPath),
+     cert: fs.readFileSync(config.httpsConfig.certPath)
+};
+
+var serverHttps = https.createServer(options, app).listen(config.httpsPort, function () {
+    var host = serverHttps.address().address;
+    var port = serverHttps.address().port;
+    console.log('https listen start ! host: ' + host + ', port: ' + port);
 });
