@@ -18,9 +18,9 @@ exports.add = function(data, callback) {
         lastMaintainNo: null,
         location: {
             startLongitude: data.startLongitude,
-            startDimension: data.startDimension,
+            startLatitude: data.startLatitude,
             endLongitude: data.endLongitude,
-            endDimension: data.endDimension
+            endLatitude: data.endLatitude
         }
     });
     powerLineDAO.add(powerLine, function(err, powerLines){

@@ -5,7 +5,8 @@ exports.addGet = function(req, res) {
 };
 exports.addPost = function(req, res) {
     powerLineService.add(req.body, function(result) {
-        res.render('powerLine/add', {'message': result});
+        // res.render('powerLine/add', {'message': result});
+        res.redirect('/');
     });
 };
 

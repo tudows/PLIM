@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var powerLineSchema = new Schema({
     no: String,
     modelNo: String,
-    voltageClass: String,
+    voltageClass: Number,
     serviceDate: Date,
     repairDay: Number,
     maintainDay: Number,
@@ -16,10 +16,10 @@ var powerLineSchema = new Schema({
     lastMaintainDate: Date,
     lastMaintainNo: String,
     location: {
-        startLongitude: Number,
-        startDimension: Number,
-        endLongitude: Number,
-        endDimension: Number
+        startLongitude: String,
+        startLatitude: String,
+        endLongitude: String,
+        endLatitude: String
     }
 });
 

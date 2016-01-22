@@ -6,17 +6,68 @@
     <%include layout/head/default.html%>
     <style type="text/css">
         body, html,#allmap {
-            width: 700px;
-            height: 700px;
-            overflow: hidden;
             margin:0;
             font-family:"微软雅黑";
+        }
+        #allmap {
+            overflow: hidden;
+            width: 700px;
+            height: 700px;
         }
 	</style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=hDMeBeFR3ccORh6CsKzOGIsc"></script>
 </head>
 
-<body>
+<body ng-app="myapp">
+    <div ng-controller="powerLineCtrl">
+        <form class="form-inline" style="width: 800px" action="powerLine/add" method="post">
+            <div>
+                <div class="form-group">
+                    <label style="width: 150px;" for="no">no</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="no">
+                    <label style="width: 150px;" for="modelNo">modelNo</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="modelNo" value="T001">
+                </div>
+                <div class="form-group">
+                    <label style="width: 150px;" for="voltageClass">voltageClass</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="voltageClass" value="8">
+                </div>
+                <div class="form-group">
+                    <label style="width: 150px;" for="repairDay">repairDay</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="repairDay" value="365">
+                    <label style="width: 150px;" for="maintainDay">maintainDay</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="maintainDay" value="125">
+                </div>
+                <div class="form-group">
+                    <label style="width: 150px;" for="designYear">designYear</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="designYear" value="30">
+                    <label style="width: 150px;" for="runningState">runningState</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="runningState" value="1">
+                </div>
+                <div class="form-group">
+                    <label style="width: 150px;" for="provinceNo">provinceNo</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="provinceNo" value="pHD006">
+                </div>
+                <div class="form-group">
+                    <label style="width: 150px;" for="startLongitude">startLongitude</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="startLongitude" ng-model="startLongitude">
+                    <label style="width: 150px;" for="startLatitude">startLatitude</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="startLatitude" ng-model="startLatitude">
+                </div>
+                <div class="form-group">
+                    <label style="width: 150px;" for="endLongitude">endLongitude</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="endLongitude" ng-model="endLongitude">
+                    <label style="width: 150px;" for="endLatitude">endLatitude</label>
+                    <input style="width: 150px;" type="text" class="form-control" name="endLatitude" ng-model="endLatitude">
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-success" ng-click="start()">开始</button>
+                <button type="button" class="btn btn-warning" ng-click="end()">结束</button>
+                <button type="submit" class="btn btn-info">储存</button>
+            </div>
+        </form>
+    </div>
     
     <div><%=message%></div>
     <div>
@@ -25,27 +76,27 @@
         <a href="/user/logout">logout</a>
     </div>
     
-    <div ng-app="search" ng-controller="searchCtrl">
+    <div ng-controller="searchCtrl">
         <select name="province" ng-model="province">
             <option value="">--请选择--</option>
             <option ng-repeat="province in provinces" value="{{province.no + '|' + province.nameCn}}">{{province.nameCn}}</option>
         </select>
         <p>你搜索的是：<span>{{province + ' ' + location}}</span></p>
-        <p>经纬度：<span>{{longitude + ',' + dimension}}</span></p>
+        <p>经纬度：<span>{{longitude + ',' + latitude}}</span></p>
         <input type="button" value="搜索" ng-click="search()"/>
         <input type="button" value="显示输电线路" ng-click="showPowerLine()"/>
         <table class="table table-striped">
             <tr>
                 <td>startLongitude</td>
-                <td>startDimension</td>
+                <td>startLatitude</td>
                 <td>endLongitude</td>
-                <td>endDimension</td>
+                <td>endLatitude</td>
             </tr>
             <tr ng-repeat="powerLine in powerLines">
                 <td>{{ powerLine.location.startLongitude }}</td>
-                <td>{{ powerLine.location.startDimension }}</td>
+                <td>{{ powerLine.location.startLatitude }}</td>
                 <td>{{ powerLine.location.endLongitude }}</td>
-                <td>{{ powerLine.location.endDimension }}</td>
+                <td>{{ powerLine.location.endLatitude }}</td>
             </tr>
         </table>
     </div>
@@ -61,6 +112,28 @@
     <div id="allmap"></div>
     
     <script>
+        var app = angular.module('myapp', []);
+        app.controller('powerLineCtrl', function($scope) {
+            $scope.start = function() {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var appElement = document.querySelector('[ng-controller=powerLineCtrl]');
+                    var $scope1 = angular.element(appElement).scope(); 
+                    $scope1.startLongitude = position.coords.longitude;
+                    $scope1.startLatitude = position.coords.latitude;
+                    $scope1.$apply();
+                });
+            }
+            $scope.end = function() {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var appElement = document.querySelector('[ng-controller=powerLineCtrl]');
+                    var $scope1 = angular.element(appElement).scope(); 
+                    $scope1.endLongitude = position.coords.longitude;
+                    $scope1.endLatitude = position.coords.latitude;
+                    $scope1.$apply();
+                });
+            }
+        });
+        
         var x=document.getElementById("demo");
         var watchID;
         function getLocation()
@@ -84,13 +157,12 @@
             map.addOverlay(circle);
         }
         
-        var app = angular.module('search', []);
         app.controller('searchCtrl', function($scope, $http) {
             $http.get("/region/listProvince").success(function(result) {
                 $scope.provinces = result;
             });
             $scope.longitude = _point.lng;
-            $scope.dimension = _point.lat;
+            $scope.latitude = _point.lat;
             $scope.search = function() {
                 if ($scope.province) {
                     map.clearOverlays();
@@ -107,7 +179,7 @@
                         }      
                     }, $scope.province.split('|')[1]);
                     $scope.longitude = _point.lng;
-                    $scope.dimension = _point.lat;
+                    $scope.latitude = _point.lat;
                 } else {
                     alert("请选择省份");
                 }
@@ -119,10 +191,10 @@
                     for (var i = 0; i < result.length; i++) {
                         points.push(new BMap.Point(
                             result[i].location.startLongitude,
-                            result[i].location.startDimension));
+                            result[i].location.startLatitude));
                         points.push(new BMap.Point(
                             result[i].location.endLongitude,
-                            result[i].location.endDimension));
+                            result[i].location.endLatitude));
                     }
                     var polyline = new BMap.Polyline(points, {
                         strokeColor:"green",
