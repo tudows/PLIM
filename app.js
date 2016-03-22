@@ -19,6 +19,14 @@ app.use(express.static('public'));
 app.use(favicon('public/images/favicon.png'));
 app.use(session());
 
+//设置跨域访问  
+app.all('*', function(req, res, next) {  
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    next();  
+});
+
 require('./utils/routeUtil')(app, express);
 
 var config = require('./config/globalConfig.json');

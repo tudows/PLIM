@@ -6,7 +6,8 @@ exports.addGet = function(req, res) {
 exports.addPost = function(req, res) {
     powerLineService.add(req.body, function(result) {
         // res.render('powerLine/add', {'message': result});
-        res.redirect('/');
+        // res.redirect('/');
+        res.end();
     });
 };
 
@@ -19,4 +20,12 @@ exports.listGet = function(req, res) {
             res.end();
         }
     });
+};
+
+exports.showGet = function(req, res) {
+    res.render('powerLine/show', {'message': ''});
+};
+
+exports.addMapGet = function(req, res) {
+    res.render('powerLine/addMap', {'message': ''});
 };
