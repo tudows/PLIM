@@ -5,7 +5,7 @@ PLIM is my university's graduation design.
 This project use nodejs + express + ejs. And to the UI framework, use the AngularJS.<br>
 DateBase use MongoDB, and operate by mongoose module.<br>
 Memory datebase use Redis.<br>
-The GIS is achieved by BaiduMap API.
+The GIS use BaiduMap.
 
 Usage
 ------------------------------
