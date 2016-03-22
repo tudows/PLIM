@@ -50,6 +50,13 @@ Log
 **2016-01-12:**
 * Finish the construct of nodejs, express, ejs and mongoose.
 
+**2016-03-22:**
+* I must apologize that although I'm continue developing this project, I was forgotten to update on the github O__O "…
+* Remove the ui-bootstrap and change to use ionic so that the project is fully adapt the mobile platform.
+* remove the 'bower_components/'.(I have move all the necesary js&css to the 'public/')
+* remove the 'node_modules/'.(before run the project, please 'npm install' first)
+
+
 License
 ------------------------------
 [GNU](https://github.com/tudows/PLIM/blob/master/LICENSE)
