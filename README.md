@@ -8,8 +8,9 @@ The GPS is achieved by BaiduMap API.
 
 Usage
 ------------------------------
-* Please rename the "config/xxxConfig - 副本.json" to "config/xxxConfig.json".
-* Edit the database's ip, port, database, username and password to your owen in the mongodbConfig.json and redisConfig.json.
+* Please 'npm install' first to install the necessary node_modules
+* Please rename the "config/xxxConfig - 副本.json" to "config/xxxConfig.json"
+* Edit the database's ip, port, database, username and password to your owen in the mongodbConfig.json and redisConfig.json
 * If be necessary, you can change the site port in the globalConfig.json
 
 **How to use https**
