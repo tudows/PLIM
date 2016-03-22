@@ -1,17 +1,18 @@
 PLIM -- Power Line Inspection and Management GPS System
 ===================================
-PLIM is my university's graduation design. And this project is the background system of the design.
+PLIM is my university's graduation design.
 
-This project use nodejs + express + ejs. And to the UI, use the AngularJS.<br>
-DateBase I use MongoDB, and nodejs use mongoose module.<br>
-The GPS is achieved by BaiduMap API.
+This project use nodejs + express + ejs. And to the UI framework, use the AngularJS.<br>
+DateBase use MongoDB, and operate by mongoose module.<br>
+Memory datebase ue Redis.<br>
+The GIS is achieved by BaiduMap API.
 
 Usage
 ------------------------------
-* Please 'npm install' first to install the necessary node_modules
-* Please rename the "config/xxxConfig - 副本.json" to "config/xxxConfig.json"
-* Edit the database's ip, port, database, username and password to your owen in the mongodbConfig.json and redisConfig.json
-* If be necessary, you can change the site port in the globalConfig.json
+1. Please 'npm install' first to install the necessary node_modules
+2. Please rename the "config/xxxConfig - 副本.json" to "config/xxxConfig.json"
+3. Edit the database's ip, port, database, username and password to your owen in the mongodbConfig.json and redisConfig.json
+4. If be necessary, you can change the site port in the globalConfig.json
 
 **How to use https**
 * Create the https certificate and place them to the "key/".
