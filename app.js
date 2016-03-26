@@ -54,4 +54,26 @@ var serverHttps = https.createServer(options, app).listen(config.httpsPort, func
     var host = serverHttps.address().address;
     var port = serverHttps.address().port;
     console.log('https listen start ! host: ' + host + ', port: ' + port);
+    
+    // var opt = {
+    //     host:'api.map.baidu.com',
+    //     method:'GET',
+    //     path:'/geoconv/v1',
+    //     headers:{}
+    // }
+    // var req = http.request(opt, function(res) {
+    //     res.on('data', function(data){
+    //         console.log(data);
+    //     }).on('end', function(){
+    //         console.log('end');
+    //     });
+    // }).on('error', function(e) {
+    //     console.log("Got error: " + e.message);
+    // })
+    // data = {
+    //     coords: '114.21892734521,29.575429778924;114.21892734521,29.575429778924',
+    //     sn: 'eWCqKxtRe4wef5V4t7HeVRdXDgf0oQpq',
+    //     ak: 'pYy1xlv85GnjPlmsCb0hl5v21e6jYtVV'};
+    // req.write(require('querystring').stringify(data));
+    // req.end();
 });
