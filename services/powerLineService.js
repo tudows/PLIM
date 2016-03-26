@@ -1,5 +1,7 @@
 var PowerLine = require('../models/powerLine');
 var powerLineDAO = require('../dao/powerLineDAO');
+var request = require('request');
+var async = require("async");
 
 exports.add = function(data, callback) {
     var powerLine = new PowerLine({

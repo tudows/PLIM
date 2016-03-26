@@ -168,28 +168,42 @@ app.controller('PowerLineController', function($scope, $http) {
 
     $scope.savePowerLine = function() {
         var input = document.getElementById("input").getElementsByTagName("input");
+        var startLongitude = input[8].value;
+        var startLatitude = input[9];
+        var endLongitude = input[10].value;
+        var endLatitude = input[11].value;
         input[8].value = input[10].value;
         input[9].value = input[11].value;
         input[10].value = "";
         input[11].value = "";
-        $http({
-            method: "post",
-            url: "powerLine/add",
-            data: {
-                no: input[0].value,
-                modelNo: input[1].value,
-                voltageClass: input[2].value,
-                repairDay: input[3].value,
-                maintainDay: input[4].value,
-                designYear: input[5].value,
-                runningState: input[6].value,
-                provinceNo: input[7].value,
-                startLongitude: input[8].value,
-                startLatitude: input[9].value,
-                endLongitude: input[10].value,
-                endLatitude: input[11].value
-            }
-        }).success(function(result) {
+        BMap.Convertor.translate(new BMap.Point(startLongitude, startLatitude), 0,
+            function(point) {
+                startLongitude = point.x;
+                startLatitude = point.x;
+                BMap.Convertor.translate(new BMap.Point(endLongitude, endLatitude), 0,
+                    function(point) {
+                        endLongitude = point.x;
+                        endLatitude = point.y;
+                        $http({
+                            method: "post",
+                            url: "powerLine/add",
+                            data: {
+                                no: input[0].value,
+                                modelNo: input[1].value,
+                                voltageClass: input[2].value,
+                                repairDay: input[3].value,
+                                maintainDay: input[4].value,
+                                designYear: input[5].value,
+                                runningState: input[6].value,
+                                provinceNo: input[7].value,
+                                startLongitude: startLongitude,
+                                startLatitude: startLatitude,
+                                endLongitude: endLongitude,
+                                endLatitude: endLatitude
+                            }
+                        }).success(function(result) {
+                        });
+                });
         });
     }
     
@@ -198,25 +212,32 @@ app.controller('PowerLineController', function($scope, $http) {
             map.clearOverlays();
             for (var i = 0; i < result.length; i++) {
                 var points = [];
-                var point1 = new BMap.Point(result[i].location.startLongitude, result[i].location.startLatitude);
-                var point2 = new BMap.Point(result[i].location.endLongitude, result[i].location.endLatitude);
+                points.push(new BMap.Point(result[i].location.startLongitude, result[i].location.startLatitude));
+                points.push(new BMap.Point(result[i].location.endLongitude, result[i].location.endLatitude));
                 if (i == 0) {
-                    BMap.Convertor.translate(point1, 0, function(point) {
-                        map.centerAndZoom(point, 25);
-                    });
+                    map.centerAndZoom(points[0], 25);
+                    // BMap.Convertor.translate(points[0], 0, function(point) {
+                    //     map.centerAndZoom(point, 25);
+                    // });
                 }
-                BMap.Convertor.translate(point1, 0, function(point) {
-                    points.push(point);
-                    BMap.Convertor.translate(point2, 0, function(point) {
-                        points.push(point);
-                        var polyline = new BMap.Polyline(points, {
-                            strokeColor:"red",
-                            strokeWeight:1,
-                            strokeOpacity:0.5
-                        });
-                        map.addOverlay(polyline);
-                    });
+                var polyline = new BMap.Polyline(points, {
+                    strokeColor:"red",
+                    strokeWeight:1,
+                    strokeOpacity:0.5
                 });
+                map.addOverlay(polyline);
+                // BMap.Convertor.translate(point1, 0, function(point) {
+                //     points.push(point);
+                //     BMap.Convertor.translate(point2, 0, function(point) {
+                //         points.push(point);
+                //         var polyline = new BMap.Polyline(points, {
+                //             strokeColor:"red",
+                //             strokeWeight:1,
+                //             strokeOpacity:0.5
+                //         });
+                //         map.addOverlay(polyline);
+                //     });
+                // });
             }
         });
     }
