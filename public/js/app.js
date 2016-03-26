@@ -38,14 +38,14 @@ var app = angular.module('plim', ['ionic', 'ngRoute'])
 
                         $scope.savePowerLine = function() {
                             var input = document.getElementById("info").getElementsByTagName("input");
-                            var startLongitude = document.getElementById("startLongitude");
-                            var startLatitude = document.getElementById("startLatitude");
-                            var endLongitude = document.getElementById("endLongitude");
-                            var endLatitude = document.getElementById("endLatitude");
-                            startLongitude.value = endLongitude.value;
-                            startLatitude.value = endLatitude.value;
-                            endLongitude.value = "";
-                            endLatitude.value = "";
+                            var startLongitude = document.getElementById("startLongitude").value;
+                            var startLatitude = document.getElementById("startLatitude").value;
+                            var endLongitude = document.getElementById("endLongitude").value;
+                            var endLatitude = document.getElementById("endLatitude").value;
+                            document.getElementById("startLongitude").value = document.getElementById("endLongitude").value;
+                            document.getElementById("startLatitude").value = document.getElementById("endLatitude").value;
+                            document.getElementById("endLongitude").value = "";
+                            document.getElementById("endLatitude").value = "";
                             $http({
                                 method: "post",
                                 url: "powerLine/add",
@@ -58,10 +58,10 @@ var app = angular.module('plim', ['ionic', 'ngRoute'])
                                     designYear: input[5].value,
                                     runningState: input[6].value,
                                     provinceNo: input[7].value,
-                                    startLongitude: startLongitude.value,
-                                    startLatitude: startLatitude.value,
-                                    endLongitude: endLongitude.value,
-                                    endLatitude: endLatitude.value
+                                    startLongitude: startLongitude,
+                                    startLatitude: startLatitude,
+                                    endLongitude: endLongitude,
+                                    endLatitude: endLatitude
                                 }
                             }).success(function(result) {
                             });
@@ -178,12 +178,12 @@ app.controller('PowerLineController', function($scope, $http) {
         input[11].value = "";
         BMap.Convertor.translate(new BMap.Point(startLongitude, startLatitude), 0,
             function(point) {
-                startLongitude = point.x;
-                startLatitude = point.x;
+                startLongitude = point.lng;
+                startLatitude = point.lat;
                 BMap.Convertor.translate(new BMap.Point(endLongitude, endLatitude), 0,
                     function(point) {
-                        endLongitude = point.x;
-                        endLatitude = point.y;
+                        endLongitude = point.lng;
+                        endLatitude = point.lat;
                         $http({
                             method: "post",
                             url: "powerLine/add",
