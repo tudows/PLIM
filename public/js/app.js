@@ -169,7 +169,7 @@ app.controller('PowerLineController', function($scope, $http) {
     $scope.savePowerLine = function() {
         var input = document.getElementById("input").getElementsByTagName("input");
         var startLongitude = input[8].value;
-        var startLatitude = input[9];
+        var startLatitude = input[9].value;
         var endLongitude = input[10].value;
         var endLatitude = input[11].value;
         input[8].value = input[10].value;
