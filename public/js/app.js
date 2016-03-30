@@ -157,6 +157,14 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
         });
     };
     
+    $scope.showSuccess = function() {
+        $ionicPopup.alert({
+            title: "成功",
+            template: "保存成功",
+            scope: $scope
+        });
+    };
+    
     $scope.startLongitude = "无数据";
     $scope.startLatitude = "无数据";
     $scope.endLongitude = "无数据";
@@ -236,6 +244,7 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
                 $scope.startLatitude = $scope.endLatitude;
                 $scope.endLongitude = "无数据";
                 $scope.endLatitude = "无数据";
+                $scope.showSuccess();
             });
             // BMap.Convertor.translate(new BMap.Point(startLongitude, startLatitude), 0,
             //     function(point) {
