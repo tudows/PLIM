@@ -157,9 +157,9 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
         });
     };
     
-    $scope.startLongiude = "无数据";
+    $scope.startLongitude = "无数据";
     $scope.startLatitude = "无数据";
-    $scope.endLongiude = "无数据";
+    $scope.endLongitude = "无数据";
     $scope.endLatitude = "无数据";
     
     $scope.getStartPosition = function() {
@@ -176,11 +176,11 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
                 position.coords.longitude,
                 position.coords.latitude), 0,
                 function(point) {
-                    $scope.startLongiude = point.lng;
+                    $scope.startLongitude = point.lng;
                     $scope.startLatitude = point.lat;
             });
         }, function(error) {
-            $scope.startLongiude = "无法获取";
+            $scope.startLongitude = "无法获取";
             $scope.startLatitude = "无法获取";
         });
     }
@@ -191,17 +191,17 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
                 position.coords.longitude,
                 position.coords.latitude), 0,
                 function(point) {
-                    $scope.endLongiude = point.lng;
+                    $scope.endLongitude = point.lng;
                     $scope.endLatitude = point.lat;
             });
         }, function(error) {
-            $scope.endLongiude = "无法获取";
+            $scope.endLongitude = "无法获取";
             $scope.endLatitude = "无法获取";
         });
     }
 
     $scope.savePowerLine = function() {
-        if (isNum($scope.startLongiude)
+        if (isNum($scope.startLongitude)
             && isNum($scope.startLatitude)
             && isNum($scope.endLongitude)
             && isNum($scope.endLatitude)) {
@@ -232,9 +232,9 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
                     endLatitude: $scope.endLatitude
                 }
             }).success(function(result) {
-                $scope.startLongiude = $scope.endLongiude;
+                $scope.startLongitude = $scope.endLongitude;
                 $scope.startLatitude = $scope.endLatitude;
-                $scope.endLongiude = "无数据";
+                $scope.endLongitude = "无数据";
                 $scope.endLatitude = "无数据";
             });
             // BMap.Convertor.translate(new BMap.Point(startLongitude, startLatitude), 0,
