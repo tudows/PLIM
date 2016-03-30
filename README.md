@@ -59,6 +59,11 @@ Log
 * Solve the coordinate-shifting problem of the BMap.
 * Success to get the heading of the mobile by html.
 
+**2016-03-20**
+* Change the BaiduMapApi from http to https.
+* Change to use the BaiduMap's latitude and longitude.
+* Add the git ignore list.
+
 
 License
 ------------------------------
