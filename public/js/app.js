@@ -359,8 +359,9 @@ function stop() {
 }
 
 function isNum(str) {
-    if (str != null && str != "")
-        return !isNaN(str);
+    var reg = /(^(\d+)$|^(\d+)\.(\d+)$)/gi;
+    if (reg.test(str))
+        return true;
     else
         return false;
 }
