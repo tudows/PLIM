@@ -126,7 +126,7 @@ app.controller('PLIMController', function($scope, $window, LeftMenus, $ionicSide
         $window.location.reload();
     }
 });
-app.controller('PowerLineController', function($scope, $http) {
+app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
     $scope.inputs = [
         { "name": "no" },
         { "name": "modelNo", "value": "T001" },
@@ -135,76 +135,121 @@ app.controller('PowerLineController', function($scope, $http) {
         { "name": "maintainDay", "value": "125" },
         { "name": "designYear", "value": "30" },
         { "name": "runningState", "value": "1" },
-        { "name": "provinceNo", "value": "pHD006" },
-        { "name": "startLongitude" },
-        { "name": "startLatitude" },
-        { "name": "endLongitude" },
-        { "name": "endLatitude" }
+        { "name": "provinceNo", "value": "pHD006" }
     ];
     
+    $scope.showCoordinate = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: "详细坐标",
+            templateUrl: "coordinate.html",
+            scope: $scope
+        });
+        alertPopup.then(function(res) {
+            
+        });
+    };
     
-
+    $scope.showError = function() {
+        $ionicPopup.alert({
+            title: "错误",
+            template: "坐标有误，请重试",
+            scope: $scope
+        });
+    };
+    
+    $scope.startLongiude = "无数据";
+    $scope.startLatitude = "无数据";
+    $scope.endLongiude = "无数据";
+    $scope.endLatitude = "无数据";
+    
     $scope.getStartPosition = function() {
-        var input = document.getElementById("input").getElementsByTagName("input");
+        // var input = document.getElementById("input").getElementsByTagName("input");
+        // navigator.geolocation.getCurrentPosition(function(position) {
+        //     input[8].value = position.coords.longitude;
+        //     input[9].value = position.coords.latitude;
+        // }, function(error) {
+        //     input[8].value = "0";
+        //     input[9].value = "0";
+        // });
         navigator.geolocation.getCurrentPosition(function(position) {
-            input[8].value = position.coords.longitude;
-            input[9].value = position.coords.latitude;
+            BMap.Convertor.translate(new BMap.Point(
+                position.coords.longitude,
+                position.coords.latitude), 0,
+                function(point) {
+                    $scope.startLongiude = point.lng;
+                    $scope.startLatitude = point.lat;
+            });
         }, function(error) {
-            input[8].value = "0";
-            input[9].value = "0";
+            $scope.startLongiude = "无法获取";
+            $scope.startLatitude = "无法获取";
         });
     }
 
     $scope.getEndPosition = function() {
-        var input = document.getElementById("input").getElementsByTagName("input");
         navigator.geolocation.getCurrentPosition(function(position) {
-            input[10].value = position.coords.longitude;
-            input[11].value = position.coords.latitude;
+            BMap.Convertor.translate(new BMap.Point(
+                position.coords.longitude,
+                position.coords.latitude), 0,
+                function(point) {
+                    $scope.endLongiude = point.lng;
+                    $scope.endLatitude = point.lat;
+            });
         }, function(error) {
-            input[10].value = "0";
-            input[11].value = "0";
+            $scope.endLongiude = "无法获取";
+            $scope.endLatitude = "无法获取";
         });
     }
 
     $scope.savePowerLine = function() {
-        var input = document.getElementById("input").getElementsByTagName("input");
-        var startLongitude = input[8].value;
-        var startLatitude = input[9].value;
-        var endLongitude = input[10].value;
-        var endLatitude = input[11].value;
-        input[8].value = input[10].value;
-        input[9].value = input[11].value;
-        input[10].value = "";
-        input[11].value = "";
-        BMap.Convertor.translate(new BMap.Point(startLongitude, startLatitude), 0,
-            function(point) {
-                startLongitude = point.lng;
-                startLatitude = point.lat;
-                BMap.Convertor.translate(new BMap.Point(endLongitude, endLatitude), 0,
-                    function(point) {
-                        endLongitude = point.lng;
-                        endLatitude = point.lat;
-                        $http({
-                            method: "post",
-                            url: "powerLine/add",
-                            data: {
-                                no: input[0].value,
-                                modelNo: input[1].value,
-                                voltageClass: input[2].value,
-                                repairDay: input[3].value,
-                                maintainDay: input[4].value,
-                                designYear: input[5].value,
-                                runningState: input[6].value,
-                                provinceNo: input[7].value,
-                                startLongitude: startLongitude,
-                                startLatitude: startLatitude,
-                                endLongitude: endLongitude,
-                                endLatitude: endLatitude
-                            }
-                        }).success(function(result) {
-                        });
-                });
-        });
+        if (isNum($scope.startLongiude)
+            && isNum($scope.startLatitude)
+            && isNum($scope.endLongitude)
+            && isNum($scope.endLatitude)) {
+            var input = document.getElementById("input").getElementsByTagName("input");
+            // var startLongitude = input[8].value;
+            // var startLatitude = input[9].value;
+            // var endLongitude = input[10].value;
+            // var endLatitude = input[11].value;
+            // input[8].value = input[10].value;
+            // input[9].value = input[11].value;
+            // input[10].value = "";
+            // input[11].value = "";
+            $http({
+                method: "post",
+                url: "powerLine/add",
+                data: {
+                    no: input[0].value,
+                    modelNo: input[1].value,
+                    voltageClass: input[2].value,
+                    repairDay: input[3].value,
+                    maintainDay: input[4].value,
+                    designYear: input[5].value,
+                    runningState: input[6].value,
+                    provinceNo: input[7].value,
+                    startLongitude: $scope.startLongitude,
+                    startLatitude: $scope.startLatitude,
+                    endLongitude: $scope.endLongitude,
+                    endLatitude: $scope.endLatitude
+                }
+            }).success(function(result) {
+                $scope.startLongiude = $scope.endLongiude;
+                $scope.startLatitude = $scope.endLatitude;
+                $scope.endLongiude = "无数据";
+                $scope.endLatitude = "无数据";
+            });
+            // BMap.Convertor.translate(new BMap.Point(startLongitude, startLatitude), 0,
+            //     function(point) {
+            //         startLongitude = point.lng;
+            //         startLatitude = point.lat;
+            //         BMap.Convertor.translate(new BMap.Point(endLongitude, endLatitude), 0,
+            //             function(point) {
+            //                 endLongitude = point.lng;
+            //                 endLatitude = point.lat;
+            //         });
+            // });
+        } else {
+            $scope.showError();
+        }
     }
     
     $scope.showPowerLine = function() {
@@ -311,4 +356,11 @@ function start() {
 function stop() {
     navigator.geolocation.clearWatch(watchPosition);
     window.removeEventListener('deviceorientation', getHead);
+}
+
+function isNum(str) {
+    if (str != null && str != "")
+        return !isNaN(str);
+    else
+        return false;
 }
