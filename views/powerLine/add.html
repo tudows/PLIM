@@ -1,9 +1,9 @@
+<app-map style="width: 100%; height: 30%" id="addMap" clickpoint></app-map>
 <div class="list" id="input">
     <label ng-repeat="input in inputs" class="item item-input">
         <input type="text" placeholder="{{input.name}}" name="{{input.name}}" value="{{input.value}}">
     </label>
 </div>
-<app-map style="width: 100%; height: 100px" id="addMap" clickpoint></app-map>
 <button class="button button-positive" ng-click="getStartPosition()">
     开始坐标
 </button>

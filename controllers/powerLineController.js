@@ -25,7 +25,3 @@ exports.listGet = function(req, res) {
 exports.showGet = function(req, res) {
     res.render('powerLine/show', {'message': ''});
 };
-
-exports.addMapGet = function(req, res) {
-    res.render('powerLine/addMap', {'message': ''});
-};
