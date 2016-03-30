@@ -4,3 +4,4 @@
 /config/globalConfig.json
 /config/mongodbConfig.json
 /config/redisConfig.json
+.DS_Store
