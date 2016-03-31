@@ -19,3 +19,13 @@ exports.add = function(data, callback) {
         }
     });
 };
+
+exports.remove = function(data, callback) {
+    PowerLine.remove(data, function(err) {
+        if(!err) {
+            callback(null);
+        } else {
+            callback(err);
+        }
+    });
+};

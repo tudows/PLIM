@@ -43,3 +43,9 @@ exports.list = function(provinceNo, callback) {
         }
     });
 };
+
+exports.remove = function(callback) {
+    powerLineDAO.remove({}, function(err){
+        callback();
+    });
+};

@@ -64,6 +64,11 @@ Log
 * Change to use the BaiduMap's latitude and longitude.
 * Add the git ignore list.
 
+**2016-03-31**
+* Optimize the controller's allocation.
+* Add some common popup.(eg: success popup, error popup, loading popup)
+* Merge the two ways of add powerline.
+
 
 License
 ------------------------------

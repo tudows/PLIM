@@ -5,11 +5,11 @@ var app = angular.module('plim', ['ionic', 'ngRoute'])
             $routeProvider
                 .when('/addPowerLine', {
                     templateUrl: 'powerLine/add',
-                    controller: 'PowerLineController'
+                    controller: 'AddPowerLineController'
                 })
                 .when('/showPowerLine', {
                     templateUrl: 'powerLine/show',
-                    controller: 'PowerLineController'
+                    controller: 'ShowPowerLineController'
                 })
                 .when('/location', {
                     templateUrl: 'location.html',
@@ -45,12 +45,12 @@ var app = angular.module('plim', ['ionic', 'ngRoute'])
         }
     }
 );
-app.controller('PLIMController', function($scope, $window, LeftMenus, $ionicSideMenuDelegate) {
+app.controller('PLIMController', function($rootScope, $scope, $window, LeftMenus, $ionicSideMenuDelegate, $ionicPopup) {
     // 初始化left menu
-    $scope.leftMenus = LeftMenus.all();
-    $scope.activeLeftMenu = $scope.leftMenus[0];
+    $rootScope.leftMenus = LeftMenus.all();
+    $rootScope.activeLeftMenu = $rootScope.leftMenus[0];
     $scope.selectleftMenu = function(leftMenu, index) {
-        $scope.activeLeftMenu = leftMenu;
+        $rootScope.activeLeftMenu = leftMenu;
         $ionicSideMenuDelegate.toggleLeft(false);
     };
 
@@ -62,8 +62,38 @@ app.controller('PLIMController', function($scope, $window, LeftMenus, $ionicSide
     $scope.refresh = function() {
         $window.location.reload();
     }
+    
+    $rootScope.showError = function(text) {
+        $ionicPopup.alert({
+            title: "错误",
+            template: text
+        });
+    };
+    
+    $rootScope.showSuccess = function(text) {
+        $ionicPopup.alert({
+            title: "成功",
+            template: text
+        });
+    };
+    
+    $rootScope.showLoading = function() {
+        $rootScope.loadingPopup = $ionicPopup.show({
+            templateUrl: "loading.html",
+            title: "正在加载中..."
+        });
+    }
+    
+    $rootScope.closeLoading = function() {
+        if ($rootScope.loadingPopup != null) {
+            $rootScope.loadingPopup.close();
+            $rootScope.loadingPopup = null;
+        }
+    }
 });
-app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
+app.controller('AddPowerLineController', function($rootScope, $scope, $http, $ionicPopup) {
+    $rootScope.activeLeftMenu = $rootScope.leftMenus[0];
+    
     $scope.inputs = [
         { "name": "no" },
         { "name": "modelNo", "value": "T001" },
@@ -74,6 +104,11 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
         { "name": "runningState", "value": "1" },
         { "name": "provinceNo", "value": "pHD006" }
     ];
+    
+    $scope.startLongitude = "无数据";
+    $scope.startLatitude = "无数据";
+    $scope.endLongitude = "无数据";
+    $scope.endLatitude = "无数据";
     
     $scope.showCoordinate = function() {
         var alertPopup = $ionicPopup.alert({
@@ -86,28 +121,8 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
         });
     };
     
-    $scope.showError = function(text) {
-        $ionicPopup.alert({
-            title: "错误",
-            template: text,
-            scope: $scope
-        });
-    };
-    
-    $scope.showSuccess = function(text) {
-        $ionicPopup.alert({
-            title: "成功",
-            template: text,
-            scope: $scope
-        });
-    };
-    
-    $scope.startLongitude = "无数据";
-    $scope.startLatitude = "无数据";
-    $scope.endLongitude = "无数据";
-    $scope.endLatitude = "无数据";
-    
     $scope.getStartPosition = function() {
+        $rootScope.showLoading();
         map.clearOverlays();
         navigator.geolocation.getCurrentPosition(function(position) {
             BMap.Convertor.translate(new BMap.Point(
@@ -119,8 +134,10 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
                     var beginPoint = new BMap.Point(point.lng, point.lat);
                     map.centerAndZoom(beginPoint, 25);
                     map.addOverlay(new BMap.Marker(beginPoint));
+                    $rootScope.closeLoading();
             });
         }, function(error) {
+            $rootScope.closeLoading();
             $scope.startLongitude = "无法获取";
             $scope.startLatitude = "无法获取";
             $scope.showError("坐标获取失败");
@@ -128,6 +145,7 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
     }
 
     $scope.getEndPosition = function() {
+        $rootScope.showLoading();
         navigator.geolocation.getCurrentPosition(function(position) {
             BMap.Convertor.translate(new BMap.Point(
                 position.coords.longitude,
@@ -144,12 +162,22 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
                         strokeOpacity:0.5
                     });
                     map.addOverlay(polyline);
+                    $rootScope.closeLoading();
             });
         }, function(error) {
+            $rootScope.closeLoading();
             $scope.endLongitude = "无法获取";
             $scope.endLatitude = "无法获取";
             $scope.showError("坐标获取失败");
         });
+    }
+    
+    $scope.cleanPowerLine = function() {
+        $scope.startLongitude = "无数据";
+        $scope.startLatitude = "无数据";
+        $scope.endLongitude = "无数据";
+        $scope.endLatitude = "无数据";
+        map.clearOverlays();
     }
 
     $scope.savePowerLine = function() {
@@ -157,6 +185,7 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
             && isNum($scope.startLatitude)
             && isNum($scope.endLongitude)
             && isNum($scope.endLatitude)) {
+            $rootScope.showLoading();
             var input = document.getElementById("input").getElementsByTagName("input");
             $http({
                 method: "post",
@@ -180,14 +209,24 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
                 $scope.startLatitude = $scope.endLatitude;
                 $scope.endLongitude = "无数据";
                 $scope.endLatitude = "无数据";
-                $scope.showSuccess("保存成功");
+                map.clearOverlays();
+                map.addOverlay(new BMap.Marker(new BMap.Point(scope.startLongitude, scope.startLatitude)));
+                $rootScope.showSuccess("保存成功");
+                $rootScope.closeLoading();
+            }).error(function(error) {
+                $rootScope.closeLoading();
+                $rootScope.showError("出现错误，请重试");
             });
         } else {
-            $scope.showError("坐标有误，请重试");
+            $rootScope.showError("坐标有误，请重试");
         }
     }
+});
+app.controller('ShowPowerLineController', function($rootScope, $scope, $http, $ionicPopup) {
+    $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
     
     $scope.showPowerLine = function() {
+        $rootScope.showLoading();
         $http.get("/powerLine/list?provinceNo=pHD006").success(function(result) {
             map.clearOverlays();
             for (var i = 0; i < result.length; i++) {
@@ -195,15 +234,32 @@ app.controller('PowerLineController', function($scope, $http, $ionicPopup) {
                 points.push(new BMap.Point(result[i].location.startLongitude, result[i].location.startLatitude));
                 points.push(new BMap.Point(result[i].location.endLongitude, result[i].location.endLatitude));
                 if (i == 0) {
+                    map.addOverlay(new BMap.Marker(points[0]));
                     map.centerAndZoom(points[0], 25);
                 }
+                map.addOverlay(new BMap.Marker(points[1]));
                 var polyline = new BMap.Polyline(points, {
                     strokeColor:"red",
-                    strokeWeight:1,
+                    strokeWeight:5,
                     strokeOpacity:0.5
                 });
                 map.addOverlay(polyline);
             }
+            $rootScope.closeLoading();
+        }).error(function(error) {
+            $rootScope.closeLoading();
+            $rootScope.showError("出现错误，请重试");
+        });
+    }
+    
+    $scope.removePowerLine = function() {
+        $rootScope.showLoading();
+        $http.post("/powerLine/remove").success(function(result) {
+            $rootScope.closeLoading();
+            $rootScope.showSuccess("清除成功");
+        }).error(function(error) {
+            $rootScope.closeLoading();
+            $rootScope.showError("出现错误，请重试");
         });
     }
 });
@@ -215,32 +271,32 @@ app.directive("appMap", function() {
         restrict: "E",
         replace: true,
         template: "<div></div>",
-        scope: {
-            center: "=",		// Center point on the map (e.g. <code>{ latitude: 10, longitude: 10 }</code>).
-            markers: "=",	   // Array of map markers (e.g. <code>[{ lat: 10, lon: 10, name: "hello" }]</code>).
-            width: "@",		 // Map width in pixels.
-            height: "@",		// Map height in pixels.
-            zoom: "@",		  // Zoom level (one is totally zoomed out, 25 is very much zoomed in).
-            zoomControl: "@",   // Whether to show a zoom control on the map.
-            scaleControl: "@",   // Whether to show scale control on the map.
-            address: "@"
-        },
+        // scope: {
+        //     center: "=",		// Center point on the map (e.g. <code>{ latitude: 10, longitude: 10 }</code>).
+        //     markers: "=",	   // Array of map markers (e.g. <code>[{ lat: 10, lon: 10, name: "hello" }]</code>).
+        //     width: "@",		 // Map width in pixels.
+        //     height: "@",		// Map height in pixels.
+        //     zoom: "@",		  // Zoom level (one is totally zoomed out, 25 is very much zoomed in).
+        //     zoomControl: "@",   // Whether to show a zoom control on the map.
+        //     scaleControl: "@",   // Whether to show scale control on the map.
+        //     address: "@"
+        // },
         link: function(scope, element, attrs) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 BMap.Convertor.translate(new BMap.Point(
                     position.coords.longitude,
                     position.coords.latitude), 0,
                     function(point) {
-                        initBMap(attrs, new BMap.Point(point.lng, point.lat));
+                        initBMap(attrs, scope, new BMap.Point(point.lng, point.lat));
                     });
             }, function(error) {
-                initBMap(attrs, new BMap.Point(121.48, 31.22));
+                initBMap(attrs, scope, new BMap.Point(121.48, 31.22));
             });
         }
     };
 });
 
-function initBMap(attrs, beginPoint) {
+function initBMap(attrs, scope, beginPoint) {
     map = new BMap.Map(attrs.id); // 创建Map实例
     map.centerAndZoom(beginPoint, 25); // 初始化地图,设置中心点坐标和地图级别
     map.addControl(new BMap.MapTypeControl()); //添加地图类型控件
@@ -249,16 +305,25 @@ function initBMap(attrs, beginPoint) {
     map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
     if (attrs.clickpoint != null) {
         map.addEventListener("click", function(e){ //点击事件
-            var startLongitude = document.getElementById("startLongitude");
-            var startLatitude = document.getElementById("startLatitude");
-            var endLongitude = document.getElementById("endLongitude");
-            var endLatitude = document.getElementById("endLatitude");
-            if (startLatitude.value == null || startLatitude.value == "") {
-                startLongitude.value = e.point.lng;
-                startLatitude.value = e.point.lat;
+            if (!isNum(scope.startLongitude) || !isNum(scope.startLatitude)) {
+                scope.startLongitude = e.point.lng;
+                scope.startLatitude = e.point.lat;
+                map.clearOverlays();
+                map.addOverlay(new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat)));
             } else {
-                endLongitude.value = e.point.lng;
-                endLatitude.value = e.point.lat;
+                scope.endLongitude = e.point.lng;
+                scope.endLatitude = e.point.lat;
+                map.clearOverlays();
+                var beginPoint = new BMap.Point(scope.startLongitude, scope.startLatitude);
+                var endPoint = new BMap.Point(e.point.lng, e.point.lat);
+                map.addOverlay(new BMap.Marker(beginPoint));
+                map.addOverlay(new BMap.Marker(endPoint))
+                var polyline = new BMap.Polyline([beginPoint, endPoint], {
+                    strokeColor:"red",
+                    strokeWeight:5,
+                    strokeOpacity:0.5
+                });
+                map.addOverlay(polyline);
             }
         });
     }

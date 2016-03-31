@@ -22,6 +22,12 @@ exports.listGet = function(req, res) {
     });
 };
 
+exports.removePost = function(req, res) {
+    powerLineService.remove(function(result) {
+        res.end();
+    });
+};
+
 exports.showGet = function(req, res) {
     res.render('powerLine/show', {'message': ''});
 };
