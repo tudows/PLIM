@@ -25,7 +25,7 @@ var app = angular.module('plim', ['ionic', 'ngRoute'])
                 })
                 .otherwise({
                     templateUrl: 'powerLine/add',
-                    controller: 'PowerLineController'
+                    controller: 'AddPowerLineController'
                 });
         }
     ])
