@@ -211,8 +211,8 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
                 $scope.endLatitude = "无数据";
                 map.clearOverlays();
                 map.addOverlay(new BMap.Marker(new BMap.Point(scope.startLongitude, scope.startLatitude)));
-                $rootScope.showSuccess("保存成功");
                 $rootScope.closeLoading();
+                $rootScope.showSuccess("保存成功");
             }).error(function(error) {
                 $rootScope.closeLoading();
                 $rootScope.showError("出现错误，请重试");
