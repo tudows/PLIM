@@ -210,7 +210,7 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
                 $scope.endLongitude = "无数据";
                 $scope.endLatitude = "无数据";
                 map.clearOverlays();
-                map.addOverlay(new BMap.Marker(new BMap.Point(scope.startLongitude, scope.startLatitude)));
+                map.addOverlay(new BMap.Marker(new BMap.Point($scope.startLongitude, $scope.startLatitude)));
                 $rootScope.closeLoading();
                 $rootScope.showSuccess("保存成功");
             }).error(function(error) {
@@ -255,6 +255,7 @@ app.controller('ShowPowerLineController', function($rootScope, $scope, $http, $i
     $scope.removePowerLine = function() {
         $rootScope.showLoading();
         $http.post("/powerLine/remove").success(function(result) {
+            map.clearOverlays();
             $rootScope.closeLoading();
             $rootScope.showSuccess("清除成功");
         }).error(function(error) {
