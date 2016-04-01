@@ -1,253 +1,198 @@
-<!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <script src="/js/angular/angular.min.js"></script>\
-    <script src="/js/bootstrap/ui-bootstrap-tpls.min.js"></script>
 
-    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
-    
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=hDMeBeFR3ccORh6CsKzOGIsc"></script>
-    <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
-    <style type="text/css">
-        body, html,#allmap {
-            margin:0;
-            font-family:"微软雅黑";
-        }
-        #allmap {
-            overflow: hidden;
-            width: 700px;
-            height: 700px;
-        }
-	</style>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=hDMeBeFR3ccORh6CsKzOGIsc"></script>
-    <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
-    <!--<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/changeMore.js"></script>-->
+<!--http://codepen.io/calendee/pen/JdtuG/
+http://codepen.io/loringdodge/pen/vOrRpV
+http://codepen.io/mircobabini/pen/gLkli-->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+    <%include layout/head/default.html%>
 </head>
 
-<body ng-app="myapp">
-    <div ng-controller="powerLineCtrl">
-        <form class="form-inline" style="width: 800px" action="powerLine/add" method="post">
-            <div>
-                <div class="form-group">
-                    <label style="width: 150px;" for="no">no</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="no">
-                    <label style="width: 150px;" for="modelNo">modelNo</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="modelNo" value="T001">
-                </div>
-                <div class="form-group">
-                    <label style="width: 150px;" for="voltageClass">voltageClass</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="voltageClass" value="8">
-                </div>
-                <div class="form-group">
-                    <label style="width: 150px;" for="repairDay">repairDay</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="repairDay" value="365">
-                    <label style="width: 150px;" for="maintainDay">maintainDay</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="maintainDay" value="125">
-                </div>
-                <div class="form-group">
-                    <label style="width: 150px;" for="designYear">designYear</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="designYear" value="30">
-                    <label style="width: 150px;" for="runningState">runningState</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="runningState" value="1">
-                </div>
-                <div class="form-group">
-                    <label style="width: 150px;" for="provinceNo">provinceNo</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="provinceNo" value="pHD006">
-                </div>
-                <div class="form-group">
-                    <label style="width: 150px;" for="startLongitude">startLongitude</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="startLongitude" ng-model="startLongitude">
-                    <label style="width: 150px;" for="startLatitude">startLatitude</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="startLatitude" ng-model="startLatitude">
-                </div>
-                <div class="form-group">
-                    <label style="width: 150px;" for="endLongitude">endLongitude</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="endLongitude" ng-model="endLongitude">
-                    <label style="width: 150px;" for="endLatitude">endLatitude</label>
-                    <input style="width: 150px;" type="text" class="form-control" name="endLatitude" ng-model="endLatitude">
-                </div>
-            </div>
-            <div>
-                <button type="button" class="btn btn-success" ng-click="start()">开始</button>
-                <button type="button" class="btn btn-warning" ng-click="end()">结束</button>
-                <button type="submit" class="btn btn-info">储存</button>
-            </div>
-        </form>
-    </div>
-    
-    <div><%=message%></div>
-    <div>
-        <a href="/user/login">login</a>
-        <a href="/user/register">register</a>
-        <a href="/user/logout">logout</a>
-    </div>
-    
-    <div ng-controller="searchCtrl">
-        <select name="province" ng-model="province">
-            <option value="">--请选择--</option>
-            <option ng-repeat="province in provinces" value="{{province.no + '|' + province.nameCn}}">{{province.nameCn}}</option>
-        </select>
-        <p>你搜索的是：<span>{{province + ' ' + location}}</span></p>
-        <p>经纬度：<span>{{longitude + ',' + latitude}}</span></p>
-        <input type="button" value="搜索" ng-click="search()"/>
-        <input type="button" value="显示输电线路" ng-click="showPowerLine()"/>
-        <table class="table table-striped">
-            <tr>
-                <td>startLongitude</td>
-                <td>startLatitude</td>
-                <td>endLongitude</td>
-                <td>endLatitude</td>
-            </tr>
-            <tr ng-repeat="powerLine in powerLines">
-                <td>{{ powerLine.location.startLongitude }}</td>
-                <td>{{ powerLine.location.startLatitude }}</td>
-                <td>{{ powerLine.location.endLongitude }}</td>
-                <td>{{ powerLine.location.endLatitude }}</td>
-            </tr>
-        </table>
-    </div>
-    
-    <div>
-        定位
-        <div id="heading"></div>
-        <p id="demo"></p>
-        <input type="button" onclick="getLocation()" value="定位"/>
-        <input type="button" onclick="navigator.geolocation.clearWatch(watchID);" value="停止"/>
-        <input type="text" value="15" id="scale"/>
-    </div>
-    
-    <div id="allmap"></div>
-    
+<body ng-app="starter">
+    <ion-nav-view></ion-nav-view>
+
+
+
+    <script id="templates/browse.html" type="text/ng-template">
+        <ion-view view-title="Browse">
+            <ion-content>
+                <h1>Browse</h1>
+            </ion-content>
+        </ion-view>
+    </script>
+
+    <script id="templates/menu.html" type="text/ng-template">
+        <ion-side-menus enable-menu-with-back-views="false">
+            <ion-side-menu-content>
+                <ion-nav-bar class="bar-stable">
+                    <ion-nav-back-button>
+                    </ion-nav-back-button>
+
+                    <ion-nav-buttons side="left">
+                        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+                        </button>
+                    </ion-nav-buttons>
+                </ion-nav-bar>
+
+                <!-- TABS -->
+                <ion-tabs>
+
+                    <ion-tab title="Search" icon-off="ion-search" icon-on="ion-search" href="#/app/search">
+                        <ion-nav-view name="tab-search"></ion-nav-view>
+                    </ion-tab>
+
+                    <ion-tab title="Browse" icon-off="ion-ios-glasses" icon-on="ion-ios-glasses" href="#/app/browse">
+                        <ion-nav-view name="tab-browse"></ion-nav-view>
+                    </ion-tab>
+
+                    <ion-tab title="Playlist" icon-off="ion-ipod" icon-on="ion-ipod" href="#/app/playlists">
+                        <ion-nav-view name="tab-playlists"></ion-nav-view>
+                    </ion-tab>
+
+                </ion-tabs>
+
+            </ion-side-menu-content>
+
+            <!-- Side Menu (left) -->
+            <ion-side-menu side="left">
+                <ion-header-bar class="bar-stable">
+                    <h1 class="title">Left</h1>
+                </ion-header-bar>
+                <ion-content>
+                    <ion-list>
+                        <ion-item menu-close href="#/app/search">
+                            Search
+                        </ion-item>
+                        <ion-item menu-close href="#/app/browse">
+                            Browse
+                        </ion-item>
+                        <ion-item menu-close href="#/app/playlists">
+                            Playlists
+                        </ion-item>
+                    </ion-list>
+                </ion-content>
+            </ion-side-menu>
+        </ion-side-menus>
+    </script>
+
+    <script id="templates/playlist.html" type="text/ng-template">
+        <ion-view view-title="Playlist">
+            <ion-content>
+                <h1>Playlist</h1>
+            </ion-content>
+        </ion-view>
+    </script>
+
+    <script id="templates/playlists.html" type="text/ng-template">
+        <ion-view view-title="Ionic Tabs + SideMenu">
+            <ion-content>
+                <ion-list>
+                    <ion-item ng-repeat="playlist in playlists" href="#/app/playlists/{{playlist.id}}">
+                        {{playlist.title}}
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </ion-view>
+    </script>
+
+    <script id="templates/search.html" type="text/ng-template">
+        <ion-view view-title="Search">
+            <ion-content>
+                <h1>Search</h1>
+            </ion-content>
+        </ion-view>
+    </script>
+
     <script>
-        var app = angular.module('myapp', []);
-        app.controller('powerLineCtrl', function($scope) {
-            $scope.start = function() {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var appElement = document.querySelector('[ng-controller=powerLineCtrl]');
-                    var $scope1 = angular.element(appElement).scope(); 
-                    $scope1.startLongitude = position.coords.longitude;
-                    $scope1.startLatitude = position.coords.latitude;
-                    $scope1.$apply();
-                });
-            }
-            $scope.end = function() {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var appElement = document.querySelector('[ng-controller=powerLineCtrl]');
-                    var $scope1 = angular.element(appElement).scope(); 
-                    $scope1.endLongitude = position.coords.longitude;
-                    $scope1.endLatitude = position.coords.latitude;
-                    $scope1.$apply();
-                });
-            }
-        });
-        
-        var x=document.getElementById("demo");
-        var watchID;
-        window.addEventListener('deviceorientation', function(e) {
-            document.getElementById("heading").innerHTML = e.webkitCompassHeading;
-        }, false);
-        function getLocation()
-        {
-            if (navigator.geolocation)
-            {
-                watchID = navigator.geolocation.watchPosition(showPosition);
-            }
-            else{x.innerHTML="Geolocation is not supported by this browser.";}
+        angular.module('starter', ['ionic', 'starter.controllers'])
+
+.run(function($ionicPlatform) {
+  $ionicPlatform.ready(function() {
+    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+    // for form inputs)
+    if (window.cordova && window.cordova.plugins.Keyboard) {
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+    }
+    if (window.StatusBar) {
+      // org.apache.cordova.statusbar required
+      StatusBar.styleDefault();
+    }
+  });
+})
+
+.config(function($stateProvider, $urlRouterProvider) {
+  $stateProvider
+
+  .state('app', {
+    url: "/app",
+    abstract: true,
+    templateUrl: "templates/menu.html",
+    controller: 'AppCtrl'
+  })
+
+  .state('app.search', {
+    url: "/search",
+    views: {
+      'tab-search': {
+        templateUrl: "templates/search.html"
+      }
+    }
+  })
+
+  .state('app.browse', {
+    url: "/browse",
+    views: {
+      'tab-browse': {
+        templateUrl: "templates/browse.html"
+      }
+    }
+  })
+
+  .state('app.playlists', {
+    url: "/playlists",
+    views: {
+      'tab-playlists': {
+        templateUrl: "templates/playlists.html",
+        controller: 'PlaylistsCtrl'
+      }
+    }
+  })
+
+    .state('app.single', {
+      url: "/playlists/:playlistId",
+      views: {
+        'tab-playlists': {
+          templateUrl: "templates/playlist.html",
+          controller: 'PlaylistCtrl'
         }
-        function showPosition(position)
-        {
-            x.innerHTML="纬度: " + position.coords.latitude +
-            "<br />经度: " + position.coords.longitude +
-            "<br />精度: " + position.coords.accuracy +
-            "<br />海拔: " + position.coords.altitude +
-            "<br />海拔精度: " + position.coords.altitudeAccuracy +
-            "<br />方向: " + position.coords.heading +
-            "<br />速度: " + position.coords.speed;
-            map.clearOverlays();
-            var point = new BMap.Point(position.coords.longitude, position.coords.latitude);
-            BMap.Convertor.translate(point, 0, function(point) {
-                map.centerAndZoom(point, document.getElementById("scale").value);
-                map.addOverlay(new BMap.Marker(point));
-            });
-        }
-        
-        app.controller('searchCtrl', function($scope, $http) {
-            $http.get("/region/listProvince").success(function(result) {
-                $scope.provinces = result;
-            });
-            $scope.longitude = _point.lng;
-            $scope.latitude = _point.lat;
-            $scope.search = function() {
-                if ($scope.province) {
-                    map.clearOverlays();
-                    var myGeo = new BMap.Geocoder();
-                    myGeo.getPoint($scope.province.split('|')[1], function(point){
-                        if (point) {
-                            _point = point;
-                            // map.centerAndZoom(_point, 12);
-                            map.addOverlay(new BMap.Marker(_point));
-                            // var local = new BMap.LocalSearch(map, {
-                            //     renderOptions: {map: map,autoViewport: true}, pageCapacity: 8
-                            // });      
-                            // local.search($scope.province.split('|')[1]);    
-                        }      
-                    }, $scope.province.split('|')[1]);
-                    $scope.longitude = _point.lng;
-                    $scope.latitude = _point.lat;
-                } else {
-                    alert("请选择省份");
-                }
-            }
-            $scope.showPowerLine = function() {
-                $http.get("/powerLine/list?provinceNo=" + $scope.province.split('|')[0]).success(function(result) {
-                    $scope.powerLines = result;
-                    for (var i = 0; i < result.length; i++) {
-                        var points = [];
-                        var point1 = new BMap.Point(result[i].location.startLongitude, result[i].location.startLatitude);
-                        var point2 = new BMap.Point(result[i].location.endLongitude, result[i].location.endLatitude);
-                        BMap.Convertor.translate(point1, 0, function(point) {
-                            points.push(point);
-                            BMap.Convertor.translate(point2, 0, function(point) {
-                                points.push(point);
-                                var polyline = new BMap.Polyline(points, {
-                                    strokeColor:"red",
-                                    strokeWeight:1,
-                                    strokeOpacity:0.5
-                                });    
-                                map.addOverlay(polyline);
-                            });
-                        });
-                        // var points = [];
-                        // var point1 = new BMap.Point(result[i].location.startLongitude, result[i].location.startLatitude);
-                        // var point2 = new BMap.Point(result[i].location.endLongitude, result[i].location.endLatitude);
-                        // BMap.Convertor.translate(point1, 0, function(point) {
-                        //     points.push(new BMap.Point(point.x, point.y));
-                        //     BMap.Convertor.translate(point2, 0, function(point) {
-                        //         points.push(new BMap.Point(point.x, point.y));
-                        //         var polyline = new BMap.Polyline(points, {
-                        //             strokeColor:"green",
-                        //             strokeWeight:6,
-                        //             strokeOpacity:0.5
-                        //         });    
-                        //         map.addOverlay(polyline);
-                        //         map.centerAndZoom(points[0], 12);
-                        //     });
-                        // });
-                    }
-                });
-            }
-        });
-        
-        // 百度地图API功能
-        var map = new BMap.Map("allmap");    // 创建Map实例
-        var _point = new BMap.Point(121.48, 31.22);
-        map.centerAndZoom(_point, 12);  // 初始化地图,设置中心点坐标和地图级别
-        map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-        map.addOverlay(new BMap.Marker(_point));
-        map.setCurrentCity("上海");          // 设置地图显示的城市 此项是必须设置的
-        map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+      }
+    });
+  // if none of the above states are matched, use this as the fallback
+  $urlRouterProvider.otherwise('/app/playlists');
+});
+
+angular.module('starter.controllers', [])
+
+.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+
+})
+
+.controller('PlaylistsCtrl', function($scope) {
+  $scope.playlists = [
+    { title: 'Reggae', id: 1 },
+    { title: 'Chill', id: 2 },
+    { title: 'Dubstep', id: 3 },
+    { title: 'Indie', id: 4 },
+    { title: 'Rap', id: 5 },
+    { title: 'Cowbell', id: 6 }
+  ];
+})
+
+.controller('PlaylistCtrl', function($scope, $stateParams) {
+});
     </script>
 </body>
 

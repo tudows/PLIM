@@ -24,6 +24,7 @@ exports.listGet = function(req, res) {
 
 exports.removePost = function(req, res) {
     powerLineService.remove(function(result) {
+        res.send(result);
         res.end();
     });
 };

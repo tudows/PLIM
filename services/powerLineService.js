@@ -46,6 +46,10 @@ exports.list = function(provinceNo, callback) {
 
 exports.remove = function(callback) {
     powerLineDAO.remove({}, function(err){
-        callback();
+        if(!err){
+            callback(true);
+        } else {
+            callback(false);
+        }
     });
 };

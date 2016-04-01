@@ -23,6 +23,10 @@ var app = angular.module('plim', ['ionic', 'ngRoute'])
                     templateUrl: 'user/register',
                     controller: 'UserController'
                 })
+                .when('/manage', {
+                    templateUrl: 'manage/index',
+                    controller: 'ManageController'
+                })
                 .otherwise({
                     templateUrl: 'powerLine/add',
                     controller: 'AddPowerLineController'
@@ -39,7 +43,8 @@ var app = angular.module('plim', ['ionic', 'ngRoute'])
                     { "title": "注册", "href": "#user/register" },
                     { "title": "旧版", "href": "index1" },
                     { "title": "登出", "href": "user/logout" },
-                    { "title": "定位测试", "href": "#location" }
+                    { "title": "定位测试", "href": "#location" },
+                    { "title": "管理", "href": "#manage" }
                 ];
             }
         }
@@ -222,7 +227,7 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
         }
     }
 });
-app.controller('ShowPowerLineController', function($rootScope, $scope, $http, $ionicPopup) {
+app.controller('ShowPowerLineController', function($rootScope, $scope, $http) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
     
     $scope.showPowerLine = function() {
@@ -251,21 +256,27 @@ app.controller('ShowPowerLineController', function($rootScope, $scope, $http, $i
             $rootScope.showError("出现错误，请重试");
         });
     }
+});
+app.controller('LocationController', function($rootScope, $scope) {
+    
+});
+app.controller('ManageController', function($rootScope, $scope) {
+    $rootScope.activeLeftMenu = $rootScope.leftMenus[7];
     
     $scope.removePowerLine = function() {
         $rootScope.showLoading();
         $http.post("/powerLine/remove").success(function(result) {
-            map.clearOverlays();
             $rootScope.closeLoading();
-            $rootScope.showSuccess("清除成功");
+            if (result) {
+                $rootScope.showSuccess("清除成功");
+            } else {
+                $rootScope.showError("清除失败，请重试");
+            }
         }).error(function(error) {
             $rootScope.closeLoading();
             $rootScope.showError("出现错误，请重试");
         });
     }
-});
-app.controller('LocationController', function($scope) {
-    
 });
 app.directive("appMap", function() {
     return {
