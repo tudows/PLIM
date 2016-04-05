@@ -1,41 +1,50 @@
-var map;
-var app = angular.module('plim', ['ionic', 'ui.router'])
+var app = angular.module('plim', ['ionic'])
     .config(function($stateProvider, $urlRouterProvider) {
-        $stateProvider
-            .state('tab', {
-                url: "/tab",
-                templateUrl : 'template/tab.html',
-                abstract : true,
-                controller: "PLIMController"
-            })
-            .state('no_tab', {
-                url: "/no_tab",
-                templateUrl : 'template/no_tab.html',
-                abstract : true
-            })
-            .state('addPowerLine', {
-                url: "/addPowerLine",
-                views: {
-                    "tab1": {
-                        templateUrl : 'powerLine/add',
-                        controller: "AddPowerLineController"
-                    }
-                }
-            })
-        $urlRouterProvider.otherwise('/tab/addPowerLine');
+            $stateProvider
+                .state('addPowerLine', {
+                    url: "/addPowerLine",
+                    templateUrl: 'powerLine/add',
+                    controller: 'AddPowerLineController'
+                })
+                .state('showPowerLine', {
+                    url: "/showPowerLine",
+                    templateUrl: 'powerLine/show',
+                    controller: 'ShowPowerLineController'
+                })
+                .state('location', {
+                    url: "/location",
+                    templateUrl: 'location.html',
+                    controller: 'LocationController'
+                })
+                .state('user_login', {
+                    url: "/user/login",
+                    templateUrl: 'user/login',
+                    controller: 'UserController'
+                })
+                .state('user_register', {
+                    url: "/user/register",
+                    templateUrl: 'user/register',
+                    controller: 'UserController'
+                })
+                .state('manage', {
+                    url: "/manage",
+                    templateUrl: 'manage/index',
+                    controller: 'ManageController'
+                });
+            $urlRouterProvider.otherwise('/addPowerLine');
     })
     .factory('LeftMenus', function() {
         return {
             all: function() {
                 return [
-                    { "title": "线路录入", "href": "#addPowerLine" },
-                    { "title": "线路定位", "href": "#showPowerLine" },
-                    { "title": "登陆", "href": "#user/login" },
-                    { "title": "注册", "href": "#user/register" },
+                    { "title": "线路录入", "href": "#/addPowerLine" },
+                    { "title": "线路定位", "href": "#/showPowerLine" },
+                    { "title": "登陆", "href": "#/user/login" },
+                    { "title": "注册", "href": "#/user/register" },
                     { "title": "旧版", "href": "index1" },
-                    { "title": "登出", "href": "user/logout" },
-                    { "title": "定位测试", "href": "#location" },
-                    { "title": "管理", "href": "#manage" }
+                    { "title": "登出", "href": "#/user/logout" },
+                    { "title": "定位测试", "href": "#/location" },
+                    { "title": "管理", "href": "#/manage" }
                 ];
             }
         }
@@ -90,10 +99,6 @@ app.controller('PLIMController', function($rootScope, $scope, $window, LeftMenus
 app.controller('AddPowerLineController', function($rootScope, $scope, $http, $ionicPopup) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[0];
     
-    $scope.tabs = [
-        { "title": "add", "href": "#addPowerLine", "tabName": "addPowerLineTab" }
-    ];
-    
     $scope.inputs = [
         { "name": "no" },
         { "name": "modelNo", "value": "T001" },
@@ -123,7 +128,7 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
     
     $scope.getStartPosition = function() {
         $rootScope.showLoading();
-        map.clearOverlays();
+        $scope.map.clearOverlays();
         navigator.geolocation.getCurrentPosition(function(position) {
             BMap.Convertor.translate(new BMap.Point(
                 position.coords.longitude,
@@ -132,8 +137,8 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
                     $scope.startLongitude = point.lng;
                     $scope.startLatitude = point.lat;
                     var beginPoint = new BMap.Point(point.lng, point.lat);
-                    map.centerAndZoom(beginPoint, 25);
-                    map.addOverlay(new BMap.Marker(beginPoint));
+                    $scope.map.centerAndZoom(beginPoint, 25);
+                    $scope.map.addOverlay(new BMap.Marker(beginPoint));
                     $rootScope.closeLoading();
             });
         }, function(error) {
@@ -155,13 +160,13 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
                     $scope.endLatitude = point.lat;
                     var beginPoint = new BMap.Point($scope.startLongitude , $scope.startLatitude);
                     var endPoint = new BMap.Point(point.lng, point.lat);
-                    map.addOverlay(new BMap.Marker(endPoint));
+                    $scope.map.addOverlay(new BMap.Marker(endPoint));
                     var polyline = new BMap.Polyline([beginPoint, endPoint], {
                         strokeColor:"red",
                         strokeWeight:5,
                         strokeOpacity:0.5
                     });
-                    map.addOverlay(polyline);
+                    $scope.map.addOverlay(polyline);
                     $rootScope.closeLoading();
             });
         }, function(error) {
@@ -177,8 +182,10 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
         $scope.startLatitude = "无数据";
         $scope.endLongitude = "无数据";
         $scope.endLatitude = "无数据";
-        map.clearOverlays();
+        $scope.map.clearOverlays();
     }
+    
+    initBMap("bmap", $scope, true);
 
     $scope.savePowerLine = function() {
         if (isNum($scope.startLongitude)
@@ -209,8 +216,8 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
                 $scope.startLatitude = $scope.endLatitude;
                 $scope.endLongitude = "无数据";
                 $scope.endLatitude = "无数据";
-                map.clearOverlays();
-                map.addOverlay(new BMap.Marker(new BMap.Point($scope.startLongitude, $scope.startLatitude)));
+                $scope.map.clearOverlays();
+                $scope.map.addOverlay(new BMap.Marker(new BMap.Point($scope.startLongitude, $scope.startLatitude)));
                 $rootScope.closeLoading();
                 $rootScope.showSuccess("保存成功");
             }).error(function(error) {
@@ -228,22 +235,22 @@ app.controller('ShowPowerLineController', function($rootScope, $scope, $http) {
     $scope.showPowerLine = function() {
         $rootScope.showLoading();
         $http.get("/powerLine/list?provinceNo=pHD006").success(function(result) {
-            map.clearOverlays();
+            $scope.map.clearOverlays();
             for (var i = 0; i < result.length; i++) {
                 var points = [];
                 points.push(new BMap.Point(result[i].location.startLongitude, result[i].location.startLatitude));
                 points.push(new BMap.Point(result[i].location.endLongitude, result[i].location.endLatitude));
                 if (i == 0) {
-                    map.addOverlay(new BMap.Marker(points[0]));
-                    map.centerAndZoom(points[0], 25);
+                    $scope.map.addOverlay(new BMap.Marker(points[0]));
+                    $scope.map.centerAndZoom(points[0], 25);
                 }
-                map.addOverlay(new BMap.Marker(points[1]));
+                $scope.map.addOverlay(new BMap.Marker(points[1]));
                 var polyline = new BMap.Polyline(points, {
                     strokeColor:"red",
                     strokeWeight:5,
                     strokeOpacity:0.5
                 });
-                map.addOverlay(polyline);
+                $scope.map.addOverlay(polyline);
             }
             $rootScope.closeLoading();
         }).error(function(error) {
@@ -253,6 +260,9 @@ app.controller('ShowPowerLineController', function($rootScope, $scope, $http) {
     }
 });
 app.controller('LocationController', function($rootScope, $scope) {
+    
+});
+app.controller('UserController', function($rootScope, $scope) {
     
 });
 app.controller('ManageController', function($rootScope, $scope) {
@@ -273,64 +283,48 @@ app.controller('ManageController', function($rootScope, $scope) {
         });
     }
 });
-app.directive("appMap", function() {
-    return {
-        restrict: "E",
-        replace: true,
-        template: "<div></div>",
-        // scope: {
-        //     center: "=",		// Center point on the map (e.g. <code>{ latitude: 10, longitude: 10 }</code>).
-        //     markers: "=",	   // Array of map markers (e.g. <code>[{ lat: 10, lon: 10, name: "hello" }]</code>).
-        //     width: "@",		 // Map width in pixels.
-        //     height: "@",		// Map height in pixels.
-        //     zoom: "@",		  // Zoom level (one is totally zoomed out, 25 is very much zoomed in).
-        //     zoomControl: "@",   // Whether to show a zoom control on the map.
-        //     scaleControl: "@",   // Whether to show scale control on the map.
-        //     address: "@"
-        // },
-        link: function(scope, element, attrs) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                BMap.Convertor.translate(new BMap.Point(
-                    position.coords.longitude,
-                    position.coords.latitude), 0,
-                    function(point) {
-                        initBMap(attrs, scope, new BMap.Point(point.lng, point.lat));
-                    });
-            }, function(error) {
-                initBMap(attrs, scope, new BMap.Point(121.48, 31.22));
-            });
-        }
-    };
-});
 
-function initBMap(attrs, scope, beginPoint) {
-    map = new BMap.Map(attrs.id); // 创建Map实例
-    map.centerAndZoom(beginPoint, 25); // 初始化地图,设置中心点坐标和地图级别
-    map.addControl(new BMap.MapTypeControl()); //添加地图类型控件
-    map.addOverlay(new BMap.Marker(beginPoint));
-    map.setCurrentCity("上海"); // 设置地图显示的城市 此项是必须设置的
-    map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
-    if (attrs.clickpoint != null) {
-        map.addEventListener("click", function(e){ //点击事件
+function initBMap(id, scope, isClick) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        BMap.Convertor.translate(new BMap.Point(
+            position.coords.longitude,
+            position.coords.latitude), 0,
+            function(point) {
+                _initBMap(id, scope, new BMap.Point(point.lng, point.lat), isClick);
+            });
+    }, function(error) {
+        _initBMap(id, scope, new BMap.Point(121.48, 31.22), isClick);
+    });
+}
+
+function _initBMap(id, scope, beginPoint, isClick) {
+    scope.map = new BMap.Map(id); // 创建Map实例
+    scope.map.centerAndZoom(beginPoint, 25); // 初始化地图,设置中心点坐标和地图级别
+    scope.map.addControl(new BMap.MapTypeControl()); //添加地图类型控件
+    scope.map.addOverlay(new BMap.Marker(beginPoint));
+    scope.map.setCurrentCity("上海"); // 设置地图显示的城市 此项是必须设置的
+    scope.map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+    if (isClick) {
+        scope.map.addEventListener("click", function(e){ //点击事件
             if (!isNum(scope.startLongitude) || !isNum(scope.startLatitude)) {
                 scope.startLongitude = e.point.lng;
                 scope.startLatitude = e.point.lat;
-                map.clearOverlays();
-                map.addOverlay(new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat)));
+                scope.map.clearOverlays();
+                scope.map.addOverlay(new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat)));
             } else {
                 scope.endLongitude = e.point.lng;
                 scope.endLatitude = e.point.lat;
-                map.clearOverlays();
+                scope.map.clearOverlays();
                 var beginPoint = new BMap.Point(scope.startLongitude, scope.startLatitude);
                 var endPoint = new BMap.Point(e.point.lng, e.point.lat);
-                map.addOverlay(new BMap.Marker(beginPoint));
-                map.addOverlay(new BMap.Marker(endPoint))
+                scope.map.addOverlay(new BMap.Marker(beginPoint));
+                scope.map.addOverlay(new BMap.Marker(endPoint));
                 var polyline = new BMap.Polyline([beginPoint, endPoint], {
                     strokeColor:"red",
                     strokeWeight:5,
                     strokeOpacity:0.5
                 });
-                map.addOverlay(polyline);
+                scope.map.addOverlay(polyline);
             }
         });
     }

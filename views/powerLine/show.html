@@ -18,8 +18,17 @@
     </ion-tabs>
 </script>
 
-    <ion-tabs class="tabs-icon-top tabs-positive">
 
+
+<ion-view view-title="">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon" ng-click="toggleLeftMenu()">
+            <i class="icon ion-navicon"></i>
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+    </ion-content>
+    <ion-tabs class="tabs-icon-top tabs-positive">
         <ion-tab title="Home" icon="ion-home" href="#">
             <ion-nav-view name="home-tab"></ion-nav-view>
         </ion-tab>
@@ -30,3 +39,4 @@
             <ion-nav-view name="contact-tab"></ion-nav-view>
         </ion-tab>
     </ion-tabs>
+</ion-view>
