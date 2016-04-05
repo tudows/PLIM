@@ -13,6 +13,7 @@ Usage
 2. Please rename the "config/xxxConfig - 副本.json" to "config/xxxConfig.json"
 3. Edit the database's ip, port, database, username and password to your owen in the mongodbConfig.json and redisConfig.json
 4. If be necessary, you can change the site port in the globalConfig.json
+5. The mobile project is in "mobile/"
 
 **How to use https**
 * Create the https certificate and place them to the "key/".
@@ -68,6 +69,9 @@ Log
 * Optimize the controller's allocation.
 * Add some common popup.(eg: success popup, error popup, loading popup)
 * Merge the two ways of add powerline.
+
+**2016-04-05**
+* Add the ios project. The project is use the Xcode7 and the ios version is 9.2.
 
 
 License
