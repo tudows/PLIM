@@ -1,0 +1,70 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>PLIM</title>
+    <%include layout/head/default.html%>
+    <script src="https://api.map.baidu.com/api?v=2.0&ak=hDMeBeFR3ccORh6CsKzOGIsc&s=1"></script>
+    <script src="/js/plugins/bmap-convertor.js"></script>
+</head>
+
+<body ng-app="plim" ng-controller="PLIMController">
+    <ion-side-menus>
+
+        <!-- 中心内容 -->
+        <ion-side-menu-content>
+            <ion-header-bar class="bar-royal">
+                <button class="button button-icon" ng-click="toggleLeftMenu()">
+                    <i class="icon ion-navicon"></i>
+                </button>
+                <h1 class="title">PLIM</h1>
+                <button class="button button-icon" ng-click="refresh()">
+                    <i class="icon ion-loop"></i>
+                </button>
+            </ion-header-bar>
+            <ion-content>
+                <div ng-view></div>
+            </ion-content>
+        </ion-side-menu-content>
+
+        <!-- 左侧菜单 -->
+        <ion-side-menu side="left">
+            <ion-header-bar class="bar-royal">
+                <h1 class="title">菜单</h1>
+            </ion-header-bar>
+            <ion-content scroll="false">
+                <ion-list>
+                    <ion-item ng-repeat="leftMenu in leftMenus" ng-click="selectleftMenu(leftMenu, $index)" ng-class="{active: activeLeftMenu == leftMenu}"
+                    ng-href="{{leftMenu.href}}">
+                        {{leftMenu.title}}
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </ion-side-menu>
+
+    </ion-side-menus>
+
+    <script id="location.html" type="text/ng-template">
+        <button class="button button-balanced" onclick="start()">
+            start
+        </button>
+        <button class="button button-balanced" onclick="stop()">
+            stop
+        </button>
+        <div id="location"></div>
+        <div id="head"></div>
+    </script>
+    
+    <script id="loading.html" type="text/ng-template">
+        <div class="row">
+            <div class="col col-100" style="text-align: center;">
+                <ion-spinner icon="android"></ion-spinner>
+            </div>
+        </div>
+    </script>
+
+    <script src="/js/app.js"></script>
+</body>
+
+</html>

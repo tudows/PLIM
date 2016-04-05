@@ -1,29 +1,38 @@
 var map;
-var app = angular.module('plim', ['ionic', 'ui.router'])
-    .config(function($stateProvider, $urlRouterProvider) {
-        $stateProvider
-            .state('tab', {
-                url: "/tab",
-                templateUrl : 'template/tab.html',
-                abstract : true,
-                controller: "PLIMController"
-            })
-            .state('no_tab', {
-                url: "/no_tab",
-                templateUrl : 'template/no_tab.html',
-                abstract : true
-            })
-            .state('addPowerLine', {
-                url: "/addPowerLine",
-                views: {
-                    "tab1": {
-                        templateUrl : 'powerLine/add',
-                        controller: "AddPowerLineController"
-                    }
-                }
-            })
-        $urlRouterProvider.otherwise('/tab/addPowerLine');
-    })
+var app = angular.module('plim', ['ionic', 'ngRoute'])
+    .config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider
+                .when('/addPowerLine', {
+                    templateUrl: 'powerLine/add',
+                    controller: 'AddPowerLineController'
+                })
+                .when('/showPowerLine', {
+                    templateUrl: 'powerLine/show',
+                    controller: 'ShowPowerLineController'
+                })
+                .when('/location', {
+                    templateUrl: 'location.html',
+                    controller: 'LocationController'
+                })
+                .when('/user/login', {
+                    templateUrl: 'user/login',
+                    controller: 'UserController'
+                })
+                .when('/user/register', {
+                    templateUrl: 'user/register',
+                    controller: 'UserController'
+                })
+                .when('/manage', {
+                    templateUrl: 'manage/index',
+                    controller: 'ManageController'
+                })
+                .otherwise({
+                    templateUrl: 'powerLine/add',
+                    controller: 'AddPowerLineController'
+                });
+        }
+    ])
     .factory('LeftMenus', function() {
         return {
             all: function() {
@@ -89,10 +98,6 @@ app.controller('PLIMController', function($rootScope, $scope, $window, LeftMenus
 });
 app.controller('AddPowerLineController', function($rootScope, $scope, $http, $ionicPopup) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[0];
-    
-    $scope.tabs = [
-        { "title": "add", "href": "#addPowerLine", "tabName": "addPowerLineTab" }
-    ];
     
     $scope.inputs = [
         { "name": "no" },
