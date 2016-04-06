@@ -69,6 +69,11 @@ Log
 * Add some common popup.(eg: success popup, error popup, loading popup)
 * Merge the two ways of add powerline.
 
+**2016-04-06**
+* Adjust the ui design.
+* Adjust the route of the ui.
+* Change to use the ui-route instead of the ngRoute.
+
 
 License
 ------------------------------
