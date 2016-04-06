@@ -11,8 +11,8 @@ exports.addPost = function(req, res) {
     });
 };
 
-exports.listGet = function(req, res) {
-    powerLineService.list(req.query.provinceNo, function(result) {
+exports.listPowerLineGet = function(req, res) {
+    powerLineService.list(req.query, function(result) {
         if (result) {
             res.json(result);
         }
@@ -33,6 +33,10 @@ exports.positionGet = function(req, res) {
     res.render('powerLine/position');
 };
 
-exports.my_listGet = function(req, res) {
-    res.render('powerLine/my_list');
+exports.listGet = function(req, res) {
+    res.render('powerLine/list');
+};
+
+exports.detailGet = function(req, res) {
+    res.render('powerLine/detail');
 };

@@ -34,8 +34,8 @@ exports.add = function(data, callback) {
     });
 };
 
-exports.list = function(provinceNo, callback) {
-    powerLineDAO.find({'provinceNo': provinceNo}, function(err, powerLines){
+exports.list = function(powerLine, callback) {
+    powerLineDAO.find(powerLine, function(err, powerLines){
         if(!err){
             callback(powerLines);
         } else {

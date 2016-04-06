@@ -17,26 +17,29 @@ var app = angular.module('plim', ['ionic'])
                     abstract: true,
                     templateUrl: 'templates/powerline_maintain.html'
                 })
-                .state('app.powerline_maintain.my_list', {
-                    url: "/my_list",
+                .state('app.powerline_maintain.list', {
+                    url: "/list",
                     views: {
-                        "my_list-tab": {
-                            templateUrl: 'powerLine/my_list',
-                            controller: 'MyListPowerLineController'
+                        "list-tab": {
+                            templateUrl: 'powerLine/list',
+                            controller: 'ListPowerLineController'
                         }
                     }
                 })
                 .state('app.powerline_maintain.powerline', {
-                    url: "/powerline/:powerline_no",
+                    url: "/powerline/:no",
                     views: {
-                        "my_list-tab": {
-                            templateUrl: 'templates/powerline/single.html',
-                            controller: 'SinglePowerLineController'
+                        "list-tab": {
+                            templateUrl: function($stateParams) {
+                                return 'powerLine/detail/' + $stateParams.no;
+                            },
+                            controller: 'DetailPowerLineController'
                         }
                     }
                 })
                 .state('app.powerline_maintain.position', {
                     url: "/position",
+                    cache: 'false',
                     views: {
                         "position-tab": {
                             templateUrl: 'powerLine/position',
@@ -44,14 +47,14 @@ var app = angular.module('plim', ['ionic'])
                         }
                     }
                 });
-            $urlRouterProvider.otherwise('/app/powerline_maintain/my_list');
+            $urlRouterProvider.otherwise('/app/powerline_maintain/list');
     })
     .factory('LeftMenus', function() {
         return {
             all: function() {
                 return [
                     { "title": "线路录入", "href": "#/app/addPowerLine" },
-                    { "title": "线路维修", "href": "#/app/powerline_maintain/my_list" },
+                    { "title": "线路维修", "href": "#/app/powerline_maintain/list" },
                     { "title": "登陆", "href": "#/user/login" },
                     { "title": "注册", "href": "#/user/register" },
                     { "title": "旧版", "href": "index1" },
@@ -60,6 +63,17 @@ var app = angular.module('plim', ['ionic'])
                     { "title": "管理", "href": "#/manage" }
                 ];
             }
+        }
+    })
+    .service('PowerLine', function() {
+        var powerline = null;
+        
+        this.setPowerline = function(powerline) {
+            this.powerline = powerline;
+        }
+        
+        this.getPowerline = function() {
+            return this.powerline;
         }
     }
 );
@@ -198,7 +212,7 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
         $scope.map.clearOverlays();
     }
     
-    initBMap("bmap", $scope, true);
+    initBMap("bmap", $scope, true, function() {});
 
     $scope.savePowerLine = function() {
         if (isNum($scope.startLongitude)
@@ -242,53 +256,101 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
         }
     }
 });
-app.controller('PositionPowerLineController', function($rootScope, $scope, $http) {
+app.controller('PositionPowerLineController', function($rootScope, $scope, PowerLine) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
     
-    initBMap("bmap1", $scope, false);
-    
-    $scope.showPowerLine = function() {
-        $rootScope.showLoading();
-        $http.get("/powerLine/list?provinceNo=pHD006").success(function(result) {
-            $scope.map.clearOverlays();
-            for (var i = 0; i < result.length; i++) {
-                var points = [];
-                points.push(new BMap.Point(result[i].location.startLongitude, result[i].location.startLatitude));
-                points.push(new BMap.Point(result[i].location.endLongitude, result[i].location.endLatitude));
-                if (i == 0) {
-                    $scope.map.addOverlay(new BMap.Marker(points[0]));
-                    $scope.map.centerAndZoom(points[0], 25);
-                }
-                $scope.map.addOverlay(new BMap.Marker(points[1]));
-                var polyline = new BMap.Polyline(points, {
-                    strokeColor:"red",
-                    strokeWeight:5,
-                    strokeOpacity:0.5
+    console.log(PowerLine.getPowerline());
+    $rootScope.showLoading();
+    initBMap("bmap1", $scope, false, function() {
+        $scope.map.clearOverlays();
+        $scope.powerline = PowerLine.getPowerline();
+        var beginPoint = new BMap.Point(
+            $scope.powerline.location.startLongitude,
+            $scope.powerline.location.startLatitude);
+        var endPoint = new BMap.Point(
+            $scope.powerline.location.endLongitude,
+            $scope.powerline.location.endLatitude);
+        $scope.map.centerAndZoom(beginPoint, 25);
+        $scope.map.addOverlay(new BMap.Marker(beginPoint));
+        $scope.map.addOverlay(new BMap.Marker(endPoint));
+        var polyline = new BMap.Polyline([beginPoint, endPoint], {
+            strokeColor:"red",
+            strokeWeight:5,
+            strokeOpacity:0.5
+        });
+        $scope.map.addOverlay(polyline);
+        
+        var routePolicy = [
+            BMAP_DRIVING_POLICY_LEAST_TIME,
+            BMAP_DRIVING_POLICY_LEAST_DISTANCE,
+            BMAP_DRIVING_POLICY_AVOID_HIGHWAYS
+        ];
+        var driving = new BMap.DrivingRoute(
+            $scope.map, {
+                renderOptions: { map: $scope.map, autoViewport: true },
+                policy: routePolicy[0]
+            });
+        navigator.geolocation.getCurrentPosition(function(position) {
+            BMap.Convertor.translate(new BMap.Point(
+                position.coords.longitude,
+                position.coords.latitude), 0,
+                function(point) {
+                    driving.search(new BMap.Point(point.lng, point.lat), beginPoint);
+                    $rootScope.closeLoading();
                 });
-                $scope.map.addOverlay(polyline);
-            }
+        }, function(error) {
             $rootScope.closeLoading();
+            $rootScope.showError("无法定位，请重试");
+        });
+    });
+    
+});
+app.controller('ListPowerLineController', function($rootScope, $scope, $http) {
+    $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
+    
+    $rootScope.showLoading();
+    $http.get("/powerLine/listPowerLine?provinceNo=pHD006").success(function(result) {
+        $scope.powerlines = result;
+        $rootScope.closeLoading();
+    }).error(function(error) {
+        $rootScope.closeLoading();
+        $rootScope.showError("出现错误，请重试");
+    });
+    
+    $scope.pullRefresh = function() {
+        $http.get("/powerLine/listPowerLine?provinceNo=pHD006").success(function(result) {
+            $scope.powerlines = result;
         }).error(function(error) {
-            $rootScope.closeLoading();
+            $scope.powerlines = [];
             $rootScope.showError("出现错误，请重试");
+        })
+        .finally(function() {
+            $scope.$broadcast('scroll.refreshComplete');
         });
     }
 });
-app.controller('MyListPowerLineController', function($rootScope, $scope) {
+app.controller('DetailPowerLineController', function($rootScope, $scope, $stateParams, $http, $state, PowerLine) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
     
-    $scope.powerlines = [
-    { name: 'Reggae', no: 1 },
-    { name: 'Chill', no: 2 },
-    { name: 'Dubstep', no: 3 },
-    { name: 'Indie', no: 4 },
-    { name: 'Rap', no: 5 },
-    { name: 'Cowbell', no: 6 }
-  ];
-});
-app.controller('SinglePowerLineController', function($rootScope, $scope) {
-    $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
+    $rootScope.showLoading();
+    $http.get("/powerLine/listPowerLine?no=" + $stateParams.no).success(function(result) {
+        if (result != null && result.length == 1) {
+            $scope.powerline = result[0];
+            $rootScope.closeLoading();
+        } else {
+            $rootScope.closeLoading();
+            $rootScope.showError("出现错误，请重试");
+        }
+    }).error(function(error) {
+        $rootScope.closeLoading();
+        $rootScope.showError("出现错误，请重试");
+    });
     
+    $scope.position = function() {
+        PowerLine.setPowerline($scope.powerline);
+        
+        $state.go("app.powerline_maintain.position", {}, { reload: true });
+    }
 });
 app.controller('LocationController', function($rootScope, $scope) {
     
@@ -315,16 +377,18 @@ app.controller('ManageController', function($rootScope, $scope) {
     }
 });
 
-function initBMap(id, scope, isClick) {
+function initBMap(id, scope, isClick, callback) {
     navigator.geolocation.getCurrentPosition(function(position) {
         BMap.Convertor.translate(new BMap.Point(
             position.coords.longitude,
             position.coords.latitude), 0,
             function(point) {
                 _initBMap(id, scope, new BMap.Point(point.lng, point.lat), isClick);
+                callback();
             });
     }, function(error) {
         _initBMap(id, scope, new BMap.Point(121.48, 31.22), isClick);
+        callback();
     });
 }
 

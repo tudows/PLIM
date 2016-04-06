@@ -49,6 +49,14 @@
         </ion-side-menus>
     </script>
     
+    <script id="loading.html" type="text/ng-template">
+        <div class="row">
+            <div class="col col-100" style="text-align: center;">
+                <ion-spinner icon="android"></ion-spinner>
+            </div>
+        </div>
+    </script>
+    
     <script id="templates/powerline_maintain.html" type="text/ng-template">
         <ion-view view-title="线路维修" hide-back-button=true>
             <ion-nav-buttons side="left">
@@ -56,25 +64,13 @@
                 </button>
             </ion-nav-buttons>
             <ion-tabs class="tabs-icon-top tabs-stable">
-                <ion-tab title="维修列表" icon="ion-ios-paper-outline" href="#/app/powerline_maintain/my_list">
-                    <ion-nav-view name="my_list-tab"></ion-nav-view>
+                <ion-tab title="维修列表" icon="ion-ios-paper-outline" href="#/app/powerline_maintain/list">
+                    <ion-nav-view name="list-tab"></ion-nav-view>
                 </ion-tab>
                 <ion-tab title="线路定位" icon="ion-location" href="#/app/powerline_maintain/position">
                     <ion-nav-view name="position-tab"></ion-nav-view>
                 </ion-tab>
             </ion-tabs>
-        </ion-view>
-    </script>
-    
-    <script id="templates/powerline/single.html" type="text/ng-template">
-        <ion-view view-title="线路信息">
-            <ion-nav-bar class="bar-stable">
-                <ion-nav-back-button>
-                </ion-nav-back-button>
-            </ion-nav-bar>
-            <ion-content>
-                <h1>1</h1>
-            </ion-content>
         </ion-view>
     </script>
     

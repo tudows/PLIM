@@ -1,0 +1,23 @@
+<ion-view view-title="线路信息">
+    <ion-nav-bar class="bar-stable">
+        <ion-nav-back-button>
+        </ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <div class="row">
+            <div class="col col-20">线路编号</div>
+            <div class="col col-80">{{powerline.no}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-20">线路类型</div>
+            <div class="col col-80">{{powerline.modelNo}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-100">
+                <button class="button button-block button-positive" ng-click="position()">
+                    定位
+                </button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -21,13 +21,13 @@ module.exports = function(app, express) {
         .post(function(req, res) {
             return routeMVC(req.params.controller, req.params.method + 'Post', req, res);
         });
-    // app.route('/:controller/:method/:id')
-    //     .get(function(req, res) {
-    //         return routeMVC('index', 'indexGet', req, res);
-    //     })
-    //     .post(function(req, res) {
-    //         return routeMVC('index', 'indexPost', req, res);
-    //     });
+    app.route('/:controller/:method/:id')
+        .get(function(req, res) {
+            return routeMVC(req.params.controller, req.params.method + 'Get', req, res);
+        })
+        .post(function(req, res) {
+            return routeMVC(req.params.controller, req.params.method + 'Post', req, res);
+        });
 }
 routeMVC = function(controllerName, methodName, req, res, next) {
     if (controllerName == null || controllerName.trim() == '') {

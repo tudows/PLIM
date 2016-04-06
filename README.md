@@ -73,6 +73,8 @@ Log
 * Adjust the ui design.
 * Adjust the route of the ui.
 * Change to use the ui-route instead of the ngRoute.
+* Add the powerline list page and detail page.
+* Add the powerline navigation function.
 
 
 License
