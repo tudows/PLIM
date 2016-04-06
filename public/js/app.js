@@ -1,44 +1,57 @@
 var app = angular.module('plim', ['ionic'])
     .config(function($stateProvider, $urlRouterProvider) {
             $stateProvider
-                .state('addPowerLine', {
+                .state('app', {
+                    url: "/app",
+                    abstract: true,
+                    templateUrl: "templates/menu.html",
+                    controller: 'PLIMController'
+                })
+                .state('app.addPowerLine', {
                     url: "/addPowerLine",
                     templateUrl: 'powerLine/add',
                     controller: 'AddPowerLineController'
                 })
-                .state('showPowerLine', {
-                    url: "/showPowerLine",
-                    templateUrl: 'powerLine/show',
-                    controller: 'ShowPowerLineController'
+                .state('app.powerline_maintain', {
+                    url: "/powerline_maintain",
+                    abstract: true,
+                    templateUrl: 'templates/powerline_maintain.html'
                 })
-                .state('location', {
-                    url: "/location",
-                    templateUrl: 'location.html',
-                    controller: 'LocationController'
+                .state('app.powerline_maintain.my_list', {
+                    url: "/my_list",
+                    views: {
+                        "my_list-tab": {
+                            templateUrl: 'powerLine/my_list',
+                            controller: 'MyListPowerLineController'
+                        }
+                    }
                 })
-                .state('user_login', {
-                    url: "/user/login",
-                    templateUrl: 'user/login',
-                    controller: 'UserController'
+                .state('app.powerline_maintain.powerline', {
+                    url: "/powerline/:powerline_no",
+                    views: {
+                        "my_list-tab": {
+                            templateUrl: 'templates/powerline/single.html',
+                            controller: 'SinglePowerLineController'
+                        }
+                    }
                 })
-                .state('user_register', {
-                    url: "/user/register",
-                    templateUrl: 'user/register',
-                    controller: 'UserController'
-                })
-                .state('manage', {
-                    url: "/manage",
-                    templateUrl: 'manage/index',
-                    controller: 'ManageController'
+                .state('app.powerline_maintain.position', {
+                    url: "/position",
+                    views: {
+                        "position-tab": {
+                            templateUrl: 'powerLine/position',
+                            controller: 'PositionPowerLineController'
+                        }
+                    }
                 });
-            $urlRouterProvider.otherwise('/addPowerLine');
+            $urlRouterProvider.otherwise('/app/powerline_maintain/my_list');
     })
     .factory('LeftMenus', function() {
         return {
             all: function() {
                 return [
-                    { "title": "线路录入", "href": "#/addPowerLine" },
-                    { "title": "线路定位", "href": "#/showPowerLine" },
+                    { "title": "线路录入", "href": "#/app/addPowerLine" },
+                    { "title": "线路维修", "href": "#/app/powerline_maintain/my_list" },
                     { "title": "登陆", "href": "#/user/login" },
                     { "title": "注册", "href": "#/user/register" },
                     { "title": "旧版", "href": "index1" },
@@ -229,8 +242,10 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
         }
     }
 });
-app.controller('ShowPowerLineController', function($rootScope, $scope, $http) {
+app.controller('PositionPowerLineController', function($rootScope, $scope, $http) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
+    
+    initBMap("bmap1", $scope, false);
     
     $scope.showPowerLine = function() {
         $rootScope.showLoading();
@@ -258,6 +273,22 @@ app.controller('ShowPowerLineController', function($rootScope, $scope, $http) {
             $rootScope.showError("出现错误，请重试");
         });
     }
+});
+app.controller('MyListPowerLineController', function($rootScope, $scope) {
+    $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
+    
+    $scope.powerlines = [
+    { name: 'Reggae', no: 1 },
+    { name: 'Chill', no: 2 },
+    { name: 'Dubstep', no: 3 },
+    { name: 'Indie', no: 4 },
+    { name: 'Rap', no: 5 },
+    { name: 'Cowbell', no: 6 }
+  ];
+});
+app.controller('SinglePowerLineController', function($rootScope, $scope) {
+    $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
+    
 });
 app.controller('LocationController', function($rootScope, $scope) {
     

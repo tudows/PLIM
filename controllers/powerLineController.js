@@ -29,6 +29,10 @@ exports.removePost = function(req, res) {
     });
 };
 
-exports.showGet = function(req, res) {
-    res.render('powerLine/show', {'message': ''});
+exports.positionGet = function(req, res) {
+    res.render('powerLine/position');
+};
+
+exports.my_listGet = function(req, res) {
+    res.render('powerLine/my_list');
 };

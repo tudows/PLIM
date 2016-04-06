@@ -1,0 +1,9 @@
+<ion-view view-title="维修线路列表">
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="powerline in powerlines" href="#/app/powerline_maintain/powerline/{{powerline.no}}">
+                {{powerline.name}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
