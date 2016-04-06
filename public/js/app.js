@@ -261,9 +261,9 @@ app.controller('PositionPowerLineController', function($rootScope, $scope, Power
     
     $rootScope.showLoading();
     initBMap("bmap1", $scope, false, function() {
-        $scope.map.clearOverlays();
         $scope.powerline = PowerLine.getPowerline();
         if ($scope.powerline != null) {
+            $scope.map.clearOverlays();
             var beginPoint = new BMap.Point(
                 $scope.powerline.location.startLongitude,
                 $scope.powerline.location.startLatitude);
