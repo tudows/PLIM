@@ -259,49 +259,52 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
 app.controller('PositionPowerLineController', function($rootScope, $scope, PowerLine) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
     
-    console.log(PowerLine.getPowerline());
     $rootScope.showLoading();
     initBMap("bmap1", $scope, false, function() {
         $scope.map.clearOverlays();
         $scope.powerline = PowerLine.getPowerline();
-        var beginPoint = new BMap.Point(
-            $scope.powerline.location.startLongitude,
-            $scope.powerline.location.startLatitude);
-        var endPoint = new BMap.Point(
-            $scope.powerline.location.endLongitude,
-            $scope.powerline.location.endLatitude);
-        $scope.map.centerAndZoom(beginPoint, 25);
-        $scope.map.addOverlay(new BMap.Marker(beginPoint));
-        $scope.map.addOverlay(new BMap.Marker(endPoint));
-        var polyline = new BMap.Polyline([beginPoint, endPoint], {
-            strokeColor:"red",
-            strokeWeight:5,
-            strokeOpacity:0.5
-        });
-        $scope.map.addOverlay(polyline);
-        
-        var routePolicy = [
-            BMAP_DRIVING_POLICY_LEAST_TIME,
-            BMAP_DRIVING_POLICY_LEAST_DISTANCE,
-            BMAP_DRIVING_POLICY_AVOID_HIGHWAYS
-        ];
-        var driving = new BMap.DrivingRoute(
-            $scope.map, {
-                renderOptions: { map: $scope.map, autoViewport: true },
-                policy: routePolicy[0]
+        if ($scope.powerline != null) {
+            var beginPoint = new BMap.Point(
+                $scope.powerline.location.startLongitude,
+                $scope.powerline.location.startLatitude);
+            var endPoint = new BMap.Point(
+                $scope.powerline.location.endLongitude,
+                $scope.powerline.location.endLatitude);
+            $scope.map.centerAndZoom(beginPoint, 25);
+            $scope.map.addOverlay(new BMap.Marker(beginPoint));
+            $scope.map.addOverlay(new BMap.Marker(endPoint));
+            var polyline = new BMap.Polyline([beginPoint, endPoint], {
+                strokeColor:"red",
+                strokeWeight:5,
+                strokeOpacity:0.5
             });
-        navigator.geolocation.getCurrentPosition(function(position) {
-            BMap.Convertor.translate(new BMap.Point(
-                position.coords.longitude,
-                position.coords.latitude), 0,
-                function(point) {
-                    driving.search(new BMap.Point(point.lng, point.lat), beginPoint);
-                    $rootScope.closeLoading();
+            $scope.map.addOverlay(polyline);
+            
+            var routePolicy = [
+                BMAP_DRIVING_POLICY_LEAST_TIME,
+                BMAP_DRIVING_POLICY_LEAST_DISTANCE,
+                BMAP_DRIVING_POLICY_AVOID_HIGHWAYS
+            ];
+            var driving = new BMap.DrivingRoute(
+                $scope.map, {
+                    renderOptions: { map: $scope.map, autoViewport: true },
+                    policy: routePolicy[0]
                 });
-        }, function(error) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                BMap.Convertor.translate(new BMap.Point(
+                    position.coords.longitude,
+                    position.coords.latitude), 0,
+                    function(point) {
+                        driving.search(new BMap.Point(point.lng, point.lat), beginPoint);
+                        $rootScope.closeLoading();
+                    });
+            }, function(error) {
+                $rootScope.closeLoading();
+                $rootScope.showError("无法定位，请重试");
+            });
+        } else {
             $rootScope.closeLoading();
-            $rootScope.showError("无法定位，请重试");
-        });
+        }
     });
     
 });
