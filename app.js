@@ -46,8 +46,8 @@ var serverHttp = app.listen(config.httpPort, function() {
 
 
 var options = {
-     key: fs.readFileSync(config.httpsConfig.keyPath),
-     cert: fs.readFileSync(config.httpsConfig.certPath)
+     key: fs.readFileSync(config.httpsConfig.privateKeyPath),
+     cert: fs.readFileSync(config.httpsConfig.publicKeyPath)
 };
 
 var serverHttps = https.createServer(options, app).listen(config.httpsPort, function () {

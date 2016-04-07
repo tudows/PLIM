@@ -2,7 +2,7 @@
     "httpPort": 777,
     "httpsPort": 778,
     "httpsConfig": {
-        "keyPath": "./key/server.key",
-        "certPath": "./key/server.crt"
+        "privateKeyPath": "./key/server.key",
+        "publicKeyPath": "./key/server.crt"
     }
 }

@@ -36,7 +36,7 @@ routeMVC = function(controllerName, methodName, req, res, next) {
     if (methodName == null || methodName.trim() == '') {
         methodName = 'index';
     }
-    methodName = methodName.replace(/[^a-z0-9A-Z_-]/i, '');
+    methodName = methodName.replace(/[^a-z0-9A-Z_-]/gi, '');
     console.log('url:' + req.originalUrl + ', controller: ' + controllerName + ', method: ' + methodName);
     
     var controller, method;

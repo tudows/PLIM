@@ -76,6 +76,12 @@ Log
 * Add the powerline list page and detail page.
 * Add the powerline navigation function.
 
+**2016-04-07**
+* Add the encrypt and decipher module -- "crypto".
+* Add encrypt and decrypt util.
+* Add converter util.
+* Encrypt the powerline no by rsa.
+
 
 License
 ------------------------------

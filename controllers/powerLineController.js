@@ -1,4 +1,6 @@
 var powerLineService = require('../services/powerLineService');
+var crypto = require('../utils/cryptoUtil');
+var converter = require('../utils/converterUtil');
 
 exports.addGet = function(req, res) {
     res.render('powerLine/add', {'message': ''});
@@ -12,8 +14,19 @@ exports.addPost = function(req, res) {
 };
 
 exports.listPowerLineGet = function(req, res) {
-    powerLineService.list(req.query, function(result) {
+    var powerline = req.query;
+    if (powerline.no != null && powerline.no != '') {
+        powerline.no = crypto.rsaPrivateDecrypt(
+            converter.stringToBuffer(
+                converter.urlToBase64(powerline.no),
+                'base64'
+            ), 'ascii');
+    }
+    powerLineService.list(powerline, function(result) {
         if (result) {
+            result.forEach(function(_powerline) {
+                _powerline.encrypt = converter.base64ToUrl(crypto.rsaPublicEncrypt(_powerline.no, 'base64'));
+            });
             res.json(result);
         }
         else {
