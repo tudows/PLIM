@@ -83,6 +83,7 @@ Log
 * Encrypt the powerline no by rsa.
 * Add the real-time GPS.
 * Add the compass head into the real-time GPS.
+* Add a test qrcode image in [/public/images/qrtest.png](https://github.com/tudows/PLIM/blob/master/public/images/qrtest.png)
 
 
 License
