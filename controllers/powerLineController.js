@@ -6,7 +6,9 @@ exports.addGet = function(req, res) {
     res.render('powerLine/add', {'message': ''});
 };
 exports.addPost = function(req, res) {
-    powerLineService.add(req.body, function(result) {
+    var powerline = req.body;
+    powerline.encrypt = converter.base64ToUrl(crypto.rsaPublicEncrypt(powerline.no, 'base64'));
+    powerLineService.add(powerline, function(result) {
         // res.render('powerLine/add', {'message': result});
         // res.redirect('/');
         res.end();
@@ -24,9 +26,6 @@ exports.listPowerLineGet = function(req, res) {
     }
     powerLineService.list(powerline, function(result) {
         if (result) {
-            result.forEach(function(_powerline) {
-                _powerline.encrypt = converter.base64ToUrl(crypto.rsaPublicEncrypt(_powerline.no, 'base64'));
-            });
             res.json(result);
         }
         else {

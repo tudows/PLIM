@@ -23,7 +23,8 @@ exports.add = function(data, callback) {
             startLatitude: data.startLatitude,
             endLongitude: data.endLongitude,
             endLatitude: data.endLatitude
-        }
+        },
+        encrypt: data.encrypt
     });
     powerLineDAO.add(powerLine, function(err, powerLines){
         if(!err){

@@ -81,6 +81,8 @@ Log
 * Add encrypt and decrypt util.
 * Add converter util.
 * Encrypt the powerline no by rsa.
+* Add the real-time GPS.
+* Add the compass head into the real-time GPS.
 
 
 License

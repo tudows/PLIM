@@ -75,8 +75,64 @@ var app = angular.module('plim', ['ionic'])
         this.getPowerline = function() {
             return this.powerline;
         }
-    }
-);
+    })
+    .service('NowPosition', function($interval) {
+        var position = {
+            latitude: null,
+            longitude: null,
+            accuracy: null,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null,
+            compassHead: null
+        }
+
+        var timer = null;
+
+        var getCompass = function(e) {
+            position.compassHead = e.webkitCompassHeading - 15;
+        };
+
+        this.getPosition = function() {
+            return position;
+        };
+
+        this.startListener = function(callback) {
+            if (timer != null) {
+                this.stopListener();
+            }
+
+            window.addEventListener('deviceorientation', getCompass);
+
+            timer = $interval(
+                function() {
+                    navigator.geolocation.getCurrentPosition(function(_position) {
+                        BMap.Convertor.translate(new BMap.Point(
+                            _position.coords.longitude,
+                            _position.coords.latitude), 0,
+                            function(point) {
+                                position.latitude = point.lat;
+                                position.longitude = point.lng;
+                                position.accuracy = _position.coords.accuracy;
+                                position.altitude = _position.coords.altitude;
+                                position.altitudeAccuracy = _position.coords.altitudeAccuracy;
+                                position.heading = _position.coords.heading;
+                                position.speed = _position.coords.speed;
+                                callback();
+                        });
+                    });
+                },
+                500
+            );
+        };
+
+        this.stopListener = function() {
+            $interval.cancel(timer);
+            window.removeEventListener('deviceorientation', getCompass);
+            timer = null;
+        };
+    });
 app.controller('PLIMController', function($rootScope, $scope, $window, LeftMenus, $ionicSideMenuDelegate, $ionicPopup) {
     // 初始化left menu
     $rootScope.leftMenus = LeftMenus.all();
@@ -93,7 +149,7 @@ app.controller('PLIMController', function($rootScope, $scope, $window, LeftMenus
     
     $scope.refresh = function() {
         $window.location.reload();
-    }
+    };
     
     $rootScope.showError = function(text) {
         $ionicPopup.alert({
@@ -114,14 +170,15 @@ app.controller('PLIMController', function($rootScope, $scope, $window, LeftMenus
             templateUrl: "loading.html",
             title: "正在加载中..."
         });
-    }
+    };
     
     $rootScope.closeLoading = function() {
         if ($rootScope.loadingPopup != null) {
             $rootScope.loadingPopup.close();
             $rootScope.loadingPopup = null;
         }
-    }
+    };
+
 });
 app.controller('AddPowerLineController', function($rootScope, $scope, $http, $ionicPopup) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[0];
@@ -256,14 +313,47 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
         }
     }
 });
-app.controller('PositionPowerLineController', function($rootScope, $scope, PowerLine) {
+app.controller('PositionPowerLineController', function($rootScope, $scope, PowerLine, NowPosition) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
     
     $rootScope.showLoading();
     initBMap("bmap1", $scope, false, function() {
+        $scope.map.clearOverlays();
+
+        NowPosition.startListener(function() {
+            $scope.map.removeOverlay($scope.mapPosition);
+            $scope.map.removeOverlay($scope.mapAccuracy);
+            var _point = new BMap.Point(NowPosition.getPosition().longitude, NowPosition.getPosition().latitude);
+            $scope.mapPosition = new BMap.PointCollection([_point],
+                {color: "red"}
+            );
+            $scope.mapAccuracy = new BMap.Circle(_point, NowPosition.getPosition().accuracy,
+                {strokeColor: "red", strokeWeight: 1, fillOpacity: 0.3});
+            $scope.map.addOverlay($scope.mapPosition);
+            $scope.map.addOverlay($scope.mapAccuracy);
+
+            $scope.map.removeOverlay($scope.headLine);
+            $scope.map.removeOverlay($scope.headPoint);
+            var _point1 = new BMap.Point(
+                NowPosition.getPosition().longitude + 0.00005 * Math.sin(NowPosition.getPosition().compassHead * 3.14 / 180),
+                NowPosition.getPosition().latitude + 0.00005 * Math.cos(NowPosition.getPosition().compassHead * 3.14 / 180)
+            );
+            var _point2 = new BMap.Point(
+                NowPosition.getPosition().longitude - 0.00005 * Math.sin(NowPosition.getPosition().compassHead * 3.14 / 180),
+                NowPosition.getPosition().latitude - 0.00005 * Math.cos(NowPosition.getPosition().compassHead * 3.14 / 180)
+            );
+            $scope.headPoint = new BMap.PointCollection([_point1],
+                {color: "blue"}
+            );
+            $scope.headLine = new BMap.Polyline([_point1, _point2],
+                {strokeColor: "blue", strokeWeight: 2}
+            );
+            $scope.map.addOverlay($scope.headPoint);
+            $scope.map.addOverlay($scope.headLine);
+        });
+
         $scope.powerline = PowerLine.getPowerline();
         if ($scope.powerline != null) {
-            $scope.map.clearOverlays();
             var beginPoint = new BMap.Point(
                 $scope.powerline.location.startLongitude,
                 $scope.powerline.location.startLatitude);
@@ -426,31 +516,6 @@ function _initBMap(id, scope, beginPoint, isClick) {
             }
         });
     }
-}
-
-var getHead = function(e) {
-    if (document.getElementById("head") != null)
-        document.getElementById("head").innerHTML = "<br />电子罗盘：" + e.webkitCompassHeading;
-};
-var watchPosition;
-function start() {
-    watchPosition = navigator.geolocation.watchPosition(function(position) {
-        if (document.getElementById("location") != null) {
-            document.getElementById("location").innerHTML =
-            "纬度: " + position.coords.latitude +
-            "<br />经度: " + position.coords.longitude +
-            "<br />精度: " + position.coords.accuracy +
-            "<br />海拔: " + position.coords.altitude +
-            "<br />海拔精度: " + position.coords.altitudeAccuracy +
-            "<br />方向: " + position.coords.heading +
-            "<br />速度: " + position.coords.speed;
-        }
-    });
-    window.addEventListener('deviceorientation', getHead);
-}
-function stop() {
-    navigator.geolocation.clearWatch(watchPosition);
-    window.removeEventListener('deviceorientation', getHead);
 }
 
 function isNum(str) {
