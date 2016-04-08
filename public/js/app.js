@@ -91,7 +91,7 @@ var app = angular.module('plim', ['ionic'])
         var timer = null;
 
         var getCompass = function(e) {
-            position.compassHead = e.webkitCompassHeading - 15;
+            position.compassHead = e.webkitCompassHeading;
         };
 
         this.getPosition = function() {
