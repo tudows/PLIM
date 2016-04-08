@@ -85,6 +85,9 @@ Log
 * Add the compass head into the real-time GPS.
 * Add a test qrcode image in [/public/images/qrtest.png](https://github.com/tudows/PLIM/blob/master/public/images/qrtest.png)
 
+**2016-04-08**
+* Change the symbol of the now-position in the map.
+
 
 License
 ------------------------------
