@@ -26,6 +26,10 @@ Usage
     4. cp server.key server.key.orig
     5. openssl rsa -in server.key.orig -out server.key
 
+Known Bug
+------------------------------
+1. Cannot display the navigate line between powerline and current position.
+
 Log
 ------------------------------
 **2016-01-22**
@@ -86,7 +90,9 @@ Log
 * Add a test qrcode image in [/public/images/qrtest.png](https://github.com/tudows/PLIM/blob/master/public/images/qrtest.png)
 
 **2016-04-08**
-* Change the symbol of the now-position in the map.
+* Change the symbol of the current position in the map.
+* Optimize the position page, the page will only load once.
+* Optimize the back navigate.
 
 
 License

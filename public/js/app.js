@@ -39,7 +39,6 @@ var app = angular.module('plim', ['ionic'])
                 })
                 .state('app.powerline_maintain.position', {
                     url: "/position",
-                    cache: 'false',
                     views: {
                         "position-tab": {
                             templateUrl: 'powerLine/position',
@@ -318,7 +317,7 @@ app.controller('PositionPowerLineController', function($rootScope, $scope, Power
     
     $rootScope.showLoading();
     initBMap("bmap1", $scope, false, function() {
-        $scope.map.clearOverlays();
+        $rootScope.closeLoading();
 
         NowPosition.startListener(function() {
             $scope.map.removeOverlay($scope.mapArrow);
@@ -358,38 +357,13 @@ app.controller('PositionPowerLineController', function($rootScope, $scope, Power
             
             $scope.map.addOverlay($scope.mapAccuracy);
             $scope.map.addOverlay($scope.mapArrow);
-            
-            // $scope.map.removeOverlay($scope.mapPosition);
-            // $scope.map.removeOverlay($scope.mapAccuracy);
-            // var _point = new BMap.Point(NowPosition.getPosition().longitude, NowPosition.getPosition().latitude);
-            // $scope.mapPosition = new BMap.PointCollection([_point],
-            //     {color: "red"}
-            // );
-            // $scope.mapAccuracy = new BMap.Circle(_point, NowPosition.getPosition().accuracy,
-            //     {strokeColor: "red", strokeWeight: 1, fillOpacity: 0.3});
-            // $scope.map.addOverlay($scope.mapPosition);
-            // $scope.map.addOverlay($scope.mapAccuracy);
-
-            // $scope.map.removeOverlay($scope.headLine);
-            // $scope.map.removeOverlay($scope.headPoint);
-            // var _point1 = new BMap.Point(
-            //     NowPosition.getPosition().longitude + 0.00005 * Math.sin(NowPosition.getPosition().compassHead * 3.14 / 180),
-            //     NowPosition.getPosition().latitude + 0.00005 * Math.cos(NowPosition.getPosition().compassHead * 3.14 / 180)
-            // );
-            // var _point2 = new BMap.Point(
-            //     NowPosition.getPosition().longitude - 0.00005 * Math.sin(NowPosition.getPosition().compassHead * 3.14 / 180),
-            //     NowPosition.getPosition().latitude - 0.00005 * Math.cos(NowPosition.getPosition().compassHead * 3.14 / 180)
-            // );
-            // $scope.headPoint = new BMap.PointCollection([_point1],
-            //     {color: "blue"}
-            // );
-            // $scope.headLine = new BMap.Polyline([_point1, _point2],
-            //     {strokeColor: "blue", strokeWeight: 2}
-            // );
-            // $scope.map.addOverlay($scope.headPoint);
-            // $scope.map.addOverlay($scope.headLine);
         });
-
+        
+        $scope.showPowerline();
+    });
+    
+    $scope.showPowerline = function() {
+        $rootScope.showLoading();
         $scope.powerline = PowerLine.getPowerline();
         if ($scope.powerline != null) {
             var beginPoint = new BMap.Point(
@@ -433,11 +407,25 @@ app.controller('PositionPowerLineController', function($rootScope, $scope, Power
         } else {
             $rootScope.closeLoading();
         }
+    };
+    
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+        if (toState.name == "app.powerline_maintain.position" && fromState.name == "app.powerline_maintain.powerline") {
+            $scope.map.clearOverlays();
+            $scope.showPowerline();
+        }
+    });
+    
+    $scope.$on('$destroy',function() {
+        NowPosition.stopListener();
     });
     
 });
-app.controller('ListPowerLineController', function($rootScope, $scope, $http) {
+app.controller('ListPowerLineController', function($rootScope, $scope, $http, $ionicHistory) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
+    
+    $ionicHistory.clearHistory();
+    $ionicHistory.clearCache();
     
     $rootScope.showLoading();
     $http.get("/powerLine/listPowerLine?provinceNo=pHD006").success(function(result) {
@@ -460,7 +448,7 @@ app.controller('ListPowerLineController', function($rootScope, $scope, $http) {
         });
     }
 });
-app.controller('DetailPowerLineController', function($rootScope, $scope, $stateParams, $http, $state, PowerLine) {
+app.controller('DetailPowerLineController', function($rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
     
     $rootScope.showLoading();
@@ -477,10 +465,18 @@ app.controller('DetailPowerLineController', function($rootScope, $scope, $stateP
         $rootScope.showError("出现错误，请重试");
     });
     
+    $scope.back = function() {
+        if ($ionicHistory.backTitle() == null) {
+            $state.go("app.powerline_maintain.list", {});
+        } else {
+            $ionicHistory.goBack();
+        }
+    }
+    
     $scope.position = function() {
         PowerLine.setPowerline($scope.powerline);
         
-        $state.go("app.powerline_maintain.position", {}, { reload: true });
+        $state.go("app.powerline_maintain.position", {});
     }
 });
 app.controller('LocationController', function($rootScope, $scope) {
@@ -526,9 +522,10 @@ function initBMap(id, scope, isClick, callback) {
 function _initBMap(id, scope, beginPoint, isClick) {
     scope.map = new BMap.Map(id); // 创建Map实例
     scope.map.centerAndZoom(beginPoint, 25); // 初始化地图,设置中心点坐标和地图级别
-    scope.map.addControl(new BMap.MapTypeControl()); //添加地图类型控件
-    scope.map.addControl(new BMap.NavigationControl()); 
-    scope.map.addOverlay(new BMap.Marker(beginPoint));
+    scope.map.addControl(new BMap.MapTypeControl()); //地图类型控件
+    scope.map.addControl(new BMap.NavigationControl()); //平移缩放控件
+    scope.map.addControl(new BMap.GeolocationControl()); //定位控件
+    // scope.map.addOverlay(new BMap.Marker(beginPoint));
     scope.map.setCurrentCity("上海"); // 设置地图显示的城市 此项是必须设置的
     scope.map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
     if (isClick) {
