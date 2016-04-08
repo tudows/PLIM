@@ -122,7 +122,7 @@ var app = angular.module('plim', ['ionic'])
                         });
                     });
                 },
-                500
+                1000
             );
         };
 
@@ -323,6 +323,13 @@ app.controller('PositionPowerLineController', function($rootScope, $scope, Power
             $scope.map.removeOverlay($scope.mapArrow);
             $scope.map.removeOverlay($scope.mapAccuracy);
             
+            if ($scope.mapPolyline != null) {
+                $scope.mapPolyline.forEach(function(polyline) {
+                    $scope.map.removeOverlay(polyline);
+                    $scope.map.addOverlay(polyline);
+                });
+            }
+            
             var _point = new BMap.Point(NowPosition.getPosition().longitude, NowPosition.getPosition().latitude);
             
             if (NowPosition.getPosition().compassHead != null) {
@@ -365,6 +372,7 @@ app.controller('PositionPowerLineController', function($rootScope, $scope, Power
     $scope.showPowerline = function() {
         $rootScope.showLoading();
         $scope.powerline = PowerLine.getPowerline();
+        $scope.mapPolyline = [];
         if ($scope.powerline != null) {
             var beginPoint = new BMap.Point(
                 $scope.powerline.location.startLongitude,
@@ -398,6 +406,13 @@ app.controller('PositionPowerLineController', function($rootScope, $scope, Power
                     position.coords.latitude), 0,
                     function(point) {
                         driving.search(new BMap.Point(point.lng, point.lat), beginPoint);
+                        driving.setPolylinesSetCallback(function() {
+                            $scope.map.getOverlays().forEach(function(overlay) {
+                                if (overlay.toString() == "[object Polyline]") {
+                                    $scope.mapPolyline.push(overlay);
+                                }
+                            });
+                        });
                         $rootScope.closeLoading();
                     });
             }, function(error) {
@@ -411,8 +426,10 @@ app.controller('PositionPowerLineController', function($rootScope, $scope, Power
     
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
         if (toState.name == "app.powerline_maintain.position" && fromState.name == "app.powerline_maintain.powerline") {
-            $scope.map.clearOverlays();
-            $scope.showPowerline();
+            if ($scope.map != null){
+                $scope.map.clearOverlays();
+                $scope.showPowerline();
+            }
         }
     });
     

@@ -28,7 +28,7 @@ Usage
 
 Known Bug
 ------------------------------
-1. Cannot display the navigate line between powerline and current position.
+N/A
 
 Log
 ------------------------------
@@ -93,6 +93,9 @@ Log
 * Change the symbol of the current position in the map.
 * Optimize the position page, the page will only load once.
 * Optimize the back navigate.
+* Change the refresh icon.
+* Fix the bug 'Cannot display the navigate line between powerline and current position'.
+* Adjust the interval of the real-time GPS.
 
 
 License
