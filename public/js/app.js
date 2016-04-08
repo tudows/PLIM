@@ -321,35 +321,73 @@ app.controller('PositionPowerLineController', function($rootScope, $scope, Power
         $scope.map.clearOverlays();
 
         NowPosition.startListener(function() {
-            $scope.map.removeOverlay($scope.mapPosition);
+            $scope.map.removeOverlay($scope.mapArrow);
             $scope.map.removeOverlay($scope.mapAccuracy);
+            
             var _point = new BMap.Point(NowPosition.getPosition().longitude, NowPosition.getPosition().latitude);
-            $scope.mapPosition = new BMap.PointCollection([_point],
-                {color: "red"}
-            );
-            $scope.mapAccuracy = new BMap.Circle(_point, NowPosition.getPosition().accuracy,
-                {strokeColor: "red", strokeWeight: 1, fillOpacity: 0.3});
-            $scope.map.addOverlay($scope.mapPosition);
+            
+            if (NowPosition.getPosition().compassHead != null) {
+                $scope.mapArrow = new BMap.Marker(_point, {
+                    icon: new BMap.Symbol(BMap_Symbol_SHAPE_FORWARD_CLOSED_ARROW, {
+                        scale: 2,
+                        anchor: new BMap.Size(0, 8),
+                        strokeWeight: 0,
+                        strokeColor: 'green',
+                        rotation: NowPosition.getPosition().compassHead,
+                        fillColor: 'green',
+                        fillOpacity: 1
+                    })
+                });
+            } else {
+                $scope.mapArrow = new BMap.Marker(_point, {
+                    icon: new BMap.Symbol(BMap_Symbol_SHAPE_CIRCLE, {
+                        scale: 4,
+                        strokeWeight: 0,
+                        strokeColor: 'red',
+                        fillColor: 'red',
+                        fillOpacity: 1
+                    })
+                });
+            }
+            
+            $scope.mapAccuracy = new BMap.Circle(_point, NowPosition.getPosition().accuracy, {
+                strokeColor: "blue",
+                strokeWeight: 1,
+                fillOpacity: 0.3
+            });
+            
             $scope.map.addOverlay($scope.mapAccuracy);
+            $scope.map.addOverlay($scope.mapArrow);
+            
+            // $scope.map.removeOverlay($scope.mapPosition);
+            // $scope.map.removeOverlay($scope.mapAccuracy);
+            // var _point = new BMap.Point(NowPosition.getPosition().longitude, NowPosition.getPosition().latitude);
+            // $scope.mapPosition = new BMap.PointCollection([_point],
+            //     {color: "red"}
+            // );
+            // $scope.mapAccuracy = new BMap.Circle(_point, NowPosition.getPosition().accuracy,
+            //     {strokeColor: "red", strokeWeight: 1, fillOpacity: 0.3});
+            // $scope.map.addOverlay($scope.mapPosition);
+            // $scope.map.addOverlay($scope.mapAccuracy);
 
-            $scope.map.removeOverlay($scope.headLine);
-            $scope.map.removeOverlay($scope.headPoint);
-            var _point1 = new BMap.Point(
-                NowPosition.getPosition().longitude + 0.00005 * Math.sin(NowPosition.getPosition().compassHead * 3.14 / 180),
-                NowPosition.getPosition().latitude + 0.00005 * Math.cos(NowPosition.getPosition().compassHead * 3.14 / 180)
-            );
-            var _point2 = new BMap.Point(
-                NowPosition.getPosition().longitude - 0.00005 * Math.sin(NowPosition.getPosition().compassHead * 3.14 / 180),
-                NowPosition.getPosition().latitude - 0.00005 * Math.cos(NowPosition.getPosition().compassHead * 3.14 / 180)
-            );
-            $scope.headPoint = new BMap.PointCollection([_point1],
-                {color: "blue"}
-            );
-            $scope.headLine = new BMap.Polyline([_point1, _point2],
-                {strokeColor: "blue", strokeWeight: 2}
-            );
-            $scope.map.addOverlay($scope.headPoint);
-            $scope.map.addOverlay($scope.headLine);
+            // $scope.map.removeOverlay($scope.headLine);
+            // $scope.map.removeOverlay($scope.headPoint);
+            // var _point1 = new BMap.Point(
+            //     NowPosition.getPosition().longitude + 0.00005 * Math.sin(NowPosition.getPosition().compassHead * 3.14 / 180),
+            //     NowPosition.getPosition().latitude + 0.00005 * Math.cos(NowPosition.getPosition().compassHead * 3.14 / 180)
+            // );
+            // var _point2 = new BMap.Point(
+            //     NowPosition.getPosition().longitude - 0.00005 * Math.sin(NowPosition.getPosition().compassHead * 3.14 / 180),
+            //     NowPosition.getPosition().latitude - 0.00005 * Math.cos(NowPosition.getPosition().compassHead * 3.14 / 180)
+            // );
+            // $scope.headPoint = new BMap.PointCollection([_point1],
+            //     {color: "blue"}
+            // );
+            // $scope.headLine = new BMap.Polyline([_point1, _point2],
+            //     {strokeColor: "blue", strokeWeight: 2}
+            // );
+            // $scope.map.addOverlay($scope.headPoint);
+            // $scope.map.addOverlay($scope.headLine);
         });
 
         $scope.powerline = PowerLine.getPowerline();
@@ -489,6 +527,7 @@ function _initBMap(id, scope, beginPoint, isClick) {
     scope.map = new BMap.Map(id); // 创建Map实例
     scope.map.centerAndZoom(beginPoint, 25); // 初始化地图,设置中心点坐标和地图级别
     scope.map.addControl(new BMap.MapTypeControl()); //添加地图类型控件
+    scope.map.addControl(new BMap.NavigationControl()); 
     scope.map.addOverlay(new BMap.Marker(beginPoint));
     scope.map.setCurrentCity("上海"); // 设置地图显示的城市 此项是必须设置的
     scope.map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
