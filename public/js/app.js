@@ -53,13 +53,7 @@ var app = angular.module('plim', ['ionic'])
             all: function() {
                 return [
                     { "title": "线路录入", "href": "#/app/addPowerLine" },
-                    { "title": "线路维修", "href": "#/app/powerline_maintain/list" },
-                    { "title": "登陆", "href": "#/user/login" },
-                    { "title": "注册", "href": "#/user/register" },
-                    { "title": "旧版", "href": "index1" },
-                    { "title": "登出", "href": "#/user/logout" },
-                    { "title": "定位测试", "href": "#/location" },
-                    { "title": "管理", "href": "#/manage" }
+                    { "title": "线路维修", "href": "#/app/powerline_maintain/list" }
                 ];
             }
         }
@@ -510,30 +504,6 @@ app.controller('DetailPowerLineController', function($rootScope, $scope, $stateP
         PowerLine.setPowerline($scope.powerline);
         
         $state.go("app.powerline_maintain.position", {});
-    }
-});
-app.controller('LocationController', function($rootScope, $scope) {
-    
-});
-app.controller('UserController', function($rootScope, $scope) {
-    
-});
-app.controller('ManageController', function($rootScope, $scope) {
-    $rootScope.activeLeftMenu = $rootScope.leftMenus[7];
-    
-    $scope.removePowerLine = function() {
-        $rootScope.showLoading();
-        $http.post("/powerLine/remove").success(function(result) {
-            $rootScope.closeLoading();
-            if (result) {
-                $rootScope.showSuccess("清除成功");
-            } else {
-                $rootScope.showError("清除失败，请重试");
-            }
-        }).error(function(error) {
-            $rootScope.closeLoading();
-            $rootScope.showError("出现错误，请重试");
-        });
     }
 });
 
