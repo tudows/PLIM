@@ -97,6 +97,9 @@ Log
 * Fix the bug 'Cannot display the navigate line between powerline and current position'.
 * Adjust the interval of the real-time GPS.
 
+**2016-04-09**
+* Adjust the interval of the real-time GPS.
+
 
 License
 ------------------------------
