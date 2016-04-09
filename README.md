@@ -99,6 +99,7 @@ Log
 
 **2016-04-09**
 * Adjust the interval of the real-time GPS.
+* Add the html5 cache.(Don't work with https)
 
 
 License
