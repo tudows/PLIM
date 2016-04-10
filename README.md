@@ -39,6 +39,7 @@ So if you want to cache under the https, please use the reverse proxy or other t
 Known Bug
 ------------------------------
 1. When update the GPS information on the map, the map will not be very smooth.
+2. Some powerline cant display navigate line.
 
 Log
 ------------------------------
