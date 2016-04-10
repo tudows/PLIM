@@ -26,9 +26,19 @@ Usage
     4. cp server.key server.key.orig
     5. openssl rsa -in server.key.orig -out server.key
 
+**About Multi Core Balanced Load**
+* You can config the cpu core number in the "globalConfig.json".<br/>
+If the setting number is greater than 0 and lower or equals than your cpu's real core number (or real thread number of the cpu with multi thread technology),<br/>
+the setting will go into effect. Or else, will use all of your cpu's core number or thread number as default.<br/>
+So if you don't care how many the core use and want to us the default number, please set the number as 0.
+
+**About Html5 Cache**
+* If you use the https protocol, the html5 cache will not work.<br/>
+So if you want to cache under the https, please use the reverse proxy or other technology such as config the nginx.
+
 Known Bug
 ------------------------------
-N/A
+1. When update the GPS information on the map, the map will not be very smooth.
 
 Log
 ------------------------------
@@ -100,6 +110,9 @@ Log
 **2016-04-09**
 * Adjust the interval of the real-time GPS.
 * Add the html5 cache.(Don't work with https)
+
+**2016-04-09**
+* Add the cluster module to do the multi core balanced load.
 
 
 License

@@ -4,5 +4,6 @@
     "httpsConfig": {
         "privateKeyPath": "./key/server.key",
         "publicKeyPath": "./key/server.crt"
-    }
+    },
+    "numCPUs": 0
 }
