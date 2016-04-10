@@ -41,6 +41,11 @@ Known Bug
 1. When update the GPS information on the map, the map will not be very smooth.
 2. Some powerline cant display navigate line.
 
+Feature ( I don't promiss I will realize it :) )
+------------------------------
+1. Add the powerline by scan the qr code.
+2. Unify the qr code interface. Smart judge the qr meaning then automatically jump the corresponding url.
+
 Log
 ------------------------------
 **2016-01-22**
