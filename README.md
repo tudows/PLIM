@@ -113,6 +113,7 @@ Log
 
 **2016-04-09**
 * Add the cluster module to do the multi core balanced load.
+* Fix the html5 cache bug.
 
 
 License
