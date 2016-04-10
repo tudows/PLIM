@@ -8,7 +8,7 @@ var fs = require('fs');
 var cluster = require('cluster');
 var numCPUs = require('os').cpus().length;
 
-var NODE_ENV = process.env.NODE_ENV || 'production';
+// var NODE_ENV = process.env.NODE_ENV || 'production';
 var appName = 'PLIM';
 
 var app = express();
