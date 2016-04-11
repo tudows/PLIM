@@ -53,15 +53,13 @@ Then the qrcode is "**APLXX**Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb", with the "**APLXX*
 So the qrcode should be generate by the code "**APLXX**Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb" rather than "Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb".<br/>
 The identifier can be changed in the system.
 
-
-
 2. Encrypt<br/>
 Encrypt the date by the rsa and return the trsult
 > **Usage** "/qrcode/encrypt/xxx"<br/>
 > * The key use the https ssl key.
 > * The detail of the encrypt please reference the "**About Encrypt & Decrypt**".
 
-2. Decrypt<br/>
+3. Decrypt<br/>
 Decrypt the date by the rsa and return the trsult
 > **Usage** "/qrcode/decrypt/xxx"<br/>
 > * The key use the https ssl key.
