@@ -12,6 +12,11 @@ var app = angular.module('plim', ['ionic'])
                     templateUrl: 'powerLine/add',
                     controller: 'AddPowerLineController'
                 })
+                .state('app.addPowerLineData', {
+                    url: "/addPowerLine/:data",
+                    templateUrl: 'powerLine/add',
+                    controller: 'AddPowerLineController'
+                })
                 .state('app.powerline_maintain', {
                     url: "/powerline_maintain",
                     abstract: true,
@@ -189,24 +194,79 @@ app.controller('PLIMController', function($rootScope, $scope, $window, LeftMenus
     };
 
 });
-app.controller('AddPowerLineController', function($rootScope, $scope, $http, $ionicPopup) {
+app.controller('AddPowerLineController', function($rootScope, $scope, $http, $ionicPopup, $stateParams) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[0];
     
-    $scope.inputs = [
-        { "name": "no" },
-        { "name": "modelNo", "value": "T001" },
-        { "name": "voltageClass", "value": "8" },
-        { "name": "repairDay", "value": "365" },
-        { "name": "maintainDay", "value": "125" },
-        { "name": "designYear", "value": "30" },
-        { "name": "runningState", "value": "1" },
-        { "name": "provinceNo", "value": "pHD006" }
-    ];
+    $rootScope.showLoading();
+    initBMap("bmap", $scope, true, function() {
+        if ($stateParams.data != null) {
+            $http.get("powerLine/add/" + $stateParams.data)
+            .success(function(result) {
+                // $scope.no = result.no;
+                // $scope.modelNo = result.modelNo;
+                // $scope.voltageClass = result.voltageClass;
+                // $scope.repairDay = result.repairDay;
+                // $scope.maintainDay = result.maintainDay;
+                // $scope.designYear = result.designYear;
+                // $scope.runningState = result.runningState;
+                // $scope.provinceNo = result.provinceNo;
+                // $scope.startLongitude = result.startLongitude;
+                // $scope.startLatitude = result.startLatitude;
+                // $scope.endLongitude = result.endLongitude;
+                // $scope.endLatitude = result.endLatitude;
+                $scope.powerline = result;
+                $scope.map.clearOverlays();
+                var beginPoint = new BMap.Point($scope.powerline.startLongitude, $scope.powerline.startLatitude);
+                var endPoint = new BMap.Point($scope.powerline.endLatitude, $scope.powerline.endLatitude);
+                $scope.map.centerAndZoom(beginPoint, 25);
+                $scope.map.addOverlay(new BMap.Marker(beginPoint));
+                $scope.map.addOverlay(new BMap.Marker(endPoint));
+                $scope.map.addOverlay(new BMap.Marker(endPoint));
+                var polyline = new BMap.Polyline([beginPoint, endPoint], {
+                    strokeColor:"red",
+                    strokeWeight:5,
+                    strokeOpacity:0.5
+                });
+                $scope.map.addOverlay(polyline);
+                $rootScope.closeLoading();
+            }).error(function(error) {
+                $rootScope.closeLoading();
+                $rootScope.showError("数据读取失败");
+            });
+        } else {
+            $rootScope.closeLoading();
+        }
+    });
     
-    $scope.startLongitude = "无数据";
-    $scope.startLatitude = "无数据";
-    $scope.endLongitude = "无数据";
-    $scope.endLatitude = "无数据";
+    if ($scope.powerline == null) {
+        $scope.powerline = {
+            no: "",
+            modelNo: "T001",
+            voltageClass: "8",
+            repairDay: "365",
+            maintainDay: "125",
+            designYear: "30",
+            runningState: "1",
+            provinceNo: "pHD006",
+            startLongitude: "无数据",
+            startLatitude: "无数据",
+            endLongitude: "无数据",
+            endLatitude: "无数据"
+        };
+    } else {
+        if ($scope.powerline.startLongitude == null || $scope.powerline.startLongitude == '') {
+            $scope.powerline.startLongitude = "无数据";
+        }
+        if ($scope.powerline.startLatitude == null || $scope.powerline.startLatitude == '') {
+            $scope.powerline.startLatitude = "无数据";
+        }
+        if ($scope.powerline.endLongitude == null || $scope.powerline.endLongitude == '') {
+            $scope.powerline.endLongitude = "无数据";
+        }
+        if ($scope.powerline.endLatitude == null || $scope.powerline.endLatitude == '') {
+            $scope.powerline.endLatitude = "无数据";
+        }
+    }
     
     $scope.showCoordinate = function() {
         var alertPopup = $ionicPopup.alert({
@@ -227,8 +287,8 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
                 position.coords.longitude,
                 position.coords.latitude), 0,
                 function(point) {
-                    $scope.startLongitude = point.lng;
-                    $scope.startLatitude = point.lat;
+                    $scope.powerline.startLongitude = point.lng;
+                    $scope.powerline.startLatitude = point.lat;
                     var beginPoint = new BMap.Point(point.lng, point.lat);
                     $scope.map.centerAndZoom(beginPoint, 25);
                     $scope.map.addOverlay(new BMap.Marker(beginPoint));
@@ -236,8 +296,8 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
             });
         }, function(error) {
             $rootScope.closeLoading();
-            $scope.startLongitude = "无法获取";
-            $scope.startLatitude = "无法获取";
+            $scope.powerline.startLongitude = "无法获取";
+            $scope.powerline.startLatitude = "无法获取";
             $scope.showError("坐标获取失败");
         });
     }
@@ -249,9 +309,9 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
                 position.coords.longitude,
                 position.coords.latitude), 0,
                 function(point) {
-                    $scope.endLongitude = point.lng;
-                    $scope.endLatitude = point.lat;
-                    var beginPoint = new BMap.Point($scope.startLongitude , $scope.startLatitude);
+                    $scope.powerline.endLongitude = point.lng;
+                    $scope.powerline.endLatitude = point.lat;
+                    var beginPoint = new BMap.Point($scope.powerline.startLongitude , $scope.powerline.startLatitude);
                     var endPoint = new BMap.Point(point.lng, point.lat);
                     $scope.map.addOverlay(new BMap.Marker(endPoint));
                     var polyline = new BMap.Polyline([beginPoint, endPoint], {
@@ -264,27 +324,25 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
             });
         }, function(error) {
             $rootScope.closeLoading();
-            $scope.endLongitude = "无法获取";
-            $scope.endLatitude = "无法获取";
+            $scope.powerline.endLongitude = "无法获取";
+            $scope.powerline.endLatitude = "无法获取";
             $scope.showError("坐标获取失败");
         });
     }
     
     $scope.cleanPowerLine = function() {
-        $scope.startLongitude = "无数据";
-        $scope.startLatitude = "无数据";
-        $scope.endLongitude = "无数据";
-        $scope.endLatitude = "无数据";
+        $scope.powerline.startLongitude = "无数据";
+        $scope.powerline.startLatitude = "无数据";
+        $scope.powerline.endLongitude = "无数据";
+        $scope.powerline.endLatitude = "无数据";
         $scope.map.clearOverlays();
     }
-    
-    initBMap("bmap", $scope, true, function() {});
 
     $scope.savePowerLine = function() {
-        if (isNum($scope.startLongitude)
-            && isNum($scope.startLatitude)
-            && isNum($scope.endLongitude)
-            && isNum($scope.endLatitude)) {
+        if (isNum($scope.powerline.startLongitude)
+            && isNum($scope.powerline.startLatitude)
+            && isNum($scope.powerline.endLongitude)
+            && isNum($scope.powerline.endLatitude)) {
             $rootScope.showLoading();
             var input = document.getElementById("input").getElementsByTagName("input");
             $http({
@@ -299,18 +357,18 @@ app.controller('AddPowerLineController', function($rootScope, $scope, $http, $io
                     designYear: input[5].value,
                     runningState: input[6].value,
                     provinceNo: input[7].value,
-                    startLongitude: $scope.startLongitude,
-                    startLatitude: $scope.startLatitude,
-                    endLongitude: $scope.endLongitude,
-                    endLatitude: $scope.endLatitude
+                    startLongitude: $scope.powerline.startLongitude,
+                    startLatitude: $scope.powerline.startLatitude,
+                    endLongitude: $scope.powerline.endLongitude,
+                    endLatitude: $scope.powerline.endLatitude
                 }
             }).success(function(result) {
-                $scope.startLongitude = $scope.endLongitude;
-                $scope.startLatitude = $scope.endLatitude;
-                $scope.endLongitude = "无数据";
-                $scope.endLatitude = "无数据";
+                $scope.powerline.startLongitude = $scope.powerline.endLongitude;
+                $scope.powerline.startLatitude = $scope.powerline.endLatitude;
+                $scope.powerline.endLongitude = "无数据";
+                $scope.powerline.endLatitude = "无数据";
                 $scope.map.clearOverlays();
-                $scope.map.addOverlay(new BMap.Marker(new BMap.Point($scope.startLongitude, $scope.startLatitude)));
+                $scope.map.addOverlay(new BMap.Marker(new BMap.Point($scope.powerline.startLongitude, $scope.powerline.startLatitude)));
                 $rootScope.closeLoading();
                 $rootScope.showSuccess("保存成功");
             }).error(function(error) {
