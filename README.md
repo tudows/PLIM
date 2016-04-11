@@ -43,7 +43,7 @@ So if you want to cache under the https, please use the reverse proxy or other t
 * Significantly, the encrypted data size is limited by the key's size. If you have not enough size of the key, you can not encrypt too big data.
 
 **QRCode API**
-1. Smart Analyse<br/>
+* Smart Analyse<br/>
 Smart identify the qrcode and redirect to the correct url.
 > **Usage:** "/qrcode/analyse/xxx"<br/>
 > * xxx is the qrcode. Must know that this qrcode will be decrypted in the system, so the qrcode must be an encrypted code.
@@ -53,13 +53,13 @@ Then the qrcode is "**APLXX**Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb", with the "**APLXX*
 So the qrcode should be generate by the code "**APLXX**Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb" rather than "Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb".<br/>
 The identifier can be changed in the system.
 
-2. Encrypt<br/>
+* Encrypt<br/>
 Encrypt the date by the rsa and return the trsult
 > **Usage** "/qrcode/encrypt/xxx"<br/>
 > * The key use the https ssl key.
 > * The detail of the encrypt please reference the "**About Encrypt & Decrypt**".
 
-3. Decrypt<br/>
+* Decrypt<br/>
 Decrypt the date by the rsa and return the trsult
 > **Usage** "/qrcode/decrypt/xxx"<br/>
 > * The key use the https ssl key.
