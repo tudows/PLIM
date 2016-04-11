@@ -27,3 +27,13 @@ exports.encryptGet = function(req, res) {
     res.send(encrypt);
     res.end();
 };
+
+exports.decryptGet = function(req, res) {
+    var decrypt = crypto.rsaPrivateDecrypt(
+        converter.stringToBuffer(
+            converter.urlToBase64(req.params.id),
+            'base64'
+        ), 'ascii');
+    res.send(decrypt);
+    res.end();
+};

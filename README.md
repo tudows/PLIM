@@ -36,6 +36,37 @@ So if you don't care how many the core use and want to us the default number, pl
 * If you use the https protocol, the html5 cache will not work.<br/>
 So if you want to cache under the https, please use the reverse proxy or other technology such as config the nginx.
 
+**About Encrypt & Decrypt**
+* The encrypt use the private key encrypt and through the **RSA** algorithm.
+* The decrypt use the public key encrypt and through the **RSA** algorithm.
+* The private and public keys use the https ssl key. Of course you can change to use personal keys easily.
+* Significantly, the encrypted data size is limited by the key's size. If you have not enough size of the key, you can not encrypt too big data.
+
+**QRCode API**
+1. Smart Analyse<br/>
+Smart identify the qrcode and redirect to the correct url.
+> **Usage:** "/qrcode/analyse/xxx"<br/>
+> * xxx is the qrcode. Must know that this qrcode will be decrypted in the system, so the qrcode must be an encrypted code.
+> * The first five chars of the qrcode is the identifier. For example:<br/>
+The encrypted code is "Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb"<br/>
+Then the qrcode is "**APLXX**Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb", with the "**APLXX**" system can analyse the encrypted code meaning.<br/>
+So the qrcode should be generate by the code "**APLXX**Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb" rather than "Wm0CgT8pz%7CDI8MZy3NwolNcyQRNb".<br/>
+The identifier can be changed in the system.
+
+
+
+2. Encrypt<br/>
+Encrypt the date by the rsa and return the trsult
+> **Usage** "/qrcode/encrypt/xxx"<br/>
+> * The key use the https ssl key.
+> * The detail of the encrypt please reference the "**About Encrypt & Decrypt**".
+
+2. Decrypt<br/>
+Decrypt the date by the rsa and return the trsult
+> **Usage** "/qrcode/decrypt/xxx"<br/>
+> * The key use the https ssl key.
+> * The detail of the decrypt please reference the "**About Encrypt & Decrypt**".
+
 Known Bug
 ------------------------------
 1. When update the GPS information on the map, the map will not be very smooth.
@@ -43,8 +74,7 @@ Known Bug
 
 Future ( I don't promiss I will realize it :) )
 ------------------------------
-1. Add the powerline by scan the qr code.
-2. Unify the qr code interface. Smart judge the qr meaning then automatically jump the corresponding url.
+N/A
 
 Log
 ------------------------------
@@ -103,7 +133,7 @@ Log
 * Encrypt the powerline no by rsa.
 * Add the real-time GPS.
 * Add the compass head into the real-time GPS.
-* Add a test qrcode image in [/public/images/qrtest.png](https://github.com/tudows/PLIM/blob/master/public/images/qrtest.png)
+* Add a get_powerline test qrcode image in [/test/qrcode/get_powerline.png](https://github.com/tudows/PLIM/blob/master/test/qrcode/get_powerline.png)
 
 **2016-04-08**
 * Change the symbol of the current position in the map.
@@ -120,6 +150,12 @@ Log
 **2016-04-09**
 * Add the cluster module to do the multi core balanced load.
 * Fix the html5 cache bug.
+
+**2016-04-11**
+* Can add the powerline by scan the qr code.
+* Unify the qr code interface. Smart judge the qr meaning then automatically jump the corresponding url.
+* Add a open interface of the qrcode.
+* Add a add_powerline test qrcode image in [/test/qrcode/add_powerline.png](https://github.com/tudows/PLIM/blob/master/test/qrcode/add_powerline.png)
 
 
 License
