@@ -1,0 +1,42 @@
+<ion-view view-title="用户信息">
+    <ion-content>
+        <div class="row">
+            <div class="col col-30">工号</div>
+            <div class="col col-70">{{user.no}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-30">姓名</div>
+            <div class="col col-70">{{user.name}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-30">维修任务</div>
+            <div class="col col-70">{{maintainNumber}}</div>
+        </div>
+        <div class="row" ng-if="user == null">
+            <div class="col col-50">
+                <button class="button button-block button-positive button-balanced" ui-sref="app.user.register">
+                    设备注册
+                </button>
+            </div>
+            <div class="col col-50">
+                <button class="button button-block button-positive" ng-click="showUuid()">
+                    设备信息
+                </button>
+            </div>
+        </div>
+        <div class="row" ng-if="user != null">
+            <button class="button button-block button-positive" ng-click="showUuid()">
+                设备信息
+            </button>
+        </div>
+    </ion-content>
+</ion-view>
+
+<script id="uuid.html" type="text/ng-template">
+    <div class="row">
+        <div class="col">设备标示符</div>
+    </div>
+    <div class="row">
+        <div class="col">{{uuid}}</div>
+    </div>
+</script>

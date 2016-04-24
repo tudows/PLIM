@@ -155,6 +155,11 @@ Log
 * Add a open interface of the qrcode.
 * Add a add_powerline test qrcode image in [/test/qrcode/add_powerline.png](https://github.com/tudows/PLIM/blob/master/test/qrcode/add_powerline.png)
 
+**2016-04-24**
+* Divide the app.js to controller, service.
+* Add the fingerprint2 to the project.
+* Adjust the position of the js in the project.
+
 
 License
 ------------------------------

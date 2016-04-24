@@ -10,11 +10,23 @@ exports.add = function(data, callback) {
     });
 };
 
+exports.updateByNo = function(data, callback) {
+    User.update({
+        no: data.no
+    }, {
+        $set: data.set
+    },
+    function(err, user) {
+        if(!err) {
+            callback(null, user);
+        } else {
+            callback(err, null);
+        }
+    });
+};
+
 exports.findOne = function(data, callback) {
-    User.findOne({
-        username: data.username,
-        password: data.password
-    }, function(err, user) {
+    User.findOne(data, function(err, user) {
         if(!err) {
             callback(null, user);
         } else {

@@ -21,7 +21,8 @@ var powerLineSchema = new Schema({
         endLongitude: String,
         endLatitude: String
     },
-    encrypt: String
+    encrypt: String,
+    status: Number
 });
 
 module.exports = mongoose.model('PowerLine', powerLineSchema);

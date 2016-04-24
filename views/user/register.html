@@ -1,20 +1,25 @@
-<ion-view view-title="注册">
-    <ion-nav-buttons side="left">
-        <button class="button button-icon" ng-click="toggleLeftMenu()">
-            <i class="icon ion-navicon"></i>
-        </button>
-    </ion-nav-buttons>
+<ion-view view-title="设备注册">
+    <ion-nav-bar>
+          <ion-nav-back-button></ion-nav-back-button>
+     </ion-nav-bar>
     <ion-content>
-        <form action="user/register" method="post">
+        <div class="list">
             <label class="item item-input">
-                <input type="text" placeholder="username" name="username">
+                <span class="input-label">工号：</span>
+                <input type="text" name="userNo">
             </label>
-            <label class="item item-input">
-                <input type="password" placeholder="password" name="password">
-            </label>
-            <button class="button button-block button-positive" type="submit">
-                register
-            </button>
-        </form>
+        </div>
+        <div class="row">
+            <div class="col col-50">
+                <button class="button button-block button-positive button-balanced" ng-click="register()">
+                    提交申请
+                </button>
+            </div>
+            <div class="col col-50">
+                <button class="button button-block button-positive" ng-click="showUuid()">
+                    设备信息
+                </button>
+            </div>
+        </div>
     </ion-content>
 </ion-view>

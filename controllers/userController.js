@@ -1,41 +1,52 @@
 var userService = require('../services/userService');
 var session = require('../utils/sessionUtil');
 
-exports.loginGet = function(req, res) {
-    res.render('user/login');
-};
-exports.loginPost = function(req, res) {
-    var message = 'null';
-    userService.findOne({'username': req.body.username, 'password': req.body.password}, function(result) {
-        if (result) {
-            message = 'welcome ' + req.body.username;
-            console.log(req.body.username + ' login success');
-            session.set(req, 'username', req.body.username);
-        }
-        else {
-            message = 'fail';
-            console.log('login fail');
-        }
-    });
-    res.redirect('/');
+exports.indexGet = function (req, res) {
+    res.render('user/index');
 };
 
-exports.registerGet = function(req, res) {
+exports.loginGet = exports.loginPost = function(req, res) {
+    userService.findOne({uuid: req.body.uuid}, function(user) {
+        if (user != null) {
+            session.del(req, 'user');
+            session.set(req, 'user', user);
+            res.json(user);
+        }
+        else {
+            res.end();
+        }
+    });
+};
+
+exports.findNoGet = exports.findNoPost = function(req, res) {
+    userService.findOne({no: req.body.no}, function(user) {
+        if (user != null) {
+            res.json(user);
+        }
+        else {
+            res.end();
+        }
+    });
+};
+
+exports.registerGet = function (req, res) {
     res.render('user/register');
 };
-exports.registerPost = function(req, res) {
-    userService.add({'username': req.body.username, 'password': req.body.password}, function(result) {
-        if (result) {
-            session.del(req, 'username');
-            res.redirect('/user/login');
+exports.registerPost = function (req, res) {
+    userService.register(req.body, function(result) {
+        if (user != null) {
+            session.del(req, 'user');
+            session.set(req, 'user', user);
+            res.json(user);
         }
         else {
-            res.render('user/register');
+            res.end();
         }
     });
 };
 
-exports.logoutGet = function(req, res) {
-    session.del(req, 'username');
-    res.redirect('/');
+exports.addUserPost = function (req, res) {
+    userService.add(req.body, function(result) {
+        res.end();
+    });
 };
