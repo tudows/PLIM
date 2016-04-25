@@ -10,10 +10,8 @@ exports.add = function(data, callback) {
     });
 };
 
-exports.updateByNo = function(data, callback) {
-    User.update({
-        no: data.no
-    }, {
+exports.update = function(data, callback) {
+    User.update(data.key, {
         $set: data.set
     },
     function(err, user) {

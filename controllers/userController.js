@@ -1,5 +1,6 @@
 var userService = require('../services/userService');
 var session = require('../utils/sessionUtil');
+var crypto = require('../utils/cryptoUtil');
 
 exports.indexGet = function (req, res) {
     res.render('user/index');
@@ -33,7 +34,7 @@ exports.registerGet = function (req, res) {
     res.render('user/register');
 };
 exports.registerPost = function (req, res) {
-    userService.register(req.body, function(result) {
+    userService.updateByNo(req.body, function(result) {
         if (user != null) {
             session.del(req, 'user');
             session.set(req, 'user', user);

@@ -3,7 +3,7 @@ var mongoose = require('../utils/mongooseUtil');
 var Schema = mongoose.Schema;
 var userSchema = new Schema({
     no: String,
-    uuid: String,
+    uuid: Array,
     name: String,
     lastLoginDate: Date,
     lastLocation: {
@@ -12,7 +12,8 @@ var userSchema = new Schema({
         endLongitude: String,
         endLatitude: String
     },
-    status: Number
+    status: Number,
+    salt: String
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -33,3 +33,7 @@ module.exports.rsaPublicEncrypt = function(str, encode) {
         return endata.toString(encode);
     }
 };
+
+module.exports.random = function(len, encode) {
+    return crypto.randomBytes(len).toString(encode);
+};
