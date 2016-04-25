@@ -1,14 +1,10 @@
 CACHE MANIFEST
 
-#2016-04-11 21:49
+#2016-04-25 23:25
 #v0.0.0 beta
 
 #需要缓存的文件
 CACHE:
-/index
-/js/app.js
-/powerLine/position
-/powerLine/add
 
 #不需要缓存的文件
 NETWORK:
