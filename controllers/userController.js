@@ -34,11 +34,18 @@ exports.registerGet = function (req, res) {
     res.render('user/register');
 };
 exports.registerPost = function (req, res) {
-    userService.updateByNo(req.body, function(result) {
-        if (user != null) {
-            session.del(req, 'user');
-            session.set(req, 'user', user);
-            res.json(user);
+    userService.addUuid(req.body, function(result) {
+        if (result != null) {
+            userService.findOne({no: req.body.no}, function(user) {
+                if (user != null) {
+                    session.del(req, 'user');
+                    session.set(req, 'user', user);
+                    res.json(user);
+                }
+                else {
+                    res.end();
+                }
+            });
         }
         else {
             res.end();

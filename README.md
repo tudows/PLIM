@@ -160,6 +160,11 @@ Log
 * Add the fingerprint2 to the project.
 * Adjust the position of the js in the project.
 
+**2016-04-25**
+* Add the generate-salt method and generate-sha256 method in "cryptoUtil".
+* Add the auto login system by device-finger(generate by fingerprint2).
+* Add the device register system.
+
 
 License
 ------------------------------

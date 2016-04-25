@@ -37,3 +37,8 @@ module.exports.rsaPublicEncrypt = function(str, encode) {
 module.exports.random = function(len, encode) {
     return crypto.randomBytes(len).toString(encode);
 };
+
+
+module.exports.sha256 = function(str, salt, encode) {
+    return crypto.pbkdf2Sync(str, salt, 100000, 256, 'sha256').toString(encode);
+};

@@ -5,6 +5,8 @@ var userSchema = new Schema({
     no: String,
     uuid: Array,
     name: String,
+    status: Number,
+    salt: String,
     lastLoginDate: Date,
     lastLocation: {
         startLongitude: String,
@@ -12,8 +14,7 @@ var userSchema = new Schema({
         endLongitude: String,
         endLatitude: String
     },
-    status: Number,
-    salt: String
+    lastDevice: String
 });
 
 module.exports = mongoose.model('User', userSchema);
