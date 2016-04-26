@@ -58,3 +58,9 @@ exports.addUserPost = function (req, res) {
         res.end();
     });
 };
+
+exports.updateLastInfoGet = exports.updateLastInfoPost = function(req, res) {
+    userService.updateLastInfo(req.body, function(user) {
+        res.end();
+    });
+};

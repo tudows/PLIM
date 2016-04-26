@@ -9,10 +9,8 @@ var userSchema = new Schema({
     salt: String,
     lastLoginDate: Date,
     lastLocation: {
-        startLongitude: String,
-        startLatitude: String,
-        endLongitude: String,
-        endLatitude: String
+        longitude: String,
+        latitude: String
     },
     lastDevice: String
 });

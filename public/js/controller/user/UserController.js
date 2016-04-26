@@ -14,7 +14,7 @@ app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User
         $rootScope.showLoading("正在获取设备标识符。。。");
         new Fingerprint2().get(function (result, components) {
             $rootScope.closeLoading();
-            $scope.uuid = result;
+            User.setUuid(result);
             $rootScope.showLoading("登录中，请稍后");
             $http({
                 method: "post",
@@ -26,7 +26,6 @@ app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User
                 $rootScope.closeLoading();
                 if (result != "") {
                     User.setUser(result);
-                    $scope.user = result;
                 } else {
                     $rootScope.showError("设备未注册");
                 }
@@ -58,13 +57,12 @@ app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User
                     url: "user/register",
                     data: {
                         no: document.getElementsByName("userNo")[0].value,
-                        uuid: $scope.uuid
+                        uuid: User.getUuid()
                     }
                 }).success(function (result) {
                     $rootScope.closeLoading();
                     if (result != "") {
                         User.setUser(result);
-                        $scope.user = result;
                         $ionicHistory.goBack();
                     } else {
                         $rootScope.showError("申请失败，请重试");

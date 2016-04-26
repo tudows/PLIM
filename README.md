@@ -165,6 +165,9 @@ Log
 * Add the auto login system by device-finger(generate by fingerprint2).
 * Add the device register system.
 
+**2016-04-26**
+* Add the function of updating the user's last information into the database.
+
 
 License
 ------------------------------

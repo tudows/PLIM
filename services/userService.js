@@ -88,9 +88,9 @@ exports.updateLastInfo = function(data, callback) {
         key: {no: data.no},
         set: {
             $set: {
-                lastLoginDate: data.date,
-                lastLocation: data.location,
-                lastDevice: crypto.sha256(data.uuid, 'rrabbit', 'hex')
+                lastLoginDate: data.lastLoginDate,
+                lastLocation: data.lastLocation,
+                lastDevice: crypto.sha256(data.lastDevice, 'rrabbit', 'hex')
             }
         }
     }, function(err, result) {
