@@ -120,8 +120,7 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
         var selectProvinceNoName = selectProvinceNo.options[selectProvinceNoIndex].text;
         $scope.geocoder.getPoint(selectProvinceNoName, function(point){
             if (point) {
-                $scope.map.centerAndZoom(point, 12);
-                $scope.map.addOverlay(new BMap.Marker(point));
+                $scope.map.centerAndZoom(point, 9);
             }
         }, selectProvinceNoName);
     };
