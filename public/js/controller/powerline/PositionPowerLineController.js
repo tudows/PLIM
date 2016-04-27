@@ -2,7 +2,7 @@ app.controller("PositionPowerLineController", function ($rootScope, $scope, Powe
     $rootScope.activeLeftMenu = $rootScope.leftMenus[2];
 
     $rootScope.showLoading();
-    initBMap("bmap1", $scope, false, function () {
+    initBMap("bmap1", $scope, function () {
         $rootScope.closeLoading();
 
         NowPosition.startListener(function () {
