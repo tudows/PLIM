@@ -113,6 +113,18 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
             });
         }
     };
+    
+    $scope.changeProvince = function () {
+        var selectProvinceNo = document.getElementsByName("provinceNo")[0];
+        var selectProvinceNoIndex = selectProvinceNo.selectedIndex;
+        var selectProvinceNoName = selectProvinceNo.options[selectProvinceNoIndex].text;
+        $scope.geocoder.getPoint(selectProvinceNoName, function(point){
+            if (point) {
+                $scope.map.centerAndZoom(point, 12);
+                $scope.map.addOverlay(new BMap.Marker(point));
+            }
+        }, selectProvinceNoName);
+    };
 
     $scope.loadDate = function () {
         $rootScope.showLoading();
