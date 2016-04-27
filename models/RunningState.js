@@ -5,5 +5,5 @@ var runningStateSchema = new Schema({
     nameCn: String,
     nameEn: String
 });
-
+ 
 module.exports = mongoose.model('RunningState', runningStateSchema);
