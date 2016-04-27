@@ -5,33 +5,114 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
     $ionicHistory.clearCache();
 
     $rootScope.showLoading();
-    initBMap("bmap", $scope, true, function () {
-        $rootScope.closeLoading();
-        if ($stateParams.data != null && $stateParams.data != "") {
-            $scope.loadDate();
-        } else {
-            if ($scope.powerline == null) {
-                $scope.powerline = {
-                    no: "",
-                    modelNo: "T001",
-                    voltageClass: "8",
-                    repairDay: "365",
-                    maintainDay: "125",
-                    designYear: "30",
-                    runningState: "1",
-                    provinceNo: "pHD006"
-                };
+    initBMap("bmap", $scope, function () {
+        $scope.map.addEventListener("click", function (e) { //点击事件
+            if (!isNum($scope.startLongitude) || !isNum($scope.startLatitude)) {
+                $scope.startLongitude = e.point.lng;
+                $scope.startLatitude = e.point.lat;
+                $scope.map.clearOverlays();
+                $scope.map.addOverlay(new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat)));
+            } else {
+                $scope.endLongitude = e.point.lng;
+                $scope.endLatitude = e.point.lat;
+                $scope.map.clearOverlays();
+                var beginPoint = new BMap.Point($scope.startLongitude, $scope.startLatitude);
+                var endPoint = new BMap.Point(e.point.lng, e.point.lat);
+                $scope.map.addOverlay(new BMap.Marker(beginPoint));
+                $scope.map.addOverlay(new BMap.Marker(endPoint));
+                var polyline = new BMap.Polyline([beginPoint, endPoint], {
+                    strokeColor: "red",
+                    strokeWeight: 5,
+                    strokeOpacity: 0.5
+                });
+                $scope.map.addOverlay(polyline);
             }
-            $scope.startLongitude = "无数据";
-            $scope.startLatitude = "无数据";
-            $scope.endLongitude = "无数据";
-            $scope.endLatitude = "无数据";
-        }
+        });
+        $scope.geocoder = new BMap.Geocoder();
+        $scope.regionBlock = false;
+        $scope.map.addEventListener("touchend", function (type, target, point, pixel) {
+            $scope.switchProvince();
+        });
+        
+        async.series([
+            function (callback) {
+                async.parallel([
+                    function (_callback) {
+                        $http.get("baseData/getVoltageClass").success(function(result) {
+                            $scope.voltageClasses = result;
+                            _callback(null, '');
+                        }).error(function(err) {
+                            _callback(null, '');
+                        });;
+                    },
+                    function (_callback) {
+                        $http.get("baseData/getRunningState").success(function(result) {
+                            $scope.runningStates = result;
+                            _callback(null, '');
+                        }).error(function(err) {
+                            _callback(null, '');
+                        });
+                    },
+                    function (_callback) {
+                        $http.get("baseData/getRegion").success(function(result) {
+                            $scope.regions = result;
+                            _callback(null, '');
+                        }).error(function(err) {
+                            _callback(null, '');
+                        });
+                    }
+                ], function (err, result) {
+                    if (result.length == 3) {
+                        callback(null, '');
+                    }
+                });
+            },
+            function (callback) {
+                $rootScope.closeLoading();
+                if ($stateParams.data != null && $stateParams.data != "") {
+                    $scope.loadDate();
+                } else {
+                    if ($scope.powerline == null) {
+                        $scope.powerline = {
+                            no: "",
+                            modelNo: "T001",
+                            voltageClass: $scope.voltageClasses[0]._id,
+                            repairDay: 365,
+                            maintainDay: 125,
+                            designYear: 30,
+                            runningState: $scope.runningStates[0]._id,
+                            provinceNo: $scope.regions[0].provinces._id
+                        };
+                    }
+                    $scope.startLongitude = "无数据";
+                    $scope.startLatitude = "无数据";
+                    $scope.endLongitude = "无数据";
+                    $scope.endLatitude = "无数据";
+                }
+                callback(null, '');
+            }
+        ], function (err, result) {
+            $scope.switchProvince();
+        });
     });
     
-    $http.get("baseData/getVoltageClass").success(function(result) {
-        $scope.voltageClasses = result;
-    });
+    $scope.switchProvince = function () {
+        if (!$scope.regionBlock) {
+            $scope.regionBlock = true;
+            $scope.geocoder.getLocation($scope.map.getCenter(), function(result) {
+                $http.post("baseData/getRegionByName", {
+                    "nameCn": result.addressComponents.province
+                }).success(function(result) {
+                    if (result.length > 0) {
+                        $scope.powerline.provinceNo = result[0].provinces._id;
+                    }
+                    $scope.regionBlock = false;
+                }).error(function(err) {
+                    $scope.regionBlock = false;
+                });
+            });
+        }
+    };
 
     $scope.loadDate = function () {
         $rootScope.showLoading();

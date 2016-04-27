@@ -39,3 +39,13 @@ exports.findOneDbRef = function(model, data, populate, callback) {
         }
     });
 };
+
+exports.findRegionByNameDbRef = function(data, callback) {
+    baseDataDAO.findRegionByNameDbRef(data, function(err, result){
+        if(!err){
+            callback(result);
+        } else {
+            callback(null);
+        }
+    });
+};

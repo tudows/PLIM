@@ -169,8 +169,13 @@ Log
 * Add the function of updating the user's last information into the database.
 
 **2016-04-27**
-* Add Async module.
+* Add "Async" module.
 * Restruct the model by using the mongodb's reference.
+* Fix a login bug.
+* Add the bmap Geocoder function.
+* Add the baseDataDAO.
+* Use the advanced query method on the province query.
+* Adjust the ui of the add-powerline page.
 
 
 License
