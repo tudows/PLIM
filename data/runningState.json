@@ -1,0 +1,9 @@
+{
+    "runningStates": [
+        {"no": 0, "nameCn": "停运中", "nameEn": "stopping"},
+        {"no": 1, "nameCn": "运行中", "nameEn": "running"},
+        {"no": 2, "nameCn": "故障中", "nameEn": "faulting"},
+        {"no": 3, "nameCn": "维修中", "nameEn": "repairing"},
+        {"no": 4, "nameCn": "保养中", "nameEn": "maintaining"}
+    ]
+}

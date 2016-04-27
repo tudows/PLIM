@@ -33,8 +33,8 @@ the setting will go into effect. Or else, will use all of your cpu's core number
 So if you don't care how many the core use and want to us the default number, please set the number as 0.
 
 **About Html5 Cache**
-* If you use the https protocol, the html5 cache will not work.<br/>
-So if you want to cache under the https, please use the reverse proxy or other technology such as config the nginx.
+* If you use the https protocol, the html5 cache may be not work.<br/>
+If dont work, you can try to use the reverse proxy or other technology such as config the nginx.
 
 **About Encrypt & Decrypt**
 * The encrypt use the private key encrypt and through the **RSA** algorithm.
@@ -143,7 +143,7 @@ Log
 
 **2016-04-09**
 * Adjust the interval of the real-time GPS.
-* Add the html5 cache.(Don't work with https)
+* Add the html5 cache.(May be don't work with https)
 
 **2016-04-09**
 * Add the cluster module to do the multi core balanced load.
@@ -167,6 +167,10 @@ Log
 
 **2016-04-26**
 * Add the function of updating the user's last information into the database.
+
+**2016-04-27**
+* Add Async module.
+* Restruct the model by using the mongodb's reference.
 
 
 License

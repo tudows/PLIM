@@ -1,4 +1,5 @@
 var mongoose = require('../utils/mongooseUtil');
+require('../models/runningState');
 
 var Schema = mongoose.Schema;
 var powerLineSchema = new Schema({
@@ -9,7 +10,10 @@ var powerLineSchema = new Schema({
     repairDay: Number,
     maintainDay: Number,
     designYear: Number,
-    runningState: Number,
+    runningState: {
+        type: Schema.Types.ObjectId,
+        ref: 'RunningState'
+    },
     provinceNo: String,
     lastRepairDate: Date,
     lastRepairNo: String,

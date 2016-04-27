@@ -7,45 +7,63 @@
         <div style="width: 100%; height: 30%" id="bmap"></div>
         <div class="list" id="input">
             <label class="item item-input">
-                <input type="text" placeholder="no" name="no" ng-model="powerline.no">
+                <span class="input-label">编号</span>
+                <input type="text" name="no" ng-model="powerline.no">
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="modelNo" name="modelNo" ng-model="powerline.modelNo">
+                <span class="input-label">型号</span>
+                <input type="text" name="modelNo" ng-model="powerline.modelNo">
+            </label>
+            <label class="item item-input item-select">
+                <span class="input-label">电压等级</span>
+                <select name="voltageClass" ng-model="powerline.voltageClass">
+                    <option ng-repeat="vc in voltageClasses" value="{{vc._id}}">
+                        {{vc.voltage}}{{vc.unit.unitCn}}
+                    </ion-item>
+                </select>
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="voltageClass" name="voltageClass" ng-model="powerline.voltageClass">
+                <span class="input-label">维修</span>
+                <input type="text" name="repairDay" ng-model="powerline.repairDay">
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="repairDay" name="repairDay" ng-model="powerline.repairDay">
+                <span class="input-label">保养</span>
+                <input type="text" name="maintainDay" ng-model="powerline.maintainDay">
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="maintainDay" name="maintainDay" ng-model="powerline.maintainDay">
+                <span class="input-label">设计年限</span>
+                <input type="text" name="designYear" ng-model="powerline.designYear">
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="designYear" name="designYear" ng-model="powerline.designYear">
+                <span class="input-label">运行状态</span>
+                <input type="text" name="runningState" ng-model="powerline.runningState">
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="runningState" name="runningState" ng-model="powerline.runningState">
-            </label>
-            <label class="item item-input">
-                <input type="text" placeholder="provinceNo" name="provinceNo" ng-model="powerline.provinceNo">
+                <span class="input-label">所属区域</span>
+                <input type="text" name="provinceNo" ng-model="powerline.provinceNo">
             </label>
         </div>
-        <button class="button button-positive" ng-click="getStartPosition()">
-            开始
-        </button>
-        <button class="button button-positive" ng-click="getEndPosition()">
-            结束
-        </button>
-        <button class="button button-assertive" ng-click="cleanPowerLine()">
-            清除
-        </button>
-        <button class="button button-balanced" ng-click="savePowerLine()">
-            保存
-        </button>
-        <button class="button button-calm" ng-click="showCoordinate()">
-            显示
-        </button>
+        <div class="row">
+            <div class="col col-50">
+                <button class="button button-block button-positive" ng-click="getStartPosition()">线路起始定位</button>
+            </div>
+            <div class="col col-50">
+                <button class="button button-block button-positive" ng-click="getEndPosition()">线路结束定位</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-50">
+                <button class="button button-block button-assertive" ng-click="cleanPowerLine()">清除线路定位</button>
+            </div>
+            <div class="col col-50">
+                <button class="button button-block button-calm" ng-click="showCoordinate()">显示线路定位</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-100">
+                <button class="button button-block button-balanced" ng-click="savePowerLine()">保存线路</button>
+            </div>
+        </div>
     </ion-content>
 </ion-view>
 

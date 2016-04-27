@@ -28,6 +28,10 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
             $scope.endLatitude = "无数据";
         }
     });
+    
+    $http.get("baseData/getVoltageClass").success(function(result) {
+        $scope.voltageClasses = result;
+    });
 
     $scope.loadDate = function () {
         $rootScope.showLoading();

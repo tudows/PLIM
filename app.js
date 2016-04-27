@@ -70,10 +70,13 @@ if (cluster.isMaster) {
         
         //init
         // var initDAO = require('./dao/initDAO');
+        // initDAO.addRunningState();
         // initDAO.addRegionData();
         // initDAO.addPowerLineData();
         // initDAO.addVoltageClassData();
         
+        // var baseDataDAO = require('./dao/baseDataDAO');
+        // baseDataDAO.findDbRef();
     });
 
     var serverHttps = https.createServer(options, app).listen(config.httpsPort, function () {

@@ -1,5 +1,5 @@
 {
-    "regionTypes": [
+    "provinceTypes": [
         {"no": "1", "nameCn": "省份",         "nameEn": "province"},
         {"no": "2", "nameCn": "直辖市",       "nameEn": "municipality"},
         {"no": "3", "nameCn": "自治区",       "nameEn": "autonomous district"},
