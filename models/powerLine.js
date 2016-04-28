@@ -1,11 +1,16 @@
 var mongoose = require('../utils/mongooseUtil');
 require('../models/runningState');
+require('../models/region');
+require('../models/voltageClass');
 
 var Schema = mongoose.Schema;
 var powerLineSchema = new Schema({
     no: String,
     modelNo: String,
-    voltageClass: Number,
+    voltageClass: {
+        type: Schema.Types.ObjectId,
+        ref: 'VoltageClass'
+    },
     serviceDate: Date,
     repairDay: Number,
     maintainDay: Number,
@@ -14,7 +19,10 @@ var powerLineSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'RunningState'
     },
-    provinceNo: String,
+    province:  {
+        type: Schema.Types.ObjectId,
+        ref: 'Region'
+    },
     lastRepairDate: Date,
     lastRepairNo: String,
     lastMaintainDate: Date,

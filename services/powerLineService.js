@@ -2,18 +2,19 @@ var PowerLine = require('../models/powerLine');
 var powerLineDAO = require('../dao/powerLineDAO');
 var request = require('request');
 var async = require("async");
+var mongoose = require('mongoose');
 
 exports.add = function(data, callback) {
     var powerLine = new PowerLine({
         no: data.no,
         modelNo: data.modelNo,
-        voltageClass: data.voltageClass,
+        voltageClass: mongoose.Types.ObjectId(data.voltageClass),
         serviceDate: new Date(),
         repairDay: data.repairDay,
         maintainDay: data.maintainDay,
         designYear: data.designYear,
-        runningState: data.runningState,
-        provinceNo: data.provinceNo,
+        runningState: mongoose.Types.ObjectId(data.runningState),
+        province: mongoose.Types.ObjectId(data.province),
         lastRepairDate: null,
         lastRepairNo: null,
         lastMaintainDate: null,

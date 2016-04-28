@@ -22,21 +22,10 @@ exports.getRunningStateGet = exports.getRunningStatePost = function(req, res) {
     });
 };
 
-exports.getRegionGet = exports.getRegionPost = function(req, res) {
-    baseDataService.findDbRef('Region', null, null, function(regions) {
-        if (regions) {
-            res.json(regions);
-        }
-        else {
-            res.end();
-        }
-    });
-};
-
-exports.getRegionByNameGet = exports.getRegionByNamePost = function(req, res) {
-    baseDataService.findRegionByNameDbRef(req.body.nameCn, function(regions) {
-        if (regions) {
-            res.json(regions);
+exports.getProvinceGet = exports.getProvincePost = function(req, res) {
+    baseDataService.findDbRef('Province', req.body, 'type', function(provinces) {
+        if (provinces) {
+            res.json(provinces);
         }
         else {
             res.end();

@@ -2,6 +2,7 @@ var async = require('async');
 var mongoose = require('mongoose');
 
 var Region = require('../models/region');
+var Province = require('../models/province');
 var ProvinceType = require('../models/provinceType');
 var PowerLine = require('../models/powerLine');
 var VoltageClass = require('../models/voltageClass');
@@ -13,15 +14,22 @@ exports.addRegionData = function() {
     
     async.series([
         function(callback) {
-            console.log('删除区域类型数据开始。。。');
+            console.log('删除地区类型数据开始。。。');
             ProvinceType.remove({}, function(err){
-                console.log('删除区域类型数据完成。。。');
+                console.log('删除地区类型数据完成。。。');
+                callback(null, null);
+            });
+        },
+        function(callback) {
+            console.log('删除区域数据开始。。。');
+            Region.remove({}, function(err){
+                console.log('删除区域数据完成。。。');
                 callback(null, null);
             });
         },
         function(callback) {
             console.log('删除地区数据开始。。。');
-            Region.remove({}, function(err){
+            Province.remove({}, function(err){
                 console.log('删除地区数据完成。。。');
                 callback(null, null);
             });
@@ -51,16 +59,22 @@ exports.addRegionData = function() {
             regions.forEach(function(region) {
                 var _provinces = [];
                 region.provinces.forEach(function(province) {
-                    var p = {
-                        _id: new mongoose.Types.ObjectId,
+                    var p = new Province({
                         nameEn: province.nameEn,
                         nameCn: province.nameCn,
                         pinyin: province.pinyin,
                         abridge: province.abridge,
                         abridgePinYin: province.abridgePinYin,
                         type: _provinceTypes[parseInt(province.type) - 1]._id
-                    };
-                    _provinces.push(p);
+                    });
+                    _provinces.push(p._id);
+                    p.save(function(err, user) {
+                        if(err) {
+                            console.log(_provinces);
+                            console.log(err);
+                            callback(null, null);
+                        }
+                    });
                 });
                 var r = new Region({
                     nameEn: region.nameEn,
@@ -87,55 +101,11 @@ exports.addRegionData = function() {
 };
 
 exports.addPowerLineData = function() {
-    var powerLine = new PowerLine({
-        no: '1',
-        modelNo: '1',
-        voltageClass: '1',
-        serviceDate: new Date(),
-        repairDay: 1,
-        maintainDay: 1,
-        designYear: 1,
-        runningState: 1,
-        provinceNo: '1',
-        lastRepairDate: new Date(),
-        lastRepairNo: '1',
-        lastMaintainDate: new Date(),
-        lastMaintainNo: '1',
-        location: {
-            startLongitude: 121.48,
-            startDimension: 31.22,
-            endLongitude: 121.50,
-            endDimension: 31.25
-        }
+    console.log('删除线路数据开始。。。');
+    PowerLine.remove({}, function(err) {
+        console.log('删除线路数据结束。。。');
     });
-    powerLine.save(function(err, user) {
-        if(err) {}
-    });
-    var powerLine2 = new PowerLine({
-        no: '2',
-        modelNo: '2',
-        voltageClass: '2',
-        serviceDate: new Date(),
-        repairDay: 2,
-        maintainDay: 2,
-        designYear: 2,
-        runningState: 2,
-        provinceNo: '2',
-        lastRepairDate: new Date(),
-        lastRepairNo: '2',
-        lastMaintainDate: new Date(),
-        lastMaintainNo: '2',
-        location: {
-            startLongitude: 121.50,
-            startDimension: 31.25,
-            endLongitude: 121.55,
-            endDimension: 31.30
-        }
-    });
-    powerLine2.save(function(err, user) {
-        if(err) {}
-    });
-};
+}
 
 exports.addVoltageClassData = function() {
     console.log('电压等级数据初始化开始。。。');

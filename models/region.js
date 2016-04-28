@@ -1,5 +1,5 @@
 var mongoose = require('../utils/mongooseUtil');
-require('../models/provinceType');
+require('../models/province');
 
 var Schema = mongoose.Schema;
 var regionSchema = new Schema({
@@ -7,16 +7,8 @@ var regionSchema = new Schema({
     nameCn: String,
     pinyin: String,
     provinces: [{
-        _id: Schema.Types.ObjectId,
-        nameEn: String,
-        nameCn: String,
-        pinyin: String,
-        abridge: String,
-        abridgePinYin: String,
-        type: {
-            type: Schema.Types.ObjectId,
-            ref: 'ProvinceType'
-        }
+        type: Schema.Types.ObjectId,
+        ref: 'Province'
     }]
 });
 

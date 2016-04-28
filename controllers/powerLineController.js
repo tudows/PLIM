@@ -21,7 +21,7 @@ exports.addGet = function(req, res) {
             maintainDay: dataList[4],
             designYear: dataList[5],
             runningState: dataList[6],
-            provinceNo: dataList[7],
+            province: dataList[7],
             location: {
                 startLongitude: dataList[8],
                 startLatitude: dataList[9],

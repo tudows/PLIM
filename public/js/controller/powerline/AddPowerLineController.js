@@ -7,16 +7,16 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
     $rootScope.showLoading();
     initBMap("bmap", $scope, function () {
         $scope.map.addEventListener("click", function (e) { //点击事件
-            if (!isNum($scope.startLongitude) || !isNum($scope.startLatitude)) {
-                $scope.startLongitude = e.point.lng;
-                $scope.startLatitude = e.point.lat;
+            if (!isNum($scope.powerline.location.startLongitude) || !isNum($scope.powerline.location.startLatitude)) {
+                $scope.powerline.location.startLongitude = e.point.lng;
+                $scope.powerline.location.startLatitude = e.point.lat;
                 $scope.map.clearOverlays();
                 $scope.map.addOverlay(new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat)));
             } else {
-                $scope.endLongitude = e.point.lng;
-                $scope.endLatitude = e.point.lat;
+                $scope.powerline.location.endLongitude = e.point.lng;
+                $scope.powerline.location.endLatitude = e.point.lat;
                 $scope.map.clearOverlays();
-                var beginPoint = new BMap.Point($scope.startLongitude, $scope.startLatitude);
+                var beginPoint = new BMap.Point($scope.powerline.location.startLongitude, $scope.powerline.location.startLatitude);
                 var endPoint = new BMap.Point(e.point.lng, e.point.lat);
                 $scope.map.addOverlay(new BMap.Marker(beginPoint));
                 $scope.map.addOverlay(new BMap.Marker(endPoint));
@@ -28,7 +28,6 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                 $scope.map.addOverlay(polyline);
             }
         });
-        $scope.geocoder = new BMap.Geocoder();
         $scope.regionBlock = false;
         $scope.map.addEventListener("touchend", function (type, target, point, pixel) {
             $scope.switchProvince();
@@ -54,8 +53,8 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                         });
                     },
                     function (_callback) {
-                        $http.get("baseData/getRegion").success(function(result) {
-                            $scope.regions = result;
+                        $http.get("baseData/getProvince").success(function(result) {
+                            $scope.provinces = result;
                             _callback(null, '');
                         }).error(function(err) {
                             _callback(null, '');
@@ -81,48 +80,61 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                             maintainDay: 125,
                             designYear: 30,
                             runningState: $scope.runningStates[0]._id,
-                            provinceNo: $scope.regions[0].provinces._id
+                            province: $scope.provinces[0]._id
                         };
                     }
-                    $scope.startLongitude = "无数据";
-                    $scope.startLatitude = "无数据";
-                    $scope.endLongitude = "无数据";
-                    $scope.endLatitude = "无数据";
+                    
+                    $scope.powerline.location = {
+                        startLongitude: "无数据",
+                        startLatitude: "无数据",
+                        endLongitude: "无数据",
+                        endLatitude: "无数据"
+                    }
                 }
                 callback(null, '');
             }
         ], function (err, result) {
-            $scope.switchProvince();
+            if (result.length == 2)
+                $scope.switchProvince();
         });
     });
     
     $scope.switchProvince = function () {
         if (!$scope.regionBlock) {
             $scope.regionBlock = true;
-            $scope.geocoder.getLocation($scope.map.getCenter(), function(result) {
-                $http.post("baseData/getRegionByName", {
-                    "nameCn": result.addressComponents.province
-                }).success(function(result) {
-                    if (result.length > 0) {
-                        $scope.powerline.provinceNo = result[0].provinces._id;
+            (new BMap.Geocoder()).getLocation($scope.map.getCenter(), function() {
+                (new BMap.Geocoder()).getLocation($scope.map.getCenter(), function(location) {
+                    var selectProvince = document.getElementsByName("province")[0];
+                    var selectProvinceIndex = selectProvince.selectedIndex;
+                    if (selectProvinceIndex < 0 ||
+                        selectProvince.options[selectProvinceIndex].text != location.addressComponents.province) {
+                        $http.post("baseData/getProvince", {
+                            "nameCn": location.addressComponents.province
+                        }).success(function(provinces) {
+                            if (provinces.length > 0) {
+                                $scope.powerline.province = provinces[0]._id;
+                            }
+                            $scope.regionBlock = false;
+                        }).error(function(err) {
+                            $scope.regionBlock = false;
+                        });
+                    } else {
+                        $scope.regionBlock = false;
                     }
-                    $scope.regionBlock = false;
-                }).error(function(err) {
-                    $scope.regionBlock = false;
                 });
             });
         }
     };
     
     $scope.changeProvince = function () {
-        var selectProvinceNo = document.getElementsByName("provinceNo")[0];
-        var selectProvinceNoIndex = selectProvinceNo.selectedIndex;
-        var selectProvinceNoName = selectProvinceNo.options[selectProvinceNoIndex].text;
-        $scope.geocoder.getPoint(selectProvinceNoName, function(point){
+        var selectProvince = document.getElementsByName("province")[0];
+        var selectProvinceIndex = selectProvince.selectedIndex;
+        var selectProvinceName = selectProvince.options[selectProvinceIndex].text;
+        (new BMap.Geocoder()).getPoint(selectProvinceName, function(point){
             if (point) {
                 $scope.map.centerAndZoom(point, 9);
             }
-        }, selectProvinceNoName);
+        }, selectProvinceName);
     };
 
     $scope.loadDate = function () {
@@ -130,13 +142,9 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
         $http.get("powerLine/add/" + $stateParams.data)
             .success(function (result) {
                 $scope.powerline = result;
-                $scope.startLongitude = $scope.powerline.location.startLongitude;
-                $scope.startLatitude = $scope.powerline.location.startLatitude;
-                $scope.endLongitude = $scope.powerline.location.endLongitude;
-                $scope.endLatitude = $scope.powerline.location.endLatitude;
                 $scope.map.clearOverlays();
-                var beginPoint = new BMap.Point($scope.startLongitude, $scope.startLatitude);
-                var endPoint = new BMap.Point($scope.endLongitude, $scope.endLatitude);
+                var beginPoint = new BMap.Point($scope.powerline.location.startLongitude, $scope.powerline.location.startLatitude);
+                var endPoint = new BMap.Point($scope.powerline.location.endLongitude, $scope.powerline.location.endLatitude);
                 $scope.map.centerAndZoom(beginPoint, 25);
                 $scope.map.addOverlay(new BMap.Marker(beginPoint));
                 $scope.map.addOverlay(new BMap.Marker(endPoint));
@@ -173,8 +181,8 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                 position.coords.longitude,
                 position.coords.latitude), 0,
                 function (point) {
-                    $scope.startLongitude = point.lng;
-                    $scope.startLatitude = point.lat;
+                    $scope.powerline.location.startLongitude = point.lng;
+                    $scope.powerline.location.startLatitude = point.lat;
                     var beginPoint = new BMap.Point(point.lng, point.lat);
                     $scope.map.centerAndZoom(beginPoint, 25);
                     $scope.map.addOverlay(new BMap.Marker(beginPoint));
@@ -182,8 +190,8 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                 });
         }, function (error) {
             $rootScope.closeLoading();
-            $scope.startLongitude = "无法获取";
-            $scope.startLatitude = "无法获取";
+            $scope.powerline.location.startLongitude = "无法获取";
+            $scope.powerline.location.startLatitude = "无法获取";
             $scope.showError("坐标获取失败");
         });
     }
@@ -195,9 +203,9 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                 position.coords.longitude,
                 position.coords.latitude), 0,
                 function (point) {
-                    $scope.endLongitude = point.lng;
-                    $scope.endLatitude = point.lat;
-                    var beginPoint = new BMap.Point($scope.startLongitude, $scope.startLatitude);
+                    $scope.powerline.location.endLongitude = point.lng;
+                    $scope.powerline.location.endLatitude = point.lat;
+                    var beginPoint = new BMap.Point($scope.powerline.location.startLongitude, $scope.powerline.location.startLatitude);
                     var endPoint = new BMap.Point(point.lng, point.lat);
                     $scope.map.addOverlay(new BMap.Marker(endPoint));
                     var polyline = new BMap.Polyline([beginPoint, endPoint], {
@@ -210,51 +218,37 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                 });
         }, function (error) {
             $rootScope.closeLoading();
-            $scope.endLongitude = "无法获取";
-            $scope.endLatitude = "无法获取";
+            $scope.powerline.location.endLongitude = "无法获取";
+            $scope.powerline.location.endLatitude = "无法获取";
             $scope.showError("坐标获取失败");
         });
     }
 
     $scope.cleanPowerLine = function () {
-        $scope.startLongitude = "无数据";
-        $scope.startLatitude = "无数据";
-        $scope.endLongitude = "无数据";
-        $scope.endLatitude = "无数据";
+        $scope.powerline.location.startLongitude = "无数据";
+        $scope.powerline.location.startLatitude = "无数据";
+        $scope.powerline.location.endLongitude = "无数据";
+        $scope.powerline.location.endLatitude = "无数据";
         $scope.map.clearOverlays();
     }
 
     $scope.savePowerLine = function () {
-        if (isNum($scope.startLongitude)
-            && isNum($scope.startLatitude)
-            && isNum($scope.endLongitude)
-            && isNum($scope.endLatitude)) {
+        if (isNum($scope.powerline.location.startLongitude)
+            && isNum($scope.powerline.location.startLatitude)
+            && isNum($scope.powerline.location.endLongitude)
+            && isNum($scope.powerline.location.endLatitude)) {
             $rootScope.showLoading();
-            var input = document.getElementById("input").getElementsByTagName("input");
             $http({
                 method: "post",
                 url: "powerLine/add",
-                data: {
-                    no: input[0].value,
-                    modelNo: input[1].value,
-                    voltageClass: input[2].value,
-                    repairDay: input[3].value,
-                    maintainDay: input[4].value,
-                    designYear: input[5].value,
-                    runningState: input[6].value,
-                    provinceNo: input[7].value,
-                    startLongitude: $scope.startLongitude,
-                    startLatitude: $scope.startLatitude,
-                    endLongitude: $scope.endLongitude,
-                    endLatitude: $scope.endLatitude
-                }
+                data: $scope.powerline
             }).success(function (result) {
-                $scope.startLongitude = $scope.endLongitude;
-                $scope.startLatitude = $scope.endLatitude;
-                $scope.endLongitude = "无数据";
-                $scope.endLatitude = "无数据";
+                $scope.powerline.location.startLongitude = $scope.powerline.location.endLongitude;
+                $scope.powerline.location.startLatitude = $scope.powerline.location.endLatitude;
+                $scope.powerline.location.endLongitude = "无数据";
+                $scope.powerline.location.endLatitude = "无数据";
                 $scope.map.clearOverlays();
-                $scope.map.addOverlay(new BMap.Marker(new BMap.Point($scope.startLongitude, $scope.startLatitude)));
+                $scope.map.addOverlay(new BMap.Marker(new BMap.Point($scope.powerline.location.startLongitude, $scope.powerline.location.startLatitude)));
                 $rootScope.closeLoading();
                 $rootScope.showSuccess("保存成功");
             }).error(function (error) {

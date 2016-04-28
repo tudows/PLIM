@@ -5,8 +5,9 @@ app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $
     $ionicHistory.clearCache();
 
     $rootScope.showLoading();
-    $http.get("/powerLine/listPowerLine?provinceNo=pHD006").success(function (result) {
+    $http.get("/powerLine/listPowerLine").success(function (result) {
         $scope.powerlines = result;
+        console.log(result);
         $rootScope.closeLoading();
     }).error(function (error) {
         $rootScope.closeLoading();
@@ -14,14 +15,13 @@ app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $
     });
 
     $scope.pullRefresh = function () {
-        $http.get("/powerLine/listPowerLine?provinceNo=pHD006").success(function (result) {
+        $http.get("/powerLine/listPowerLine").success(function (result) {
             $scope.powerlines = result;
         }).error(function (error) {
             $scope.powerlines = [];
             $rootScope.showError("出现错误，请重试");
-        })
-            .finally(function () {
-                $scope.$broadcast("scroll.refreshComplete");
-            });
+        }).finally(function () {
+            $scope.$broadcast("scroll.refreshComplete");
+        });
     }
 });

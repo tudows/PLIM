@@ -60,7 +60,7 @@ app.controller("PLIMController", function ($rootScope, $scope, $http, $window, U
                     uuid: result
                 }
             }).success(function (result) {
-                $rootScope.closeLoading();
+                // $rootScope.closeLoading();
                 if (result != "") {
                     User.setUser(result);
                 } else {

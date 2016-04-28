@@ -72,8 +72,8 @@ if (cluster.isMaster) {
         // var initDAO = require('./dao/initDAO');
         // initDAO.addRunningState();
         // initDAO.addRegionData();
-        // initDAO.addPowerLineData();
         // initDAO.addVoltageClassData();
+        // initDAO.addPowerLineData();
         
         // var baseDataDAO = require('./dao/baseDataDAO');
         // baseDataDAO.findDbRef();
