@@ -1,19 +1,36 @@
-app.controller("DetailPowerLineController", function ($rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory) {
+app.controller("DetailPowerLineController", function ($filter, $rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[2];
 
-    $rootScope.showLoading();
-    $http.get("/powerLine/listPowerLine?no=" + $stateParams.no).success(function (result) {
-        if (result != null && result.length == 1) {
-            $scope.powerline = result[0];
-            $rootScope.closeLoading();
-        } else {
+    $scope.getDetail = function() {
+        $rootScope.showLoading();
+        $http.get("/powerLine/listPowerLine?no=" + $stateParams.no).success(function (result) {
+            if (result != null && result.length == 1) {
+                $scope.powerline = result[0];
+                if ($scope.powerline.lastRepairDay == null) {
+                    $scope.powerline.lastRepairDay = "从未维修过";
+                } else {
+                    $filter('date')($scope.powerline.lastMaintainDay, 'yyyy-MM-dd');
+                }
+                if ($scope.powerline.lastMaintainDay == null) {
+                    $scope.powerline.lastMaintainDay = "从未保养过";
+                } else {
+                    $filter('date')($scope.powerline.lastMaintainDay, 'yyyy-MM-dd');
+                }
+                $rootScope.closeLoading();
+                $scope.$broadcast("scroll.refreshComplete");
+            } else {
+                $rootScope.closeLoading();
+                $rootScope.showError("出现错误，请重试");
+                $scope.$broadcast("scroll.refreshComplete");
+            }
+        }).error(function (error) {
             $rootScope.closeLoading();
             $rootScope.showError("出现错误，请重试");
-        }
-    }).error(function (error) {
-        $rootScope.closeLoading();
-        $rootScope.showError("出现错误，请重试");
-    });
+            $scope.$broadcast("scroll.refreshComplete");
+        });
+    };
+    
+    $scope.getDetail();
 
     $scope.back = function () {
         if ($ionicHistory.backTitle() == null) {
@@ -25,7 +42,6 @@ app.controller("DetailPowerLineController", function ($rootScope, $scope, $state
 
     $scope.position = function () {
         PowerLine.setPowerline($scope.powerline);
-
         $state.go("app.powerline_maintain.position", {});
     }
 });

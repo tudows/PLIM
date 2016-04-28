@@ -11,19 +11,75 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content>
+        <ion-refresher pulling-text="下拉刷新" on-refresh="getDetail()"></ion-refresher>
         <div class="row">
-            <div class="col col-20">线路编号</div>
-            <div class="col col-80">{{powerline.no}}</div>
+            <div class="col col-25 text-right">编号</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.no}}</div>
         </div>
         <div class="row">
-            <div class="col col-20">线路类型</div>
-            <div class="col col-80">{{powerline.modelNo}}</div>
+            <div class="col col-25 text-right">类型</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.modelNo}}</div>
         </div>
         <div class="row">
-            <div class="col col-100">
+            <div class="col col-25 text-right">电压等级</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.voltageClass.voltage}}{{powerline.voltageClass.unit.unitCn}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-25 text-right">投运时间</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.serviceDate | date:'yyyy-MM-dd'}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-25 text-right">定期检修天数</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.repairDay}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-25 text-right">定期保养天数</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.maintainDay}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-25 text-right">设计年限</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.designYear}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-25 text-right">运行状态</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.runningState.nameCn}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-25 text-right">所属区域</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.province.nameCn}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-25 text-right">最近维修日期</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.lastRepairDay}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-25 text-right">最近保养日期</div>
+            <div class="col col-10"></div>
+            <div class="col">{{powerline.lastMaintainDay}}</div>
+        </div>
+        <div class="row">
+            <div class="col">
                 <button class="button button-block button-positive" ng-click="position()">
                     定位
                 </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button class="button button-block" onclick="document.getElementById('uploadImg').click()">
+                    上传照片
+                </button>
+                <input id="uploadImg" type="file" class="hidden" />
             </div>
         </div>
     </ion-content>

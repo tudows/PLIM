@@ -4,3 +4,24 @@
 .no-padding {
     padding: 0px !important;
 }
+.pull-left {
+    float: left !important;
+}
+.pull-right {
+    float: right !important;
+}
+.text-left {
+    text-align: left !important;
+}
+.text-center {
+    text-align: center !important;
+}
+.text-right {
+    text-align: right !important;
+}
+.hidden {
+    display: none;
+}
+.display {
+    display: block;
+}

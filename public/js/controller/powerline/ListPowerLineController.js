@@ -7,7 +7,6 @@ app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $
     $rootScope.showLoading();
     $http.get("/powerLine/listPowerLine").success(function (result) {
         $scope.powerlines = result;
-        console.log(result);
         $rootScope.closeLoading();
     }).error(function (error) {
         $rootScope.closeLoading();

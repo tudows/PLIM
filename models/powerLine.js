@@ -21,7 +21,7 @@ var powerLineSchema = new Schema({
     },
     province:  {
         type: Schema.Types.ObjectId,
-        ref: 'Region'
+        ref: 'Province'
     },
     lastRepairDate: Date,
     lastRepairNo: String,

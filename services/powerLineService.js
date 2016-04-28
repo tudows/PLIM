@@ -20,10 +20,10 @@ exports.add = function(data, callback) {
         lastMaintainDate: null,
         lastMaintainNo: null,
         location: {
-            startLongitude: data.startLongitude,
-            startLatitude: data.startLatitude,
-            endLongitude: data.endLongitude,
-            endLatitude: data.endLatitude
+            startLongitude: data.location.startLongitude,
+            startLatitude: data.location.startLatitude,
+            endLongitude: data.location.endLongitude,
+            endLatitude: data.location.endLatitude
         },
         encrypt: data.encrypt,
         status: 1
