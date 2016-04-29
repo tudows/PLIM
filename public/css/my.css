@@ -25,3 +25,7 @@
 .display {
     display: block;
 }
+
+.stateIcon {
+    font-size: 20px;
+}

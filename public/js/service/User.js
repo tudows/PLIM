@@ -13,32 +13,10 @@ app.service("User", function ($rootScope, $interval, $http) {
             this.stopListener();
         }
         
+        this.updateLastInfo();
         timer = $interval(
-            function () {
-                if ($rootScope.user != null && $rootScope.user != "") {
-                    navigator.geolocation.getCurrentPosition(function (_position) {
-                        BMap.Convertor.translate(new BMap.Point(
-                            _position.coords.longitude,
-                            _position.coords.latitude), 0,
-                            function (point) {
-                                $rootScope.user.lastLoginDate = new Date();
-                                $rootScope.user.lastLocation = {
-                                    longitude: point.lng,
-                                    latitude: point.lat
-                                };
-                                $rootScope.user.lastDevice = $rootScope.uuid;
-                                
-                                $http.post("user/updateLastInfo", {
-                                    no: $rootScope.user.no,
-                                    lastLoginDate: $rootScope.user.lastLoginDate,
-                                    lastLocation: $rootScope.user.lastLocation,
-                                    lastDevice: $rootScope.user.lastDevice
-                                });
-                            });
-                    });
-                }
-            },
-            10000
+            this.updateLastInfo,
+            60000
         );
     }
 
@@ -52,5 +30,30 @@ app.service("User", function ($rootScope, $interval, $http) {
     
     this.getUuid = function () {
         return $rootScope.uuid;
+    };
+    
+    this.updateLastInfo = function () {
+        if ($rootScope.user != null && $rootScope.user != "") {
+            navigator.geolocation.getCurrentPosition(function (_position) {
+                BMap.Convertor.translate(new BMap.Point(
+                    _position.coords.longitude,
+                    _position.coords.latitude), 0,
+                    function (point) {
+                        $rootScope.user.lastLoginDate = new Date();
+                        $rootScope.user.lastLocation = {
+                            longitude: point.lng,
+                            latitude: point.lat
+                        };
+                        $rootScope.user.lastDevice = $rootScope.uuid;
+
+                        $http.post("user/updateLastInfo", {
+                            no: $rootScope.user.no,
+                            lastLoginDate: $rootScope.user.lastLoginDate,
+                            lastLocation: $rootScope.user.lastLocation,
+                            lastDevice: $rootScope.user.lastDevice
+                        });
+                    });
+            });
+        }
     };
 });
