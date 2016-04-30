@@ -96,7 +96,6 @@ var serverHttps = https.createServer(options, app).listen(config.httpsPort, func
 
 var powerLineService = require('./services/powerLineService');
 powerLineService.updateOperationParameter(function (result) {
-    console.log(result);
 });
 setInterval(function() {
     powerLineService.updateOperationParameter(function(result) {
