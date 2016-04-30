@@ -1,4 +1,4 @@
-var app = angular.module('plim', ['ionic']);
+var app = angular.module('plim', ['ionic', 'radialIndicator', 'ngAnimate']);
 app.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('app', {

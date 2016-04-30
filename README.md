@@ -177,6 +177,9 @@ Log
 * Use the advanced query method on the province query.
 * Adjust the ui of the add-powerline page.
 
+**2016-04-29**
+* Add the global exception catch.
+
 
 License
 ------------------------------

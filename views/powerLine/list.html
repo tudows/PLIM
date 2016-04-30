@@ -2,15 +2,15 @@
     <ion-content>
         <ion-refresher pulling-text="下拉刷新" on-refresh="pullRefresh()"></ion-refresher>
         <ion-list>
-            <ion-item ng-repeat="powerline in powerlines" href="#/app/powerline_maintain/powerline/{{powerline.encrypt}}">
+            <ion-item ng-repeat="powerline in (powerlines | orderBy : ['runningState.code','province.nameCn','voltageClass.voltage'])" href="#/app/powerline_maintain/powerline/{{powerline.encrypt}}">
                 <div class="row">
                     <div class="col col-10">
                         <i class="stateIcon icon" ng-class="{
-                            'ion-android-happy balanced': powerline.runningState.nameCn == '运行中',
-                            'ion-stop energized': powerline.runningState.nameCn == '停运中',
-                            'ion-android-sad assertive': powerline.runningState.nameCn == '故障中',
-                            'ion-settings royal': powerline.runningState.nameCn == '维修中',
-                            'ion-magnet calm': powerline.runningState.nameCn == '保养中'
+                            'ion-android-happy balanced': powerline.runningState.code == 5,
+                            'ion-stop energized': powerline.runningState.code == 2,
+                            'ion-android-sad assertive': powerline.runningState.code == 1,
+                            'ion-settings royal': powerline.runningState.code == 3,
+                            'ion-magnet calm': powerline.runningState.code == 4
                         }"></i>
                     </div>
                     <div class="col col-20">

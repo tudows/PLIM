@@ -2,6 +2,7 @@ var mongoose = require('../utils/mongooseUtil');
 require('../models/runningState');
 require('../models/region');
 require('../models/voltageClass');
+require('../models/operationParameter');
 
 var Schema = mongoose.Schema;
 var powerLineSchema = new Schema({
@@ -34,7 +35,11 @@ var powerLineSchema = new Schema({
         endLatitude: String
     },
     encrypt: String,
-    status: Number
+    status: Number,
+    operationParameter: {
+        type: Schema.Types.ObjectId,
+        ref: 'OperationParameter'
+    }
 });
 
 module.exports = mongoose.model('PowerLine', powerLineSchema);

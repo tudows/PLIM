@@ -45,6 +45,10 @@ if (config.numCPUs > 0 && config.numCPUs <= numCPUs) {
     numCPUs = config.numCPUs;
 }
 
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ', err);
+});
+
 if (cluster.isMaster) {
 	process.title = appName + ' master';
 	console.log(process.title, 'started'); // 根据 CPU 个数来启动相应数量的 worker 

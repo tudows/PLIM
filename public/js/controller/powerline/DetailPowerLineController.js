@@ -1,10 +1,12 @@
 app.controller("DetailPowerLineController", function ($filter, $rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[2];
-
+        
+    $scope.indicatorValue = 70;
+    
     $scope.getDetail = function() {
         $rootScope.showLoading();
         $http.get("/powerLine/listPowerLine?no=" + $stateParams.no).success(function (result) {
-            if (result != null && result.length == 1) {
+            if (result != null && result.length > 0) {
                 $scope.powerline = result[0];
                 if ($scope.powerline.lastRepairDay == null) {
                     $scope.powerline.lastRepairDay = "从未维修过";
@@ -43,5 +45,15 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
     $scope.position = function () {
         PowerLine.setPowerline($scope.powerline);
         $state.go("app.powerline_maintain.position", {});
+    }
+    
+    $scope.detailInfo = false;
+    $scope.moreInfo = function ($event) {
+        $scope.detailInfo = !$scope.detailInfo;
+        if ($scope.detailInfo) {
+            angular.element($event.target).html("隐藏信息");
+        } else {
+            angular.element($event.target).html("更多信息");
+        }
     }
 });
