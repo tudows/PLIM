@@ -180,6 +180,9 @@ Log
 **2016-04-29**
 * Add the global exception catch.
 
+**2016-04-30**
+* Add the VS Code debug config.
+
 
 License
 ------------------------------
