@@ -10,9 +10,14 @@ The GIS use BaiduMap.
 Usage
 ------------------------------
 1. Please 'npm install' first to install the necessary node_modules
-2. Please rename the "config/xxxConfig - 副本.json" to "config/xxxConfig.json"
+2. Please rename the "config/xxxConfig - example.json" to "config/xxxConfig.json"
 3. Edit the database's ip, port, database, username and password to your owen in the mongodbConfig.json and redisConfig.json
 4. If be necessary, you can change the site port in the globalConfig.json
+
+**About Debug & Develop**
+* If you want to debug by vscode, please move the http method out of the cluster(like the annotation).
+* There is a existing typings.json, you can "typings install" directly.
+* The custom "*.d.ts" is in the "typings/".
 
 **How to use https**
 * Create the https certificate and place them to the "key/".
