@@ -1,0 +1,1 @@
+/// <reference path="../main/ambient/ionic/index.d.ts" />

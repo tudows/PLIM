@@ -17,7 +17,7 @@ Usage
 **About Debug & Develop**
 * If you want to debug by vscode, please move the http method out of the cluster(like the annotation).
 * There is a existing typings.json, you can "typings install" directly.
-* The custom "*.d.ts" is in the "typings/".
+* The custom "*.d.ts" is in the "typings/my/".
 
 **How to use https**
 * Create the https certificate and place them to the "key/".
@@ -188,6 +188,7 @@ Log
 **2016-04-30**
 * Add the VS Code debug config.
 * Add the typings.json.
+* Add custom "*.d.ts".
 
 
 License
