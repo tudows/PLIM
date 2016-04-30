@@ -1,0 +1,83 @@
+{
+    "error": 0,
+    "status": "success",
+    "date": "2016-04-30",
+    "results": [
+        {
+            "currentCity": "北京",
+            "pm25": "181",
+            "index": [
+                {
+                    "title": "穿衣",
+                    "zs": "热",
+                    "tipt": "穿衣指数",
+                    "des": "天气热，建议着短裙、短裤、短薄外套、T恤等夏季服装。"
+                },
+                {
+                    "title": "洗车",
+                    "zs": "不宜",
+                    "tipt": "洗车指数",
+                    "des": "不宜洗车，未来24小时内有霾，如果在此期间洗车，会弄脏您的爱车。"
+                },
+                {
+                    "title": "旅游",
+                    "zs": "较不宜",
+                    "tipt": "旅游指数",
+                    "des": "空气质量差，不适宜旅游"
+                },
+                {
+                    "title": "感冒",
+                    "zs": "少发",
+                    "tipt": "感冒指数",
+                    "des": "各项气象条件适宜，发生感冒机率较低。但请避免长期处于空调房间中，以防感冒。"
+                },
+                {
+                    "title": "运动",
+                    "zs": "较不宜",
+                    "tipt": "运动指数",
+                    "des": "有扬沙或浮尘，炎热，建议适当停止户外运动，选择在室内进行低强度运动，以避免吸入更多沙尘，有损健康。"
+                },
+                {
+                    "title": "紫外线强度",
+                    "zs": "弱",
+                    "tipt": "紫外线强度指数",
+                    "des": "紫外线强度较弱，建议出门前涂擦SPF在12-15之间、PA+的防晒护肤品。"
+                }
+            ],
+            "weather_data": [
+                {
+                    "date": "周六 04月30日 (实时：22℃)",
+                    "dayPictureUrl": "http://api.map.baidu.com/images/weather/day/mai.png",
+                    "nightPictureUrl": "http://api.map.baidu.com/images/weather/night/mai.png",
+                    "weather": "霾",
+                    "wind": "微风",
+                    "temperature": "31 ~ 15℃"
+                },
+                {
+                    "date": "周日",
+                    "dayPictureUrl": "http://api.map.baidu.com/images/weather/day/mai.png",
+                    "nightPictureUrl": "http://api.map.baidu.com/images/weather/night/leizhenyu.png",
+                    "weather": "霾转雷阵雨",
+                    "wind": "微风",
+                    "temperature": "32 ~ 19℃"
+                },
+                {
+                    "date": "周一",
+                    "dayPictureUrl": "http://api.map.baidu.com/images/weather/day/zhenyu.png",
+                    "nightPictureUrl": "http://api.map.baidu.com/images/weather/night/qing.png",
+                    "weather": "阵雨转晴",
+                    "wind": "北风4-5级",
+                    "temperature": "25 ~ 14℃"
+                },
+                {
+                    "date": "周二",
+                    "dayPictureUrl": "http://api.map.baidu.com/images/weather/day/qing.png",
+                    "nightPictureUrl": "http://api.map.baidu.com/images/weather/night/duoyun.png",
+                    "weather": "晴转多云",
+                    "wind": "北风3-4级",
+                    "temperature": "27 ~ 12℃"
+                }
+            ]
+        }
+    ]
+}

@@ -1,3 +1,5 @@
+/// <reference path="../typings/my/node&express.d.ts" />
+
 var powerLineService = require('../services/powerLineService');
 var crypto = require('../utils/cryptoUtil');
 var converter = require('../utils/converterUtil');

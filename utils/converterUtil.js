@@ -1,3 +1,5 @@
+var url = require("url");
+
 module.exports.base64ToUrl = function(base64Str) {
     return base64Str.replace(/[\/]/g, '%7C');
 };

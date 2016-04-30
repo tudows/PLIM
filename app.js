@@ -1,3 +1,5 @@
+/// <reference path="typings/my/node&express.d.ts" />
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -91,3 +93,12 @@ var serverHttps = https.createServer(options, app).listen(config.httpsPort, func
     var port = serverHttps.address().port;
     console.log('https listen start ! host: ' + host + ', port: ' + port);
 });
+
+var powerLineService = require('./services/powerLineService');
+powerLineService.updateOperationParameter(function (result) {
+    console.log(result);
+});
+setInterval(function() {
+    powerLineService.updateOperationParameter(function(result) {
+    });
+}, 60000);

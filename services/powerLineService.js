@@ -1,8 +1,11 @@
+/// <reference path="../typings/my/node&express.d.ts" />
+
 var PowerLine = require('../models/powerLine');
 var powerLineDAO = require('../dao/powerLineDAO');
 var request = require('request');
 var async = require("async");
 var mongoose = require('mongoose');
+var request = require('request');
 
 exports.add = function(data, callback) {
     var powerLine = new PowerLine({
@@ -51,6 +54,38 @@ exports.remove = function(callback) {
     powerLineDAO.remove({}, function(err){
         if(!err){
             callback(true);
+        } else {
+            callback(false);
+        }
+    });
+};
+
+exports.updateOperationParameter = function (callback) {
+    powerLineDAO.find({ status: 1 }, function (err, powerLines) {
+        if (!err) {
+            powerLines.forEach(function (powerLine) {
+                request.get(
+                    'http://api.map.baidu.com/telematics/v3/weather?location=' + encodeURI(powerLine.province.nameCn) +
+                    '&output=json&ak=hDMeBeFR3ccORh6CsKzOGIsc', function (error, response, body) {
+                        if (!error && response.statusCode == 200) {
+                            var weather = JSON.parse(body);
+                            if (weather.error == 0) {
+                                powerLine.operationParameter.weather = weather.results[0].weather_data;
+                                powerLineDAO.updateOperationParameter(powerLine.operationParameter, function (err) {
+                                    if (!err) {
+                                        callback(true);
+                                    } else {
+                                        callback(false);
+                                    }
+                                });
+                            } else {
+                                callback(false);
+                            }
+                        } else {
+                            callback(false);
+                        }
+                    });
+            });
         } else {
             callback(false);
         }

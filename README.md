@@ -189,6 +189,8 @@ Log
 * Add the VS Code debug config.
 * Add the typings.json.
 * Add custom "*.d.ts".
+* Import baidu weather api, the powerline weather information is from baidu.
+* Add the function to update the powerline's parameter at regular time.
 
 
 License

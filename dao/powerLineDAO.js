@@ -1,3 +1,5 @@
+/// <reference path="../typings/my/node&express.d.ts" />
+
 var PowerLine = require('../models/powerLine');
 var VoltageClassUnit = require('../models/voltageClassUnit');
 var OperationParameter = require('../models/operationParameter');
@@ -48,6 +50,23 @@ exports.remove = function(data, callback) {
         }
     });
     OperationParameter.remove(data, function(err) {
+        if(!err) {
+            callback(null);
+        } else {
+            callback(err);
+        }
+    });
+};
+
+exports.updateOperationParameter = function(data, callback) {
+    OperationParameter.update({_id: data.id}, {$set: {
+        volt: data.volt,
+        ampere: data.ampere,
+        ohm: data.ohm,
+        celsius: data.celsius,
+        weather: data.weather,
+        pullNewton: data.pullNewton
+    }}, function (err) {
         if(!err) {
             callback(null);
         } else {
