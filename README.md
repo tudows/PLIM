@@ -182,6 +182,7 @@ Log
 
 **2016-04-30**
 * Add the VS Code debug config.
+* Add the tsd.json.
 
 
 License
