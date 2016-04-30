@@ -5,4 +5,7 @@
 /config/mongodbConfig.json
 /config/redisConfig.json
 .DS_Store
-/typings/
+/typings/browser
+/typings/main
+/typings/browser.d.ts
+/typings/main.d.ts
