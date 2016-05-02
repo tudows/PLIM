@@ -2,10 +2,9 @@
 
 var PowerLine = require('../models/powerLine');
 var VoltageClassUnit = require('../models/voltageClassUnit');
-var OperationParameter = require('../models/operationParameter');
 
 exports.find = function(data, callback) {
-    PowerLine.find(data).populate("operationParameter").populate("voltageClass").populate("runningState").populate("province").exec(function(err, powerLines) {
+    PowerLine.find(data).populate("standardOperationParameter").populate("operationParameter").populate("voltageClass").populate("runningState").populate("province").exec(function(err, powerLines) {
         if(!err) {
             VoltageClassUnit.populate(powerLines, { "path": "voltageClass.unit" }, function (_err, _result) {
                 if (!_err) {
@@ -20,23 +19,32 @@ exports.find = function(data, callback) {
     });
 };
 
-exports.add = function(data, callback) {
-    var operationParameter = new OperationParameter({
-        volt: null,
-        ampere: null,
-        ohm: null,
-        celsius: null,
-        weather: null,
-        pullNewton: null
-    });
-    operationParameter.save(function(err, powerLine) {});
-    
-    data.operationParameter = operationParameter._id;
-    data.save(function(err, powerLine) {
+exports.addPowerLine = function(data, callback) {
+    data.save(function(err) {
         if(!err) {
-            callback(null, powerLine);
+            callback(null);
         } else {
-            callback(err, null);
+            callback(err);
+        }
+    });
+};
+
+exports.addStandardOperationParameter = function(data, callback) {
+    data.save(function(err, result) {
+        if(!err) {
+            callback(null);
+        } else {
+            callback(err);
+        }
+    });
+};
+
+exports.addOperationParameter = function(data, callback) {
+    data.save(function(err, result) {
+        if(!err) {
+            callback(null);
+        } else {
+            callback(err);
         }
     });
 };
@@ -64,8 +72,9 @@ exports.updateOperationParameter = function(data, callback) {
         ampere: data.ampere,
         ohm: data.ohm,
         celsius: data.celsius,
-        weather: data.weather,
-        pullNewton: data.pullNewton
+        environment: data.environment,
+        pullNewton: data.pullNewton,
+        updateDate: data.updateDate
     }}, function (err) {
         if(!err) {
             callback(null);

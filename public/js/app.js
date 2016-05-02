@@ -1,3 +1,5 @@
+/// <reference path="../../typings/my/angular.d.ts" />
+
 var app = angular.module('plim', ['ionic', 'radialIndicator', 'ngAnimate']);
 app.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider

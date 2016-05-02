@@ -13,8 +13,39 @@
     <ion-content>
         <ion-refresher pulling-text="下拉刷新" on-refresh="getDetail()"></ion-refresher>
         <div class="row">
-            <div class="col col-50">
-                <div data-radial-indicator="{radius: 20, percentage: true, barColor: '#87CEEB'}" data-radial-indicator-model="indicatorValue"></div>
+            <div class="col col-25 text-center">
+                <div data-radial-indicator="indicatorOption" data-radial-indicator-id="indicator1"></div>
+                <label>健康状态</label>
+            </div>
+            <div class="col col-25 text-center">
+                <div data-radial-indicator="indicatorOption" data-radial-indicator-id="indicator2"></div>
+                <label>定期维修</label>
+            </div>
+            <div class="col col-25 text-center">
+                <div data-radial-indicator="indicatorOption" data-radial-indicator-id="indicator3"></div>
+                <label>定期保养</label>
+            </div>
+            <div class="col col-25 text-center">
+                <div data-radial-indicator="indicatorOption" data-radial-indicator-id="indicator4"></div>
+                <label>运行状态</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-25 text-center">
+                <div data-radial-indicator="indicatorOption" data-radial-indicator-id="indicator5"></div>
+                <label>负荷电压</label>
+            </div>
+            <div class="col col-25 text-center">
+                <div data-radial-indicator="indicatorOption" data-radial-indicator-id="indicator6"></div>
+                <label>负荷电流</label>
+            </div>
+            <div class="col col-25 text-center">
+                <div data-radial-indicator="indicatorOption" data-radial-indicator-id="indicator7"></div>
+                <label>线路温度</label>
+            </div>
+            <div class="col col-25 text-center">
+                <div data-radial-indicator="indicatorOption" data-radial-indicator-id="indicator8"></div>
+                <label>负载拉力</label>
             </div>
         </div>
         <div class="row">
@@ -97,13 +128,13 @@
                 </button>
             </div>
         </div>
-        <div class="row">
+        <!--<div class="row">
             <div class="col">
                 <button class="button button-block" onclick="document.getElementById('uploadImg').click()">
                     上传照片
                 </button>
                 <input id="uploadImg" type="file" class="hidden" />
             </div>
-        </div>
+        </div>-->
     </ion-content>
 </ion-view>

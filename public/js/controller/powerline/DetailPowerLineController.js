@@ -1,7 +1,31 @@
-app.controller("DetailPowerLineController", function ($filter, $rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory) {
+/// <reference path="../../../../typings/my/angular.d.ts" />
+
+app.controller("DetailPowerLineController", function ($filter, $rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory, $interval, radialIndicatorInstance) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[2];
+    
+    $scope.indicatorOption = {
+        radius: 20,
+        percentage: true,
+        barColor: {
+            0: '#FF0000',
+            33: '#FFFF00',
+            66: '#0066FF',
+            100: '#33CC33'
+        },
+        roundCorner: true,
         
-    $scope.indicatorValue = 70;
+    };
+    
+    $scope.timer = $interval(function () {
+        radialIndicatorInstance['indicator1'].animate(Math.floor(Math.random() * 100));
+        radialIndicatorInstance['indicator2'].animate(Math.floor(Math.random() * 100));
+        radialIndicatorInstance['indicator3'].animate(Math.floor(Math.random() * 100));
+        radialIndicatorInstance['indicator4'].animate(Math.floor(Math.random() * 100));
+        radialIndicatorInstance['indicator5'].animate(Math.floor(Math.random() * 100));
+        radialIndicatorInstance['indicator6'].animate(Math.floor(Math.random() * 100));
+        radialIndicatorInstance['indicator7'].animate(Math.floor(Math.random() * 100));
+        radialIndicatorInstance['indicator8'].animate(Math.floor(Math.random() * 100));
+    }, 1000);
     
     $scope.getDetail = function() {
         $rootScope.showLoading();
@@ -56,4 +80,8 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
             angular.element($event.target).html("更多信息");
         }
     }
+
+    $scope.$on("$destroy", function () {
+        $interval.cancel($scope.timer);
+    });
 });

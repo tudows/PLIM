@@ -37,9 +37,7 @@ exports.addGet = function(req, res) {
 };
 
 exports.addPost = function(req, res) {
-    var powerline = req.body;
-    powerline.encrypt = converter.base64ToUrl(crypto.rsaPublicEncrypt(powerline.no, 'base64'));
-    powerLineService.add(powerline, function(result) {
+    powerLineService.add(req.body, function(result) {
         // res.render('powerLine/add', {'message': result});
         // res.redirect('/');
         res.end();
@@ -83,3 +81,10 @@ exports.listGet = function(req, res) {
 exports.detailGet = function(req, res) {
     res.render('powerLine/detail');
 };
+
+exports.updateOperationParameterPost = function (req, res) {
+    powerLineService.updateOperationParameter(req.body, function(result) {
+        res.send(result);
+        res.end();
+    });
+}

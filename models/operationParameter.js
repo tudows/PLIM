@@ -6,8 +6,21 @@ var operationParameterSchema = new Schema({
     ampere: String,
     ohm: String,
     celsius: String,
-    weather: Schema.Types.Mixed,
-    pullNewton: String
+    environment: [{
+        minTemperature: String,
+        maxTemperature: String,
+        nowTemperature: String,
+        minWindSpeed: String,
+        maxWindSpeed: String,
+        windDirection: String,
+        weather: String,
+        date: Date,
+        dayPictureUrl: String,
+        nightPictureUrl: String,
+        updateDate: Date
+    }],
+    pullNewton: String,
+    updateDate: Date
 });
 
 module.exports = mongoose.model('OperationParameter', operationParameterSchema);

@@ -70,6 +70,10 @@ Decrypt the date by the rsa and return the trsult
 > * The key use the https ssl key.
 > * The detail of the decrypt please reference the "**About Encrypt & Decrypt**".
 
+
+**Operation Parameter Interface**
+* ing...
+
 Known Bug
 ------------------------------
 1. When update the GPS information on the map, the map will not be very smooth.
@@ -191,6 +195,11 @@ Log
 * Add custom "*.d.ts".
 * Import baidu weather api, the powerline weather information is from baidu.
 * Add the function to update the powerline's parameter at regular time.
+
+**2016-05-02**
+* Open the interface of powerline operation parameter entering.
+* Add momently monitor of powerline operation parameter.
+* Add the standard operation parameter of the powerline.
 
 
 License

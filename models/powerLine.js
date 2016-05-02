@@ -3,6 +3,7 @@ require('../models/runningState');
 require('../models/region');
 require('../models/voltageClass');
 require('../models/operationParameter');
+require('../models/standardOperationParameter');
 
 var Schema = mongoose.Schema;
 var powerLineSchema = new Schema({
@@ -39,7 +40,11 @@ var powerLineSchema = new Schema({
     operationParameter: {
         type: Schema.Types.ObjectId,
         ref: 'OperationParameter'
-    }
+    },
+    standardOperationParameter: {
+        type: Schema.Types.ObjectId,
+        ref: 'StandardOperationParameter'
+    },
 });
 
 module.exports = mongoose.model('PowerLine', powerLineSchema);
