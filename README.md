@@ -205,6 +205,7 @@ Log
 **2016-05-03**
 * Add a angular plugn - "radialIndicator".
 * Graphical display the momently parameter of the powerline in the powerline detail page.
+* Optimize the process of register.
 
 
 License

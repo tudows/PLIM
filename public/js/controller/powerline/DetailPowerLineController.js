@@ -9,10 +9,10 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
         maxValue: 1000,
         initValue: 500,
         barColor: {
-            0: '#33CC33',
-            300: '#0066FF',
-            600: '#FFFF00',
-            1000: '#FF0000'
+            0: "#33CC33",
+            300: "#0066FF",
+            600: "#FFFF00",
+            1000: "#FF0000"
         },
         roundCorner: true,
         format: function (value) {
@@ -31,17 +31,17 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
         initValue: 50,
         percentage: true,
         barColor: {
-            0: '#FF0000',
-            30: '#FFFF00',
-            60: '#0066FF',
-            100: '#33CC33'
+            0: "#FF0000",
+            30: "#FFFF00",
+            60: "#0066FF",
+            100: "#33CC33"
         },
         roundCorner: true
     };
     
-    $ionicModal.fromTemplateUrl('moreInfo.html', {
+    $ionicModal.fromTemplateUrl("moreInfo.html", {
         scope: $scope,
-        animation: 'slide-in-up'
+        animation: "slide-in-up"
     }).then(function (modal) {
         $scope.moreInfoModal = modal;
     });
@@ -59,7 +59,7 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
                     $scope.powerline = result[0];
                     
                     var healthy = Math.floor(Math.random() * 100);
-                    radialIndicatorInstance['healthyIndicator'].animate(healthy);
+                    radialIndicatorInstance["healthyIndicator"].animate(healthy);
                     if (healthy < 20) {
                         $scope.healthyText = "警告";
                     } else if (healthy < 40) {
@@ -76,40 +76,40 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
                     var repairDayDiff = ((new Date()).getTime() -
                         ($scope.powerline.lastRepairDay == null ?
                         (new Date($scope.powerline.serviceDate)).getTime() : (new Date($scope.powerline.lastRepairDay)).getTime())) / (1000 * 60 * 60 * 24);
-                    radialIndicatorInstance['repairIndicator'].animate(parseInt(($scope.powerline.repairDay - repairDayDiff) / $scope.powerline.repairDay * 100));
+                    radialIndicatorInstance["repairIndicator"].animate(parseInt(($scope.powerline.repairDay - repairDayDiff) / $scope.powerline.repairDay * 100));
                     $scope.repairText = "还剩" + parseInt($scope.powerline.repairDay - repairDayDiff) + "天";
                     
                     var maintainDayDiff = ((new Date()).getTime() -
                         ($scope.powerline.lastMaintainDay == null ?
                         (new Date($scope.powerline.serviceDate)).getTime() : (new Date($scope.powerline.lastMaintainDay)).getTime())) / (1000 * 60 * 60 * 24);
-                    radialIndicatorInstance['maintainIndicator'].animate(parseInt(($scope.powerline.maintainDay - maintainDayDiff) / $scope.powerline.maintainDay * 100));
+                    radialIndicatorInstance["maintainIndicator"].animate(parseInt(($scope.powerline.maintainDay - maintainDayDiff) / $scope.powerline.maintainDay * 100));
                     $scope.maintainText = "还剩" + parseInt($scope.powerline.maintainDay - maintainDayDiff) + "天";
                     
                     var serviceDate = new Date($scope.powerline.serviceDate);
                     var nowDate = new Date();
                     var serviceYearDiff = nowDate.getFullYear() - serviceDate.getFullYear();
                     var serviceYearPercentage = parseInt(serviceYearDiff / $scope.powerline.designYear * 100);
-                    radialIndicatorInstance['serviceYearIndicator'].animate(100 - serviceYearPercentage);
+                    radialIndicatorInstance["serviceYearIndicator"].animate(100 - serviceYearPercentage);
                     $scope.serviceYearText = serviceYearDiff + "/" + $scope.powerline.designYear + " 年";
                     
                     var voltDiffUp = $scope.powerline.operationParameter.volt - $scope.powerline.standardOperationParameter.minVolt;
                     var voltDiffDown = $scope.powerline.standardOperationParameter.maxVolt - $scope.powerline.standardOperationParameter.minVolt;
-                    radialIndicatorInstance['voltIndicator'].animate(parseInt(voltDiffUp / voltDiffDown * 100));
+                    radialIndicatorInstance["voltIndicator"].animate(parseInt(voltDiffUp / voltDiffDown * 100));
                     $scope.voltText = parseInt($scope.powerline.operationParameter.volt) + " V";
                     
                     var ampereDiffUp = $scope.powerline.operationParameter.ampere - $scope.powerline.standardOperationParameter.minAmpere;
                     var ampereDiffDown = $scope.powerline.standardOperationParameter.maxAmpere - $scope.powerline.standardOperationParameter.minAmpere;
-                    radialIndicatorInstance['ampereIndicator'].animate(parseInt(ampereDiffUp / ampereDiffDown * 100));
+                    radialIndicatorInstance["ampereIndicator"].animate(parseInt(ampereDiffUp / ampereDiffDown * 100));
                     $scope.ampereText = parseInt($scope.powerline.operationParameter.ampere) + " A";
                     
                     var celsiusDiffUp = $scope.powerline.operationParameter.celsius - $scope.powerline.standardOperationParameter.minCelsius;
                     var celsiusDiffDown = $scope.powerline.standardOperationParameter.maxCelsius - $scope.powerline.standardOperationParameter.minCelsius;
-                    radialIndicatorInstance['celsiusIndicator'].animate(parseInt(celsiusDiffUp / celsiusDiffDown * 100));
+                    radialIndicatorInstance["celsiusIndicator"].animate(parseInt(celsiusDiffUp / celsiusDiffDown * 100));
                     $scope.celsiusText = parseInt($scope.powerline.operationParameter.celsius) + " ℃";
                     
                     var pullNewtonDiffUp = $scope.powerline.operationParameter.pullNewton - $scope.powerline.standardOperationParameter.minPullNewton;
                     var pullNewtonDiffDown = $scope.powerline.standardOperationParameter.maxPullNewton - $scope.powerline.standardOperationParameter.minPullNewton;
-                    radialIndicatorInstance['pullNewtonIndicator'].animate(parseInt(pullNewtonDiffUp / pullNewtonDiffDown * 100));
+                    radialIndicatorInstance["pullNewtonIndicator"].animate(parseInt(pullNewtonDiffUp / pullNewtonDiffDown * 100));
                     $scope.pullNewtonText = parseInt($scope.powerline.operationParameter.pullNewton) + " N";
                     
                     $scope.operateData();
@@ -136,12 +136,12 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
         if ($scope.powerline.lastRepairDay == null) {
             $scope.powerline.lastRepairDay = "从未维修过";
         } else {
-            $filter('date')($scope.powerline.lastMaintainDay, 'yyyy-MM-dd');
+            $filter("date")($scope.powerline.lastMaintainDay, "yyyy-MM-dd");
         }
         if ($scope.powerline.lastMaintainDay == null) {
             $scope.powerline.lastMaintainDay = "从未保养过";
         } else {
-            $filter('date')($scope.powerline.lastMaintainDay, 'yyyy-MM-dd');
+            $filter("date")($scope.powerline.lastMaintainDay, "yyyy-MM-dd");
         }
     }
     
@@ -152,6 +152,7 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
     $scope.back = function () {
         if ($ionicHistory.backTitle() == null) {
             $state.go("app.powerline_maintain.list", {});
+            // $ionicHistory.clearCache();
         } else {
             $ionicHistory.goBack();
         }

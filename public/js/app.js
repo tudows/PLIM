@@ -1,72 +1,72 @@
 /// <reference path="../../typings/my/angular.d.ts" />
 
-var app = angular.module('plim', ['ionic', 'radialIndicator', 'ngAnimate']);
+var app = angular.module("plim", ["ionic", "radialIndicator", "ngAnimate"]);
 app.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
-        .state('app', {
+        .state("app", {
             url: "/app",
             abstract: true,
             templateUrl: "templates/menu.html",
-            controller: 'PLIMController'
+            controller: "PLIMController"
         })
-        .state('app.user', {
+        .state("app.user", {
             url: "/user",
             abstract: true,
-            templateUrl: 'templates/user.html',
-            controller: 'UserController'
+            templateUrl: "templates/user.html",
+            controller: "UserController"
         })
-        .state('app.user.info', {
+        .state("app.user.info", {
             url: "/info",
-            templateUrl: 'user'
+            templateUrl: "user"
         })
-        .state('app.user.register', {
+        .state("app.user.register", {
             url: "/register",
-            templateUrl: 'user/register'
+            templateUrl: "user/register"
         })
-        .state('app.addPowerLineData', {
+        .state("app.addPowerLineData", {
             cache: false,
             url: "/addPowerLine/:data",
-            templateUrl: 'powerLine/add',
-            controller: 'AddPowerLineController'
+            templateUrl: "powerLine/add",
+            controller: "AddPowerLineController"
         })
-        .state('app.powerline_maintain', {
+        .state("app.powerline_maintain", {
             url: "/powerline_maintain",
             abstract: true,
-            templateUrl: 'templates/powerline_maintain.html'
+            templateUrl: "templates/powerline_maintain.html"
         })
-        .state('app.powerline_maintain.list', {
+        .state("app.powerline_maintain.list", {
             url: "/list",
             views: {
                 "list-tab": {
-                    templateUrl: 'powerLine/list',
-                    controller: 'ListPowerLineController'
+                    templateUrl: "powerLine/list",
+                    controller: "ListPowerLineController"
                 }
             }
         })
-        .state('app.powerline_maintain.powerline', {
+        .state("app.powerline_maintain.powerline", {
             url: "/powerline/:no",
             views: {
                 "list-tab": {
                     templateUrl: function ($stateParams) {
-                        return 'powerLine/detail/' + $stateParams.no;
+                        return "powerLine/detail/" + $stateParams.no;
                     },
-                    controller: 'DetailPowerLineController'
+                    controller: "DetailPowerLineController"
                 }
             }
         })
-        .state('app.powerline_maintain.position', {
+        .state("app.powerline_maintain.position", {
             url: "/position",
             views: {
                 "position-tab": {
-                    templateUrl: 'powerLine/position',
-                    controller: 'PositionPowerLineController'
+                    templateUrl: "powerLine/position",
+                    controller: "PositionPowerLineController"
                 }
             }
         });
-    $urlRouterProvider.when('/app/addPowerLine', '/app/addPowerLine/');
-    $urlRouterProvider.otherwise('/app/user/info');
+    $urlRouterProvider.when("/app/addPowerLine", "/app/addPowerLine/");
+    $urlRouterProvider.otherwise("/app/user/info");
 });
-app.factory('LeftMenus', function () {
+app.factory("LeftMenus", function () {
     return {
         all: function () {
             return [

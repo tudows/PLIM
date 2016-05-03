@@ -1,4 +1,4 @@
-app.controller("PLIMController", function ($rootScope, $scope, $http, $window, User, LeftMenus, $ionicSideMenuDelegate, $ionicPopup) {
+app.controller("PLIMController", function ($rootScope, $scope, $http, $window, User, LeftMenus, $ionicSideMenuDelegate, $ionicPopup, $state, $ionicHistory) {
     // 初始化left menu
     $rootScope.leftMenus = LeftMenus.all();
     $rootScope.activeLeftMenu = $rootScope.leftMenus[0];
@@ -64,6 +64,7 @@ app.controller("PLIMController", function ($rootScope, $scope, $http, $window, U
                 if (result != "") {
                     User.setUser(result);
                 } else {
+                    $state.go("app.user.register", {});
                     $rootScope.showError("设备未注册");
                 }
             }).error(function (error) {

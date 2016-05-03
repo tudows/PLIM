@@ -41,30 +41,30 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                     function (_callback) {
                         $http.get("baseData/getVoltageClass").success(function(result) {
                             $scope.voltageClasses = result;
-                            _callback(null, '');
+                            _callback(null, "");
                         }).error(function(err) {
-                            _callback(null, '');
+                            _callback(null, "");
                         });;
                     },
                     function (_callback) {
                         $http.get("baseData/getRunningState").success(function(result) {
                             $scope.runningStates = result;
-                            _callback(null, '');
+                            _callback(null, "");
                         }).error(function(err) {
-                            _callback(null, '');
+                            _callback(null, "");
                         });
                     },
                     function (_callback) {
                         $http.get("baseData/getProvince").success(function(result) {
                             $scope.provinces = result;
-                            _callback(null, '');
+                            _callback(null, "");
                         }).error(function(err) {
-                            _callback(null, '');
+                            _callback(null, "");
                         });
                     }
                 ], function (err, result) {
                     if (result.length == 3) {
-                        callback(null, '');
+                        callback(null, "");
                     }
                 });
             },
@@ -93,7 +93,7 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                         endLatitude: "无数据"
                     }
                 }
-                callback(null, '');
+                callback(null, "");
             }
         ], function (err, result) {
             if (result.length == 2)
@@ -175,9 +175,9 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
         });
     };
     
-    $ionicModal.fromTemplateUrl('standardOperationParameter.html', {
+    $ionicModal.fromTemplateUrl("standardOperationParameter.html", {
         scope: $scope,
-        animation: 'slide-in-up'
+        animation: "slide-in-up"
     }).then(function (modal) {
         $scope.standardOperationParameterModal = modal;
     });

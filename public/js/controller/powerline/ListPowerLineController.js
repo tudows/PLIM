@@ -2,8 +2,6 @@ app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $
     $rootScope.activeLeftMenu = $rootScope.leftMenus[2];
 
     $ionicHistory.clearHistory();
-    $ionicHistory.clearCache();
-
     $rootScope.showLoading();
     $http.get("/powerLine/listPowerLine").success(function (result) {
         $scope.powerlines = result;

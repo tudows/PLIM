@@ -1,5 +1,7 @@
-app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User, $http, $ionicHistory) {
+app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User, $http, $ionicHistory, $state) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[0];
+    
+    $ionicHistory.clearHistory();
     
     // $http.post("user/addUser", {
     //     no: "20160001",
@@ -63,7 +65,8 @@ app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User
                     $rootScope.closeLoading();
                     if (result != "") {
                         User.setUser(result);
-                        $ionicHistory.goBack();
+                        // $ionicHistory.goBack();
+                        $state.go("app.user.info", {});
                     } else {
                         $rootScope.showError("申请失败，请重试");
                     }
@@ -73,6 +76,10 @@ app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User
                 });
             }
         });
+    };
+    
+    $scope.unBind = function () {
+        
     };
 
     $scope.register = function () {

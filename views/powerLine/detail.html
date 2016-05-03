@@ -13,71 +13,73 @@
     <ion-content>
         <ion-refresher pulling-text="下拉刷新" on-refresh="getDetail()"></ion-refresher>
         <div class="row" style="margin-bottom: 10px;">
-            <div class="col col-100 text-center text-bold text-large">
-                {{powerline.runningState.nameCn}}
-                <i class="icon icon-large" ng-class="{
-                    'ion-android-happy balanced': powerline.runningState.code == 5,
-                    'ion-stop energized': powerline.runningState.code == 2,
-                    'ion-android-sad assertive': powerline.runningState.code == 1,
-                    'ion-settings royal': powerline.runningState.code == 3,
-                    'ion-magnet calm': powerline.runningState.code == 4
-                }"></i>
+            <div class="col col-100 text-center text-bold">
+                <h3>
+                    {{powerline.runningState.nameCn}}
+                    <i class="icon icon-large" ng-class="{
+                        'ion-android-happy balanced': powerline.runningState.code == 5,
+                        'ion-stop energized': powerline.runningState.code == 2,
+                        'ion-android-sad assertive': powerline.runningState.code == 1,
+                        'ion-settings royal': powerline.runningState.code == 3,
+                        'ion-magnet calm': powerline.runningState.code == 4
+                    }"></i>
+                </h3>
             </div>
         </div>
         <div class="row">
             <div class="col col-25 text-center">
-                <label class="text-bold text-media">健康状态</label>
+                <label class="text-bold">健康状态</label>
                 <div class="radial-indicator" data-radial-indicator="indicatorOptionH" data-radial-indicator-id="healthyIndicator"></div>
-                <label class="text-small">{{healthyText}}</label>
+                <label class="text-media">{{healthyText}}</label>
             </div>
             <div class="col col-25 text-center">
-                <label class="text-bold text-media">定期维修</label>
+                <label class="text-bold">定期维修</label>
                 <div class="radial-indicator" data-radial-indicator="indicatorOptionH" data-radial-indicator-id="repairIndicator"></div>
-                <label class="text-small">{{repairText}}</label>
+                <label class="text-media">{{repairText}}</label>
             </div>
             <div class="col col-25 text-center">
-                <label class="text-bold text-media">定期保养</label>
+                <label class="text-bold">定期保养</label>
                 <div class="radial-indicator" data-radial-indicator="indicatorOptionH" data-radial-indicator-id="maintainIndicator"></div>
-                <label class="text-small">{{maintainText}}</label>
+                <label class="text-media">{{maintainText}}</label>
             </div>
             <div class="col col-25 text-center">
-                <label class="text-bold text-media">报废期限</label>
+                <label class="text-bold">报废期限</label>
                 <div class="radial-indicator" data-radial-indicator="indicatorOptionH" data-radial-indicator-id="serviceYearIndicator"></div>
-                <label class="text-small">{{serviceYearText}}</label>
+                <label class="text-media">{{serviceYearText}}</label>
             </div>
         </div>
         <div class="row" style="margin-top: 0px;">
             <div class="col col-25 text-center">
-                <label class="text-bold text-media">负荷电压</label>
+                <label class="text-bold">负荷电压</label>
                 <div class="radial-indicator" data-radial-indicator="indicatorOptionK" data-radial-indicator-id="voltIndicator"></div>
-                <label class="text-small">{{voltText}}</label>
+                <label class="text-media">{{voltText}}</label>
             </div>
             <div class="col col-25 text-center">
-                <label class="text-bold text-media">负荷电流</label>
+                <label class="text-bold">负荷电流</label>
                 <div class="radial-indicator" data-radial-indicator="indicatorOptionK" data-radial-indicator-id="ampereIndicator"></div>
-                <label class="text-small">{{ampereText}}</label>
+                <label class="text-media">{{ampereText}}</label>
             </div>
             <div class="col col-25 text-center">
-                <label class="text-bold text-media">线路温度</label>
+                <label class="text-bold">线路温度</label>
                 <div class="radial-indicator" data-radial-indicator="indicatorOptionK" data-radial-indicator-id="celsiusIndicator"></div>
-                <label class="text-small">{{celsiusText}}</label>
+                <label class="text-media">{{celsiusText}}</label>
             </div>
             <div class="col col-25 text-center">
-                <label class="text-bold text-media">负载拉力</label>
+                <label class="text-bold">负载拉力</label>
                 <div class="radial-indicator" data-radial-indicator="indicatorOptionK" data-radial-indicator-id="pullNewtonIndicator"></div>
-                <label class="text-small">{{pullNewtonText}}</label>
+                <label class="text-media">{{pullNewtonText}}</label>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <button class="button button-block button-balanced" ng-click="moreInfoModal.show()">
+                <button class="button button-block button-positive" ng-click="moreInfoModal.show()">
                     更多信息
                 </button>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <button class="button button-block button-positive" ng-click="position()">
+                <button class="button button-block button-balanced" ng-click="position()">
                     定位
                 </button>
             </div>
@@ -102,44 +104,60 @@
         </ion-header-bar>
         <ion-content>
             <div class="row">
-                <div class="col col-50 text-right">编号 </div>
-                <div class="col"> {{powerline.no}}</div>
+                <div class="col col-100 text-center text-bold">
+                    <h3>基本信息</h3>
+                </div>
             </div>
             <div class="row">
-                <div class="col col-50 text-right">类型 </div>
-                <div class="col"> {{powerline.modelNo}}</div>
+                <div class="col col-25">编号 </div>
+                <div class="col col-25"> {{powerline.no}}</div>
+                <div class="col col-25">类型 </div>
+                <div class="col col-25"> {{powerline.modelNo}}</div>
             </div>
             <div class="row">
-                <div class="col col-50 text-right">电压等级 </div>
-                <div class="col"> {{powerline.voltageClass.voltage}}{{powerline.voltageClass.unit.unitCn}}</div>
+                <div class="col col-25">电压等级 </div>
+                <div class="col col-25"> {{powerline.voltageClass.voltage}}{{powerline.voltageClass.unit.unitCn}}</div>
+                <div class="col col-25">投运时间 </div>
+                <div class="col col-25"> {{powerline.serviceDate | date:'yyyy-MM-dd'}}</div>
             </div>
             <div class="row">
-                <div class="col col-50 text-right">投运时间 </div>
-                <div class="col"> {{powerline.serviceDate | date:'yyyy-MM-dd'}}</div>
+                <div class="col col-25">定期检修天数 </div>
+                <div class="col col-25"> {{powerline.repairDay}}</div>
+                <div class="col col-25">定期保养天数 </div>
+                <div class="col col-25"> {{powerline.maintainDay}}</div>
             </div>
             <div class="row">
-                <div class="col col-50 text-right">定期检修天数 </div>
-                <div class="col"> {{powerline.repairDay}}</div>
+                <div class="col col-25">设计年限 </div>
+                <div class="col col-25"> {{powerline.designYear}}</div>
+                <div class="col col-25">所属区域 </div>
+                <div class="col col-25"> {{powerline.province.nameCn}}</div>
             </div>
             <div class="row">
-                <div class="col col-50 text-right">定期保养天数 </div>
-                <div class="col"> {{powerline.maintainDay}}</div>
+                <div class="col col-25">最近维修日期 </div>
+                <div class="col col-25"> {{powerline.lastRepairDay}}</div>
+                <div class="col col-25">最近保养日期 </div>
+                <div class="col col-25"> {{powerline.lastMaintainDay}}</div>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col col-100 text-center text-bold">
+                    <h3>标准运行参数</h3>
+                </div>
             </div>
             <div class="row">
-                <div class="col col-50 text-right">设计年限 </div>
-                <div class="col"> {{powerline.designYear}}</div>
+                <div class="col col-25">运行电压 </div>
+                <div class="col col-25"> {{powerline.standardOperationParameter.minVolt}} ~ {{powerline.standardOperationParameter.maxVolt}} V</div>
+                <div class="col col-25">运行电流 </div>
+                <div class="col col-25"> {{powerline.standardOperationParameter.minAmpere}} ~ {{powerline.standardOperationParameter.maxAmpere}} A</div>
             </div>
             <div class="row">
-                <div class="col col-50 text-right">所属区域 </div>
-                <div class="col"> {{powerline.province.nameCn}}</div>
+                <div class="col col-25">运行电阻 </div>
+                <div class="col col-25"> {{powerline.standardOperationParameter.minOhm}} ~ {{powerline.standardOperationParameter.maxOhm}} Ω</div>
+                <div class="col col-25">运行温度 </div>
+                <div class="col col-25"> {{powerline.standardOperationParameter.minCelsius}} ~ {{powerline.standardOperationParameter.maxCelsius}} ℃</div>
             </div>
             <div class="row">
-                <div class="col col-50 text-right">最近维修日期 </div>
-                <div class="col"> {{powerline.lastRepairDay}}</div>
-            </div>
-            <div class="row">
-                <div class="col col-50 text-right">最近保养日期 </div>
-                <div class="col"> {{powerline.lastMaintainDay}}</div>
+                <div class="col col-25">承受拉力 </div>
+                <div class="col col-25"> {{powerline.standardOperationParameter.minPullNewton}} ~ {{powerline.standardOperationParameter.maxPullNewton}} N</div>
             </div>
         </ion-content>
     </ion-modal-view>
