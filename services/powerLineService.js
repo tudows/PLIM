@@ -26,7 +26,7 @@ exports.add = function (data, callback) {
             });
             powerLineDAO.addOperationParameter(_operationParameter, function (_err) {
                 operationParameterId = _operationParameter._id;
-                _callback(_err);
+                _callback(_err, '');
             });
         },
         function (_callback) {
@@ -44,11 +44,11 @@ exports.add = function (data, callback) {
             });
             powerLineDAO.addStandardOperationParameter(_standardOperationParameter, function (_err) {
                 standardOperationParameterId = _standardOperationParameter._id;
-                _callback(_err);
+                _callback(_err, '');
             });
         }
-    ], function (_err) {
-        if (_err.length == 2) {
+    ], function (_err, _results) {
+        if (_results.length == 2 && _err == null) {
             var _powerLine = new PowerLine({
                 no: data.no,
                 modelNo: data.modelNo,

@@ -1,4 +1,6 @@
-app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $ionicPopup, $stateParams, $ionicHistory) {
+/// <reference path="../../../../typings/my/angular.d.ts" />
+
+app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $ionicPopup, $stateParams, $ionicHistory, $ionicModal) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[1];
 
     $ionicHistory.clearHistory();
@@ -172,6 +174,13 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
 
         });
     };
+    
+    $ionicModal.fromTemplateUrl('standardOperationParameter.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.standardOperationParameterModal = modal;
+    });
 
     $scope.getStartPosition = function () {
         $rootScope.showLoading();

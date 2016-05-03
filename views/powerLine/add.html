@@ -69,6 +69,11 @@
         </div>
         <div class="row">
             <div class="col col-100">
+                <button class="button button-block button-energized no-margin" ng-click="standardOperationParameterModal.show()">设置标准运行参数</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-100">
                 <button class="button button-block button-balanced no-margin" ng-click="savePowerLine()">保存线路</button>
             </div>
         </div>
@@ -92,4 +97,70 @@
         <div class="col col-33">结束经度</div>
         <div class="col col-67">{{powerline.location.endLatitude}}</div>
     </div>
+</script>
+
+<script id="standardOperationParameter.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar>
+            <h1 class="title">标准运行参数</h1>
+            <button class="button button-clear" ng-click="standardOperationParameterModal.hide()">确定</button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="row">
+                <div class="col col-100">运行电压(V)</div>
+            </div>
+            <div class="row">
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.minVolt" placeholder="最小" ng-model="powerline.standardOperationParameter.minVolt">
+                </div>
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.maxVolt" placeholder="最大" ng-model="powerline.standardOperationParameter.maxVolt">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-100">运行电流(A)</div>
+            </div>
+            <div class="row">
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.minAmpere" placeholder="最小" ng-model="powerline.standardOperationParameter.minAmpere">
+                </div>
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.maxAmpere" placeholder="最大" ng-model="powerline.standardOperationParameter.maxAmpere">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-100">运行电阻(Ω)</div>
+            </div>
+            <div class="row">
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.minOhm" placeholder="最小" ng-model="powerline.standardOperationParameter.minOhm">
+                </div>
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.maxOhm" placeholder="最大" ng-model="powerline.standardOperationParameter.maxOhm">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-100">运行温度(℃)</div>
+            </div>
+            <div class="row">
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.minCelsius" placeholder="最小" ng-model="powerline.standardOperationParameter.minCelsius">
+                </div>
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.maxCelsius" placeholder="最大" ng-model="powerline.standardOperationParameter.maxCelsius">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-100">承受拉力(N)</div>
+            </div>
+            <div class="row">
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.minPullNewton" placeholder="最小" ng-model="powerline.standardOperationParameter.minPullNewton">
+                </div>
+                <div class="col col-50 item item-input">
+                    <input type="number" name="standardOperationParameter.maxPullNewton" placeholder="最大" ng-model="powerline.standardOperationParameter.maxPullNewton">
+                </div>
+            </div>
+        </ion-content>
+    </ion-modal-view>
 </script>

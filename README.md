@@ -202,6 +202,11 @@ Log
 * Add the standard operation parameter of the powerline.
 
 
+**2016-05-03**
+* Add a angular plugn - "radialIndicator".
+* Graphical display the momently parameter of the powerline in the powerline detail page.
+
+
 License
 ------------------------------
 [GNU](https://github.com/tudows/PLIM/blob/master/LICENSE)

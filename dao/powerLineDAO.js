@@ -2,6 +2,8 @@
 
 var PowerLine = require('../models/powerLine');
 var VoltageClassUnit = require('../models/voltageClassUnit');
+var OperationParameter = require('../models/operationParameter');
+var StandardOperationParameter = require('../models/standardOperationParameter');
 
 exports.find = function(data, callback) {
     PowerLine.find(data).populate("standardOperationParameter").populate("operationParameter").populate("voltageClass").populate("runningState").populate("province").exec(function(err, powerLines) {
