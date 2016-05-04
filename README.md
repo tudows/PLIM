@@ -207,6 +207,9 @@ Log
 * Graphical display the momently parameter of the powerline in the powerline detail page.
 * Optimize the process of register.
 
+**2016-05-04**
+* Add the function of unbind device.
+
 
 License
 ------------------------------

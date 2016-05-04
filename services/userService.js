@@ -76,9 +76,9 @@ exports.removeUuid = function(data, callback) {
         set: {$pull: {uuid: uuid}}
     }, function(err, result) {
         if(!err){
-            callback(result);
+            callback(true);
         } else {
-            callback(null);
+            callback(false);
         }
     });
 };

@@ -1,3 +1,5 @@
+/// <reference path="../typings/my/node&express.d.ts" />
+
 var userService = require('../services/userService');
 var session = require('../utils/sessionUtil');
 var crypto = require('../utils/cryptoUtil');
@@ -61,6 +63,16 @@ exports.addUserPost = function (req, res) {
 
 exports.updateLastInfoGet = exports.updateLastInfoPost = function(req, res) {
     userService.updateLastInfo(req.body, function(user) {
+        res.end();
+    });
+};
+
+exports.unBindDeviceGet = exports.unBindDevicePost = function (req, res) {
+    userService.removeUuid(req.body, function(result) {
+        if (result) {
+            session.del(req, 'user');
+        }
+        res.send(result);
         res.end();
     });
 };

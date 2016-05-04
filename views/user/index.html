@@ -25,9 +25,16 @@
             </div>
         </div>
         <div class="row" ng-if="user != null">
-            <button class="button button-block button-positive" ng-click="showUuid()">
-                设备信息
-            </button>
+            <div class="col col-50">
+                <button class="button button-block button-positive" ng-click="showUuid()">
+                    设备信息
+                </button>
+            </div>
+            <div class="col col-50">
+                <button class="button button-block" ng-click="unBindDevice()">
+                    设备解绑
+                </button>
+            </div>
         </div>
     </ion-content>
 </ion-view>

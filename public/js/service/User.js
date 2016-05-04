@@ -13,11 +13,13 @@ app.service("User", function ($rootScope, $interval, $http) {
             this.stopListener();
         }
         
-        this.updateLastInfo();
-        timer = $interval(
-            this.updateLastInfo,
-            60000
-        );
+        if (user != null) {
+            this.updateLastInfo();
+            timer = $interval(
+                this.updateLastInfo,
+                60000
+            );
+        }
     }
 
     this.getUser = function () {
@@ -39,19 +41,21 @@ app.service("User", function ($rootScope, $interval, $http) {
                     _position.coords.longitude,
                     _position.coords.latitude), 0,
                     function (point) {
-                        $rootScope.user.lastLoginDate = new Date();
-                        $rootScope.user.lastLocation = {
-                            longitude: point.lng,
-                            latitude: point.lat
-                        };
-                        $rootScope.user.lastDevice = $rootScope.uuid;
+                        try {
+                            $rootScope.user.lastLoginDate = new Date();
+                            $rootScope.user.lastLocation = {
+                                longitude: point.lng,
+                                latitude: point.lat
+                            };
+                            $rootScope.user.lastDevice = $rootScope.uuid;
 
-                        $http.post("user/updateLastInfo", {
-                            no: $rootScope.user.no,
-                            lastLoginDate: $rootScope.user.lastLoginDate,
-                            lastLocation: $rootScope.user.lastLocation,
-                            lastDevice: $rootScope.user.lastDevice
-                        });
+                            $http.post("user/updateLastInfo", {
+                                no: $rootScope.user.no,
+                                lastLoginDate: $rootScope.user.lastLoginDate,
+                                lastLocation: $rootScope.user.lastLocation,
+                                lastDevice: $rootScope.user.lastDevice
+                            });
+                        } catch (err) { }
                     });
             });
         }

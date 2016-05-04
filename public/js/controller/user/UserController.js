@@ -1,3 +1,5 @@
+/// <reference path="../../../../typings/my/angular.d.ts" />
+
 app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User, $http, $ionicHistory, $state) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[0];
     
@@ -67,6 +69,7 @@ app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User
                         User.setUser(result);
                         // $ionicHistory.goBack();
                         $state.go("app.user.info", {});
+                        $rootScope.showSuccess("注册成功");
                     } else {
                         $rootScope.showError("申请失败，请重试");
                     }
@@ -78,8 +81,28 @@ app.controller("UserController", function ($rootScope, $scope, $ionicPopup, User
         });
     };
     
-    $scope.unBind = function () {
-        
+    $scope.unBindDevice = function () {
+        $rootScope.showLoading();
+        $http({
+            method: "post",
+            url: "user/unBindDevice",
+            data: {
+                no: User.getUser().no,
+                uuid: User.getUuid()
+            }
+        }).success(function (result) {
+            $rootScope.closeLoading();
+            if (result) {
+                User.setUser(null);
+                $state.go("app.user.register", {});
+                $rootScope.showSuccess("解绑成功");
+            } else {
+                $rootScope.showError("解绑失败，请重试");
+            }
+        }).error(function (error) {
+            $rootScope.closeLoading();
+            $rootScope.showError("解绑失败，请重试");
+        });
     };
 
     $scope.register = function () {
