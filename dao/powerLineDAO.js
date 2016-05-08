@@ -6,9 +6,27 @@ var OperationParameter = require('../models/operationParameter');
 var StandardOperationParameter = require('../models/standardOperationParameter');
 
 exports.find = function(data, callback) {
-    PowerLine.find(data).populate("standardOperationParameter").populate("operationParameter").populate("voltageClass").populate("runningState").populate("province").exec(function(err, powerLines) {
+    PowerLine.find(data.powerLine).populate({
+        path: "standardOperationParameter",
+        match: data.standardOperationParameter == null ? {} : data.standardOperationParameter
+    }).populate({
+        path: "operationParameter",
+        match: data.operationParameter == null ? {} : data.operationParameter
+    }).populate({
+        path: "voltageClass",
+        match: data.voltageClass == null ? {} : data.voltageClass
+    }).populate({
+        path: "runningState",
+        match: data.runningState == null ? {} : data.runningState
+    }).populate({
+        path: "province",
+        match: data.province == null ? {} : data.province
+    }).exec(function(err, powerLines) {
         if(!err) {
-            VoltageClassUnit.populate(powerLines, { "path": "voltageClass.unit" }, function (_err, _result) {
+            VoltageClassUnit.populate(powerLines, {
+                path: "voltageClass.unit",
+                match: data.voltageClassUnit == null ? {} : data.voltageClassUnit
+            }, function (_err, _result) {
                 if (!_err) {
                     callback(null, _result);
                 } else {

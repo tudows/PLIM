@@ -34,7 +34,8 @@ var maintainSchema = new Schema({
     },
     maintainIllustration: String,
     maintainCompleteIllustration: String,
-    status: Number
+    status: Number,
+    operationParameterSnapshot: Schema.Types.Mixed
 });
 
 module.exports = mongoose.model('Maintain', maintainSchema);

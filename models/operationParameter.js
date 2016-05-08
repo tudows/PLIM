@@ -2,6 +2,7 @@ var mongoose = require('../utils/mongooseUtil');
 
 var Schema = mongoose.Schema;
 var operationParameterSchema = new Schema({
+    healthy: String,
     volt: String,
     ampere: String,
     ohm: String,

@@ -210,6 +210,9 @@ Log
 **2016-05-04**
 * Add the function of unbind device.
 
+**2016-05-08**
+* Add the hadoop into the project. The hadoop project is in the "hadoop/", code by java.
+
 
 License
 ------------------------------

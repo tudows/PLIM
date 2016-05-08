@@ -8,6 +8,9 @@ var PowerLine = require('../models/powerLine');
 var VoltageClass = require('../models/voltageClass');
 var VoltageClassUnit = require('../models/voltageClassUnit');
 var RunningState = require('../models/runningState');
+var MaintainState = require('../models/maintainState');
+var PowerLineOperation = require('../models/powerLineOperation');
+var MaintainType = require('../models/maintainType');
 
 exports.addRegionData = function() {
     console.log('地区数据初始化开始。。。');
@@ -100,10 +103,41 @@ exports.addRegionData = function() {
     console.log('初始化地区数据完成。。。');
 };
 
-exports.addPowerLineData = function() {
-    console.log('删除线路数据开始。。。');
-    PowerLine.remove({}, function(err) {
-        console.log('删除线路数据结束。。。');
+exports.addMaintainData = function() {
+    var json = require('../data/maintain.json');
+    
+    json.maintainStates.forEach(function(maintainState) {
+        var ms = new MaintainState({
+            nameCn: maintainState.nameCn,
+            nameEn: maintainState.nameEn,
+            code: maintainState.code
+        });
+        ms.save();
+    });
+    
+    var powerLineOperations = [];
+    json.powerLineOperations.forEach(function(powerLineOperation) {
+        var po = new PowerLineOperation({
+            nameCn: powerLineOperation.nameCn,
+            nameEn: powerLineOperation.nameEn,
+            code: powerLineOperation.code
+        });
+        powerLineOperations.push(po);
+        po.save();
+    });
+    
+    json.maintainTypes.forEach(function(maintainType) {
+        var _powerLineOperation = [];
+        maintainType.powerLineOperation.forEach(function(po) {
+            _powerLineOperation.push(powerLineOperations[po - 1]._id);
+        });
+        var mt = new MaintainType({
+            nameCn: maintainType.nameCn,
+            nameEn: maintainType.nameEn,
+            code: maintainType.code,
+            powerLineOperation: _powerLineOperation
+        });
+        mt.save();
     });
 }
 

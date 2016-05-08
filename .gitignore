@@ -9,3 +9,7 @@
 /typings/main
 /typings/browser.d.ts
 /typings/main.d.ts
+.classpath
+.project
+.settings
+/hadoop/java/hadoop/target

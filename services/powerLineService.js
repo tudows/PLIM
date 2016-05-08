@@ -16,6 +16,7 @@ exports.add = function (data, callback) {
     async.parallel([
         function (_callback) {
             var _operationParameter = new OperationParameter({
+                healthy: null,
                 volt: null,
                 ampere: null,
                 ohm: null,
@@ -86,7 +87,7 @@ exports.add = function (data, callback) {
 };
 
 exports.list = function (powerLine, callback) {
-    powerLineDAO.find(powerLine, function (err, powerLines) {
+    powerLineDAO.find({powerLine: powerLine}, function (err, powerLines) {
         if (!err) {
             callback(powerLines);
         } else {
@@ -106,7 +107,9 @@ exports.remove = function (callback) {
 };
 
 exports.updateOperationParameter = function (data, callback) {
-    powerLineDAO.find({ status: 1 }, function (err, powerLines) {
+    powerLineDAO.find({
+        powerLine: {status: 1}
+    }, function (err, powerLines) {
         if (!err) {
             powerLines.forEach(function (powerLine) {
                 async.series([

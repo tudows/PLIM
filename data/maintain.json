@@ -1,0 +1,25 @@
+{
+    "maintainStates": [
+        {"code": 1, "nameCn": "人员安排中", "nameEn": "arranging operator"},
+        {"code": 2, "nameCn": "等待处理", "nameEn": "waiting for disposing"},
+        {"code": 3, "nameCn": "处理中", "nameEn": "disposing"},
+        {"code": 4, "nameCn": "完成", "nameEn": "completion"}
+    ],
+    "powerLineOperations": [
+        {"code": 1, "nameCn": "停止运行", "nameEn": "stop running"},
+        {"code": 2, "nameCn": "切换备用线路", "nameEn": "switch alternate line"},
+        {"code": 3, "nameCn": "降低电压", "nameEn": "decrease voltage"},
+        {"code": 4, "nameCn": "降低电流", "nameEn": "decrease current"},
+        {"code": 6, "nameCn": "提高电压", "nameEn": "increase voltage"},
+        {"code": 7, "nameCn": "提高电流", "nameEn": "increase current"},
+        {"code": 8, "nameCn": "申请维修", "nameEn": "apply maintain"},
+        {"code": 9, "nameCn": "启动线路", "nameEn": "start running"}
+    ],
+    "maintainTypes": [
+        {"code": 1, "nameCn": "断路", "nameEn": "broken", "powerLineOperation": [1, 2, 8]},
+        {"code": 2, "nameCn": "短路", "nameEn": "short", "powerLineOperation": [1, 2, 8]},
+        {"code": 3, "nameCn": "负荷过高", "nameEn": "load high", "powerLineOperation": [3]},
+        {"code": 4, "nameCn": "拉力过高", "nameEn": "pull high", "powerLineOperation": [1, 2, 8]},
+        {"code": 5, "nameCn": "温度过高", "nameEn": "temperature high", "powerLineOperation": [1, 2, 8]}
+    ]
+}
