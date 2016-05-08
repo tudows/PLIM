@@ -211,7 +211,7 @@ Log
 * Add the function of unbind device.
 
 **2016-05-08**
-* Add the hadoop into the project. The hadoop project is in the "hadoop/", code by java.
+* Add the hadoop into the project. The hadoop project is in the "hadoop/", code by java. You can build by "mvn assembly:assembly" and run by "yarn jar xxx"
 
 
 License
