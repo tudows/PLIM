@@ -88,18 +88,19 @@ public class PowerLineHealthy extends MongoTool {
 				
 				Integer healthy = 100;
 				
-				if (volt <= 0 || ampere <= 0 || ohm <= 0) {
-					healthy -= 50;
+				if (volt <= 0 || ampere <= 0 || ohm <= 0 || pullNewton <= 0) {
+					healthy = 0;
 				}
 				
 				double minVolt = Double.valueOf(standardoperationparameter.get("minVolt").toString());
 				double maxVolt = Double.valueOf(standardoperationparameter.get("maxVolt").toString());
 				if (volt < minVolt || volt > maxVolt) {
-					healthy -= 5;
+					healthy -= 10;
 					double voltDiffUp = volt - minVolt;
 					double voltDiffDown = maxVolt - minVolt;
-                    if (((int) (voltDiffUp / voltDiffDown * 100)) > 500) {
-                    	healthy -= 10;
+					int voltLoad = (int) (voltDiffUp / voltDiffDown * 100);
+                    if (voltLoad > 500) {
+                    	healthy -= (int) (voltLoad / 500 * 10);
                     }
 				}
 				double minAmpere = Double.valueOf(standardoperationparameter.get("minAmpere").toString());
@@ -108,8 +109,9 @@ public class PowerLineHealthy extends MongoTool {
 					healthy -= 5;
 					double ampereDiffUp = ampere - minAmpere;
 					double ampereDiffDown = maxAmpere - minAmpere;
-                    if (((int) (ampereDiffUp / ampereDiffDown * 100)) > 500) {
-                    	healthy -= 10;
+					int ampereLoad = (int) (ampereDiffUp / ampereDiffDown * 100);
+                    if (ampereLoad > 500) {
+                    	healthy -= (int) (ampereLoad / 500 * 10);
                     }
 				}
 				double minCelsius = Double.valueOf(standardoperationparameter.get("minCelsius").toString());
@@ -118,8 +120,9 @@ public class PowerLineHealthy extends MongoTool {
 					healthy -= 5;
 					double celsiusDiffUp = celsius - minCelsius;
 					double celsiusDiffDown = maxCelsius - minCelsius;
-                    if (((int) (celsiusDiffUp / celsiusDiffDown * 100)) > 120) {
-                    	healthy -= 10;
+					int celsiusLoad = (int) (celsiusDiffUp / celsiusDiffDown * 100);
+                    if (celsiusLoad > 120) {
+                    	healthy -= (int) (celsiusLoad / 120 * 10);
                     }
 				}
 				double minPullNewton = Double.valueOf(standardoperationparameter.get("minPullNewton").toString());
@@ -128,8 +131,9 @@ public class PowerLineHealthy extends MongoTool {
 					healthy -= 5;
 					double pullNewtonDiffUp = pullNewton - minPullNewton;
 					double pullNewtonDiffDown = maxPullNewton - minPullNewton;
-                    if (((int) (pullNewtonDiffUp / pullNewtonDiffDown * 100)) > 300) {
-                    	healthy -= 10;
+					int pullNewtonLoad = (int) (pullNewtonDiffUp / pullNewtonDiffDown * 100);
+                    if (pullNewtonLoad > 300) {
+                    	healthy -= (int) (pullNewtonLoad / 300 * 10);
                     }
 				}
 				
