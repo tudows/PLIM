@@ -1,0 +1,7 @@
+{
+    "userTypes": [
+        { "code": 1, "nameCn": "管理员", "nameEn": "Administrator" },
+        { "code": 2, "nameCn": "维修人员", "nameEn": "maintain worker" },
+        { "code": 3, "nameCn": "负责人", "nameEn": "responsible person" }
+    ]
+}

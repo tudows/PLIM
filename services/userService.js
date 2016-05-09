@@ -14,7 +14,8 @@ exports.add = function(data, callback) {
             longitude: null,
             latitude: null
         },
-        lastDevice: null
+        lastDevice: null,
+        type: []
     });
     userDAO.add(user, function(err, result){
         if(!err){
@@ -113,7 +114,7 @@ exports.findOne = function(data, callback) {
     if (data.name != null && data.name != '') {
         _user.name = data.name;
     }
-    userDAO.findOne(_user, function(err, user){
+    userDAO.findOne({ user: _user }, function(err, user){
         if(!err){
             callback(user);
         } else {
@@ -122,22 +123,22 @@ exports.findOne = function(data, callback) {
     });
 };
 
-exports.findByUuid = function(data, callback) {
-    userDAO.find({},function(err, users){
-        if(!err){
-            if (users != null) {
-                users.forEach(function(user) {
-                    user.uuid.forEach(function(_uuid) {
-                        if (crypto.sha256(data.uuid, user.salt, 'hex') == _uuid) {
-                            callback(user);
-                        } 
-                    });
-                });
-            } else {
-                callback(null);
-            }
-        } else {
-            callback(null);
-        }
-    });
-};
+// exports.findByUuid = function(data, callback) {
+//     userDAO.find({},function(err, users){
+//         if(!err){
+//             if (users != null) {
+//                 users.forEach(function(user) {
+//                     user.uuid.forEach(function(_uuid) {
+//                         if (crypto.sha256(data.uuid, user.salt, 'hex') == _uuid) {
+//                             callback(user);
+//                         } 
+//                     });
+//                 });
+//             } else {
+//                 callback(null);
+//             }
+//         } else {
+//             callback(null);
+//         }
+//     });
+// };

@@ -98,5 +98,6 @@ var powerLineJob = require('./jobs/powerLineJob');
 powerLineJob.updateEnvironment(1000 * 60, function (result) {});
 powerLineJob.randomOperationParameter(1000, function (result) {});
 powerLineJob.maintainAnalyze(1000, function (result) {});
+powerLineJob.maintainArrange(1000, function (result) {});
 
-// require('./dao/initDAO').addMaintainData();
+// require('./dao/initDAO').user();

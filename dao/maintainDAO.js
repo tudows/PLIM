@@ -1,4 +1,4 @@
-/// <reference path="../typings/my/node&express.d.ts" />
+/// <reference path='../typings/my/node&express.d.ts' />
 
 var Maintain = require('../models/maintain');
 var MaintainState = require('../models/maintainState');
@@ -7,46 +7,115 @@ var PowerLineOperation = require('../models/powerLineOperation');
 var PowerLine = require('../models/powerLine');
 var RunningState = require('../models/runningState');
 var User = require('../models/user');
+var async = require('async');
 
 exports.find = function(data, callback) {
-    Maintain.find(data.maintain == null ? {} : data.maintain).populate({
-        path: "powerLine",
-        match: data.powerLine == null ? {} : data.powerLine
-    }).populate({
-        path: "maintainUser",
-        match: data.maintainUser == null ? {} : data.maintainUser
-    }).populate({
-        path: "createUser",
-        match: data.createUser == null ? {} : data.createUser
-    }).populate({
-        path: "updateUser",
-        match: data.updateUser == null ? {} : data.updateUser
-    }).populate({
-        path: "maintainState",
-        match: data.maintainState == null ? {} : data.maintainState
-    }).populate({
-        path: "maintainType",
-        match: data.maintainType == null ? {} : data.maintainType
-    }).exec(function(err, maintains) {
-        if (!err) {
-            PowerLineOperation.populate(maintains, {
-                path: "maintainType.powerLineOperation",
-                match: data.powerLineOperation == null ? {} : data.powerLineOperation
-            }, function (_err, _maintains) {
+    if (data.maintain == null) {
+        data.maintain = {};
+    }
+    async.parallel([
+        function (_callback) {
+            if (data.powerLine != null) {
+                PowerLine.find(data.powerLine, '_id', function (err, powerLines) {
+                    if (!err) {
+                        data.maintain.powerLine = { $in: powerLines };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (data.maintainUser != null) {
+                User.find(data.maintainUser, '_id', function (err, maintainUsers) {
+                    if (!err) {
+                        data.maintain.maintainUser = { $in: maintainUsers };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (data.createUser != null) {
+                User.find(data.createUser, '_id', function (err, createUsers) {
+                    if (!err) {
+                        data.maintain.createUser = { $in: createUsers };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (data.updateUser != null) {
+                User.find(data.updateUser, '_id', function (err, updateUsers) {
+                    if (!err) {
+                        data.maintain.updateUser = { $in: updateUsers };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (data.maintainState != null) {
+                MaintainState.find(data.maintainState, '_id', function (err, maintainStates) {
+                    if (!err) {
+                        data.maintain.maintainState = { $in: maintainStates };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (data.maintainType != null) {
+                MaintainType.find(data.maintainType, '_id', function (err, maintainTypes) {
+                    if (!err) {
+                        data.maintain.maintainType = { $in: maintainTypes };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        }
+    ], function (err, results) {
+        if (results.length == 6) {
+            Maintain.find(data.maintain)
+            .populate('powerLine')
+            .populate('maintainUser')
+            .populate('createUser')
+            .populate('updateUser')
+            .populate('maintainState')
+            .populate('maintainType')
+            .exec(function(err, maintains) {
                 if (!err) {
-                    callback(null, _maintains);
+                    PowerLineOperation.populate(maintains, {
+                        path: 'maintainType.powerLineOperation'
+                    }, function (_err, _maintains) {
+                        if (!err) {
+                            callback(null, _maintains);
+                        } else {
+                            callback(_err, null);
+                        }
+                    });
                 } else {
-                    callback(_err, null);
+                    callback(err, null);
                 }
             });
-        } else {
-            callback(err, null);
         }
     });
 };
 
 exports.findMaintainType = function (data, callback) {
-    MaintainType.find(data).populate("powerLineOperation").exec(function (err, maintainTypes) {
+    MaintainType.find(data).populate('powerLineOperation').exec(function (err, maintainTypes) {
         if (!err) {
             callback(null, maintainTypes);
         } else {

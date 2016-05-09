@@ -11,6 +11,8 @@ var RunningState = require('../models/runningState');
 var MaintainState = require('../models/maintainState');
 var PowerLineOperation = require('../models/powerLineOperation');
 var MaintainType = require('../models/maintainType');
+var UserType = require('../models/userType');
+var User = require('../models/user');
 
 exports.addRegionData = function() {
     console.log('地区数据初始化开始。。。');
@@ -195,4 +197,34 @@ exports.addRunningState = function() {
     
     console.log('运行状态数据插入完毕。。。');
     console.log('初始化运行状态数据完成。。。');
+}
+
+exports.addUserDate = function() {
+    var json = require('../data/user.json');
+    
+    json.userTypes.forEach(function (userType) {
+        var ut = new UserType({
+            nameCn: userType.nameCn,
+            nameEn: userType.nameEn,
+            code: userType.code
+        });
+        ut.save(function (err, result) {});
+    });
+}
+
+exports.user = function() {
+    UserType.find({ code: {$in: [1, 2, 3]} }, function (err, result) {
+        var type = [];
+        result.forEach(function (r) {
+            type.push(r);
+        });
+        
+        User.update({
+            no: '20160002'
+        }, {
+            $set: {
+                type: type
+            }
+        }, function (err, result) {});
+    });
 }

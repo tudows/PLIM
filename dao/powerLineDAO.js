@@ -1,40 +1,103 @@
-/// <reference path="../typings/my/node&express.d.ts" />
+/// <reference path='../typings/my/node&express.d.ts' />
 
 var PowerLine = require('../models/powerLine');
 var VoltageClassUnit = require('../models/voltageClassUnit');
+var VoltageClass = require('../models/voltageClass');
 var OperationParameter = require('../models/operationParameter');
 var StandardOperationParameter = require('../models/standardOperationParameter');
+var RunningState = require('../models/runningState');
+var Province = require('../models/province');
+var async = require('async');
 
 exports.find = function(data, callback) {
-    PowerLine.find(data.powerLine == null ? {} : data.powerLine).populate({
-        path: "standardOperationParameter",
-        match: data.standardOperationParameter == null ? {} : data.standardOperationParameter
-    }).populate({
-        path: "operationParameter",
-        match: data.operationParameter == null ? {} : data.operationParameter
-    }).populate({
-        path: "voltageClass",
-        match: data.voltageClass == null ? {} : data.voltageClass
-    }).populate({
-        path: "runningState",
-        match: data.runningState == null ? {} : data.runningState
-    }).populate({
-        path: "province",
-        match: data.province == null ? {} : data.province
-    }).exec(function(err, powerLines) {
-        if(!err) {
-            VoltageClassUnit.populate(powerLines, {
-                path: "voltageClass.unit",
-                match: data.voltageClassUnit == null ? {} : data.voltageClassUnit
-            }, function (_err, _result) {
-                if (!_err) {
-                    callback(null, _result);
+    if (data.powerLine == null) {
+        data.powerLine = {};
+    }
+    
+    async.parallel([
+        function (_callback) {
+            if (data.standardOperationParameter != null) {
+                StandardOperationParameter.find(data.standardOperationParameter, '_id', function (err, standardOperationParameters) {
+                    if (!err) {
+                        data.powerLine.standardOperationParameter = { $in: standardOperationParameters };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (data.operationParameter != null) {
+                OperationParameter.find(data.operationParameter, '_id', function (err, operationParameters) {
+                    if (!err) {
+                        data.powerLine.operationParameter = { $in: operationParameters };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (data.voltageClass != null) {
+                VoltageClass.find(data.voltageClass, '_id', function (err, voltageClasses) {
+                    if (!err) {
+                        data.powerLine.voltageClass = { $in: voltageClasses };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (data.runningState != null) {
+                RunningState.find(data.runningState, '_id', function (err, runningStates) {
+                    if (!err) {
+                        data.powerLine.runningState = { $in: runningStates };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (data.province != null) {
+                Province.find(data.province, '_id', function (err, provinces) {
+                    if (!err) {
+                        data.powerLine.province = { $in: provinces };
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+    ], function (err, results) {
+        if (results.length == 5) {
+            PowerLine.find(data.powerLine)
+            .populate('standardOperationParameter')
+            .populate('operationParameter')
+            .populate('voltageClass')
+            .populate('runningState')
+            .populate('province')
+            .exec(function(err, powerLines) {
+                if(!err) {
+                    VoltageClassUnit.populate(powerLines, {
+                        path: 'voltageClass.unit'
+                    }, function (_err, _result) {
+                        if (!_err) {
+                            callback(null, _result);
+                        } else {
+                            callback(_err, null);
+                        }
+                    });
                 } else {
-                    callback(_err, null);
+                    callback(err, null);
                 }
             });
-        } else {
-            callback(err, null);
         }
     });
 };

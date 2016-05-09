@@ -2,6 +2,7 @@
 
 var powerLineDAO = require('../dao/powerLineDAO');
 var maintainDAO = require('../dao/maintainDAO');
+var userDAO = require('../dao/userDAO');
 var Maintain = require('../models/maintain');
 var request = require('request');
 var async = require('async');
@@ -243,7 +244,13 @@ exports.maintainAnalyze = function (time, callback) {
                                                     maintainIllustration: maintainIllustration.substring(0, maintainIllustration.length - 5),
                                                     maintainCompleteIllustration: null,
                                                     status: 1,
-                                                    operationParameterSnapshot: powerLine.operationParameter
+                                                    operationParameterSnapshot: {
+                                                        volt: powerLine.operationParameter.volt,
+                                                        ampere: powerLine.operationParameter.ampere,
+                                                        ohm: powerLine.operationParameter.ohm,
+                                                        celsius: powerLine.operationParameter.celsius,
+                                                        pullNewton: powerLine.operationParameter.pullNewton
+                                                    }
                                                 });
                                                 maintainDAO.add(_maintain, function(err) { });
                                             }
@@ -255,6 +262,84 @@ exports.maintainAnalyze = function (time, callback) {
                     });
                     _callback(true);
                 });
+            } else {
+                _callback(false);
+            }
+        });
+    };
+    
+    func(callback);
+    setInterval(function () {
+        func(callback);
+    }, time);
+};
+
+exports.maintainArrange = function (time, callback) {
+    var func = function (_callback) {
+        maintainDAO.find({
+            maintainState: { code: 1 }
+        }, function (err, maintains) {
+            if (!err) {
+                var count = 0;
+                async.whilst(
+                    function () {
+                        return count < maintains.length;
+                    },
+                    function (_call1) {
+                        var maintain = maintains[count];
+                        async.series([
+                            function (_call2) {
+                                userDAO.find({
+                                    type: { code: 2 }
+                                }, function (err, _users) {
+                                    var users = [];
+                                    if (!err) {
+                                        _users.forEach(function (user) {
+                                            if (user.type.length > 0 && ((new Date()).getTime() - user.lastLoginDate.getTime()) <= 1000 * 60 * 60 * 24) {
+                                                var logDiff = maintain.powerLine.location.startLongitude - user.lastLocation.longitude;
+                                                var latDiff = maintain.powerLine.location.startLatitude - user.lastLocation.latitude;
+                                                user.distance = Math.sqrt(logDiff * logDiff + latDiff * latDiff);
+                                                users.push(user);
+                                            }
+                                        });
+                                    }
+                                    _call2(null, users);
+                                });
+                            }
+                        ], function (err, result) {
+                            var users = result[0];
+                            if (users.length > 0) {
+                                users.sort(function (a, b) {
+                                    return a.distance > b.distance;
+                                });
+                                users.forEach(function (user) {
+                                    // 寻找user的正在做的维修机了
+                                    // 如果不超过5个就安排给他。
+                                    // 如果大家都很忙，就安排任务相对少的的但是比较近的那个
+                                    maintainDAO.find({
+                                        maintain: {
+                                            maintainUser: user._id
+                                        }
+                                    }, function (err, _maintains) {
+                                        if (!err) {
+                                        
+                                        }
+                                    });
+                                });
+                                count++;
+                                _call1(null, count);
+                            } else {
+                                count++;
+                                _call1(null, count);
+                            }
+                        });
+                    },
+                    function (err, n) {
+                        if (n == maintains.length) {
+                            
+                        }
+                    }
+                );
             } else {
                 _callback(false);
             }

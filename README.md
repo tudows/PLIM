@@ -221,9 +221,14 @@ Log
 
 **2016-05-08**
 * Add the hadoop into the project. The hadoop project is in the "hadoop/", code by java. You can build by "mvn assembly:assembly" and run by "yarn jar xxx".
+* Add the healthy calculate by hadoop.
 
 **2016-05-09**
 * Independent the interval job into the "jobs/" (not Steve Jobs :) ).
+* Add the smart maintain analyze.
+
+**2016-05-10**
+* Adjust the dao.
 
 
 License
