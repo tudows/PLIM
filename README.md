@@ -72,7 +72,17 @@ Decrypt the date by the rsa and return the trsult
 
 
 **Operation Parameter Interface**
-* ing...
+> **Usage** "/powerLine/updateOperationParameter"<br/>
+> * Only receive post
+> * the data as follow: <br/>
+{<br/>
+&#160; &#160; &#160; &#160;_id: _id,<br/>
+&#160; &#160; &#160; &#160;volt: volt,<br/>
+&#160; &#160; &#160; &#160;ampere: ampere,<br/>
+&#160; &#160; &#160; &#160;ohm: ohm,<br/>
+&#160; &#160; &#160; &#160;celsius: celsius,<br/>
+&#160; &#160; &#160; &#160;pullNewton: pullNewton<br/>
+}
 
 Known Bug
 ------------------------------
@@ -201,7 +211,6 @@ Log
 * Add momently monitor of powerline operation parameter.
 * Add the standard operation parameter of the powerline.
 
-
 **2016-05-03**
 * Add a angular plugn - "radialIndicator".
 * Graphical display the momently parameter of the powerline in the powerline detail page.
@@ -211,7 +220,10 @@ Log
 * Add the function of unbind device.
 
 **2016-05-08**
-* Add the hadoop into the project. The hadoop project is in the "hadoop/", code by java. You can build by "mvn assembly:assembly" and run by "yarn jar xxx"
+* Add the hadoop into the project. The hadoop project is in the "hadoop/", code by java. You can build by "mvn assembly:assembly" and run by "yarn jar xxx".
+
+**2016-05-09**
+* Independent the interval job into the "jobs/" (not Steve Jobs :) ).
 
 
 License

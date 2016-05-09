@@ -6,7 +6,7 @@ var OperationParameter = require('../models/operationParameter');
 var StandardOperationParameter = require('../models/standardOperationParameter');
 
 exports.find = function(data, callback) {
-    PowerLine.find(data.powerLine).populate({
+    PowerLine.find(data.powerLine == null ? {} : data.powerLine).populate({
         path: "standardOperationParameter",
         match: data.standardOperationParameter == null ? {} : data.standardOperationParameter
     }).populate({
@@ -86,16 +86,8 @@ exports.remove = function(data, callback) {
     });
 };
 
-exports.updateOperationParameter = function(data, callback) {
-    OperationParameter.update({_id: data.id}, {$set: {
-        volt: data.volt,
-        ampere: data.ampere,
-        ohm: data.ohm,
-        celsius: data.celsius,
-        environment: data.environment,
-        pullNewton: data.pullNewton,
-        updateDate: data.updateDate
-    }}, function (err) {
+exports.updateOperationParameter = function(query, set, callback) {
+     OperationParameter.update(query, set, function (err) {
         if(!err) {
             callback(null);
         } else {

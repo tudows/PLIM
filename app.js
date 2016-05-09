@@ -94,10 +94,9 @@ var serverHttps = https.createServer(options, app).listen(config.httpsPort, func
     console.log('https listen start ! host: ' + host + ', port: ' + port);
 });
 
-var powerLineService = require('./services/powerLineService');
-powerLineService.updateOperationParameter(null, function (result) {
-});
-setInterval(function() {
-    powerLineService.updateOperationParameter(null, function(result) {
-    });
-}, 1000);
+var powerLineJob = require('./jobs/powerLineJob');
+powerLineJob.updateEnvironment(1000 * 60, function (result) {});
+powerLineJob.randomOperationParameter(1000, function (result) {});
+powerLineJob.maintainAnalyze(1000, function (result) {});
+
+// require('./dao/initDAO').addMaintainData();
