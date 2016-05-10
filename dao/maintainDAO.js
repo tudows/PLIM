@@ -271,3 +271,16 @@ exports.update = function(data, populateSet, callback) {
         }
     });
 };
+
+exports.findMaintainPowerLine = function (maintainUserId, callback) {
+    Maintain.aggregate([
+        { $match:  { maintainUser: maintainUserId } },
+        { $project: { _id: '$powerLine' } }
+    ]).exec(function (err, powerLineIds) {
+        if (!err) {
+            callback(powerLineIds);
+        } else {
+            callback([]);
+        }
+    });
+};

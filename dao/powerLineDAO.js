@@ -158,3 +158,31 @@ exports.updateOperationParameter = function(query, set, callback) {
         }
     });
 };
+
+exports.update = function (data, populateSet, callback) {
+    if (data.set == null) {
+        data.set = { $set: {} };
+    }
+    async.parallel([
+        function (_callback) {
+            if (populateSet.runningState != null) {
+                RunningState.findOne(populateSet.runningState, '_id', function (err, runningState) {
+                    if (!err) {
+                        data.set.$set.runningState = runningState;
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        }
+    ], function (err, results) {
+        PowerLine.update(data.query, data.set, function (err, result) {
+            if (!err) {
+                callback(null, result);
+            } else {
+                callback(err, null);
+            }
+        });
+    });
+};

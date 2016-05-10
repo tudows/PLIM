@@ -8,6 +8,7 @@ app.service("User", function ($rootScope, $interval, $http) {
     
     this.setUser = function (user) {
         $rootScope.user = user;
+        $rootScope.$broadcast("hasUser", user);
         
         if (timer != null) {
             this.stopListener();
@@ -36,6 +37,16 @@ app.service("User", function ($rootScope, $interval, $http) {
     
     this.updateLastInfo = function () {
         if ($rootScope.user != null && $rootScope.user != "") {
+            $http.post("maintain/getMaintainNumber", {
+                userId: $rootScope.user._id
+            }).success(function (result) {
+                if (result == 0) {
+                    $rootScope.maintainNumber = "维修任务全部完成";
+                } else {
+                    $rootScope.maintainNumber = result + " 个维修任务未完成";
+                }
+            });            
+            
             navigator.geolocation.getCurrentPosition(function (_position) {
                 BMap.Convertor.translate(new BMap.Point(
                     _position.coords.longitude,

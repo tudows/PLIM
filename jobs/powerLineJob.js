@@ -363,16 +363,37 @@ exports.maintainArrange = function (callback) {
                                     });
                                     userId = users[0]._id;
                                 }
-                                maintainDAO.update({
-                                    query: {
-                                        _id: maintain._id
+                                async.series([
+                                    function (_call7) {
+                                        maintainDAO.update({
+                                            query: {
+                                                _id: maintain._id
+                                            },
+                                            set: {
+                                                $set: { maintainUser: userId }
+                                            }
+                                        }, {
+                                            maintainState: { code: 2 }
+                                        }, function (err, result) {
+                                            _call7(null);
+                                        });
                                     },
-                                    set: {
-                                        $set: { maintainUser: userId }
+                                    function (_call7) {
+                                        var runningStateCode = null;
+                                        if (maintain.maintainType.code == 6) {
+                                            runningStateCode = 4
+                                        } else {
+                                            runningStateCode = 3
+                                        }
+                                        powerLineDAO.update({
+                                            query: { _id: maintain.powerLine._id }
+                                        }, {
+                                            runningState: { code: runningStateCode }
+                                        }, function (err, result) {
+                                            _call7(null);
+                                        });
                                     }
-                                }, {
-                                     maintainState: { code: 2 }
-                                }, function (err, result) {
+                                ], function (err) {
                                     count++;
                                     _call1(null, count);
                                 });

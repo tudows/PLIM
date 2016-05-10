@@ -1,6 +1,6 @@
 /// <reference path="../../../../typings/my/angular.d.ts" />
 
-app.controller("DetailPowerLineController", function ($filter, $rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory, $interval, radialIndicatorInstance, $ionicModal) {
+app.controller("DetailPowerLineController", function ($filter, $rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory, $interval, radialIndicatorInstance, $ionicModal, User) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[2];
     
     $scope.indicatorOptionK = {
@@ -46,6 +46,13 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
         $scope.moreInfoModal = modal;
     });
     
+    $ionicModal.fromTemplateUrl("maintainInfo.html", {
+        scope: $scope,
+        animation: "slide-in-up"
+    }).then(function (modal) {
+        $scope.maintainInfoModal = modal;
+    });
+    
     $scope.powerlineDetailBlock = false;
     
     $scope.getDetail = function() {
@@ -58,7 +65,11 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
                 if (result != null && result.length > 0) {
                     $scope.powerline = result[0];
                     
-                    var healthy = Math.floor(Math.random() * 100);
+                    $http.post("maintain/getMaintainInfo", {powerLineId: $scope.powerline._id}).success(function (result) {
+                        $scope.maintain = result;
+                    });
+                    
+                    var healthy = $scope.powerline.operationParameter.healthy;
                     radialIndicatorInstance["healthyIndicator"].animate(healthy);
                     if (healthy < 20) {
                         $scope.healthyText = "警告";
@@ -145,7 +156,9 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
         }
     }
     
-    $scope.getDetail();
+    if (User.getUser() != null) {
+        $scope.getDetail();
+    }
     
     $scope.timer = $interval($scope.getDetail, 10000);
 
@@ -176,4 +189,13 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
     $scope.$on("$destroy", function () {
         $interval.cancel($scope.timer);
     });
-});
+    
+    $rootScope.$on('hasUser', function (event,data) {
+        $scope.getDetail();
+    });
+})
+.filter('to_trusted', ['$sce', function ($sce) {
+    return function (text) {
+        return $sce.trustAsHtml(text);
+    }
+}]);

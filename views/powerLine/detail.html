@@ -71,9 +71,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col col-50">
                 <button class="button button-block button-positive" ng-click="moreInfoModal.show()">
-                    更多信息
+                    详细信息
+                </button>
+            </div>
+            <div class="col col-50">
+                <button class="button button-block button-calm" ng-click="maintainInfoModal.show()">
+                    维修信息
                 </button>
             </div>
         </div>
@@ -99,7 +104,7 @@
 <script id="moreInfo.html" type="text/ng-template">
     <ion-modal-view>
         <ion-header-bar>
-            <h1 class="title">更多信息</h1>
+            <h1 class="title">详细信息</h1>
             <button class="button button-clear" ng-click="moreInfoModal.hide()">关闭</button>
         </ion-header-bar>
         <ion-content>
@@ -158,6 +163,24 @@
             <div class="row">
                 <div class="col col-25">承受拉力 </div>
                 <div class="col col-25"> {{powerline.standardOperationParameter.minPullNewton}} ~ {{powerline.standardOperationParameter.maxPullNewton}} N</div>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+
+<script id="maintainInfo.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar>
+            <h1 class="title">维修信息</h1>
+            <button class="button button-clear" ng-click="maintainInfoModal.hide()">关闭</button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="row">
+                <div class="col col-25">
+                    系统预处理
+                </div>
+                <div class="col col-75" ng-bind-html="maintain.maintainIllustration|to_trusted">
+                </div>
             </div>
         </ion-content>
     </ion-modal-view>
