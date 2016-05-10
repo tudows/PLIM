@@ -217,3 +217,17 @@ exports.add = function(data, callback) {
         }
     });
 };
+
+exports.findUserMaintainNumber = function(maintainUserId, callback) {
+    Maintain.aggregate([
+        { $match:  { maintainUser: maintainUserId }},
+        { $project: {maintainUser: 1, maintainNumber: 1} },
+        { $group:  { _id: '$maintainUser', maintainNumber: {$sum: 1}}}
+    ]).exec(function (err, maintains) {
+        if (!err && maintains.length == 1) {
+            callback(null, maintains[0].maintainNumber);
+        } else {
+            callback(err, 0);
+        }
+    });
+};

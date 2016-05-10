@@ -295,11 +295,20 @@ exports.maintainArrange = function (time, callback) {
                                     var users = [];
                                     if (!err) {
                                         _users.forEach(function (user) {
-                                            if (user.type.length > 0 && ((new Date()).getTime() - user.lastLoginDate.getTime()) <= 1000 * 60 * 60 * 24) {
+                                            if (((new Date()).getTime() - user.lastLoginDate.getTime()) <= 1000 * 60 * 60 * 24 * 30) {
                                                 var logDiff = maintain.powerLine.location.startLongitude - user.lastLocation.longitude;
                                                 var latDiff = maintain.powerLine.location.startLatitude - user.lastLocation.latitude;
-                                                user.distance = Math.sqrt(logDiff * logDiff + latDiff * latDiff);
-                                                users.push(user);
+                                                user.distance = logDiff * logDiff + latDiff * latDiff;
+                                                async.series([
+                                                    function (_call3) {
+                                                        maintainDAO.findUserMaintainNumber(user._id, function (err, number) {
+                                                            user.maintainNumber = number;
+                                                            _call3(null, '');
+                                                        });
+                                                    }
+                                                ], function (err, results) {
+                                                    users.push(user);
+                                                });
                                             }
                                         });
                                     }
@@ -322,7 +331,10 @@ exports.maintainArrange = function (time, callback) {
                                         }
                                     }, function (err, _maintains) {
                                         if (!err) {
-                                        
+                                            user.maintainNumber = _maintains.length;
+                                            if (user.maintainNumber < 5) {
+                                                
+                                            }
                                         }
                                     });
                                 });
