@@ -8,6 +8,7 @@ var PowerLine = require('../models/powerLine');
 var RunningState = require('../models/runningState');
 var User = require('../models/user');
 var async = require('async');
+var mongoose = require('mongoose');
 
 exports.find = function(data, callback) {
     if (data.maintain == null) {
@@ -220,14 +221,53 @@ exports.add = function(data, callback) {
 
 exports.findUserMaintainNumber = function(maintainUserId, callback) {
     Maintain.aggregate([
-        { $match:  { maintainUser: maintainUserId }},
-        { $project: {maintainUser: 1, maintainNumber: 1} },
-        { $group:  { _id: '$maintainUser', maintainNumber: {$sum: 1}}}
+        { $match:  { maintainUser: maintainUserId, maintainState: { $ne: mongoose.Types.ObjectId('573035613982d8481f73dca5') } }},
+        { $project: { maintainUser: 1, maintainNumber: 1 } },
+        { $group:  { _id: '$maintainUser', maintainNumber: { $sum: 1 } } }
     ]).exec(function (err, maintains) {
         if (!err && maintains.length == 1) {
             callback(null, maintains[0].maintainNumber);
         } else {
             callback(err, 0);
+        }
+    });
+};
+
+exports.update = function(data, populateSet, callback) {
+    async.parallel([
+        function (_callback) {
+            if (populateSet.maintainState != null) {
+                MaintainState.findOne(populateSet.maintainState, '_id', function (err, maintainState) {
+                    if (!err) {
+                        data.set.$set.maintainState = maintainState;
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        },
+        function (_callback) {
+            if (populateSet.maintainType != null) {
+                MaintainType.findOne(populateSet.maintainType, '_id', function (err, maintainType) {
+                    if (!err) {
+                        data.set.$set.maintainType = maintainType;
+                    }
+                    _callback(null, '');
+                });
+            } else {
+                _callback(null, '');
+            }
+        }
+    ], function (err, results) {
+        if (results.length == 2) {
+            Maintain.update(data.query, data.set, function (err, result) {
+                if (!err) {
+                    callback(null, result);
+                } else {
+                    callback(err, null);
+                }
+            });
         }
     });
 };

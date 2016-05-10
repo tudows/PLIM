@@ -229,6 +229,9 @@ Log
 
 **2016-05-10**
 * Adjust the dao.
+* Sync the job to prevent the dirty datum.
+* Add the stop of the job.
+* Add the smart arrange maintain worker.
 
 
 License

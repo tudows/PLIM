@@ -7,7 +7,7 @@ var Maintain = require('../models/maintain');
 var request = require('request');
 var async = require('async');
 
-exports.updateEnvironment = function (time, callback) {
+exports.updateEnvironment = function (callback) {
     var func = function (_callback) {
         powerLineDAO.find({
             powerLine: {status: 1}
@@ -85,12 +85,12 @@ exports.updateEnvironment = function (time, callback) {
     };
     
     func(callback);
-    setInterval(function () {
-        func(callback);
-    }, time);
+    // setInterval(function () {
+    //     func(callback);
+    // }, time);
 };
 
-exports.randomOperationParameter = function (time, callback) {
+exports.randomOperationParameter = function (callback) {
     var func = function (_callback) {
         powerLineDAO.find({
             powerLine: {status: 1}
@@ -124,144 +124,161 @@ exports.randomOperationParameter = function (time, callback) {
     };
     
     func(callback);
-    setInterval(function () {
-        func(callback);
-    }, time);
+    // setInterval(function () {
+    //     func(callback);
+    // }, time);
 };
 
-exports.maintainAnalyze = function (time, callback) {
+exports.maintainAnalyze = function (callback) {
     var func = function (_callback) {
         powerLineDAO.find({
             powerLine: { status: 1 }
         }, function (err, powerLines) {
             if (!err) {
-                powerLines.forEach(function (powerLine) {
-                    maintainDAO.find({
-                        maintainState: { code: { $ne: 4 } },
-                        maintain: { powerLine: powerLine._id }
-                    }, function(err, maintains) {
-                        if (!err && maintains.length == 0) {
-                            var maintainTypeCode = null;
-                            if (powerLine.operationParameter.pullNewton <= 0) {
-                                maintainTypeCode = 1;
-                            } else if (powerLine.operationParameter.ampere <= 100 && powerLine.operationParameter.volt < 0) {
-                                maintainTypeCode = 1;
-                            } else if (powerLine.operationParameter.ampere < 0 && powerLine.operationParameter.volt < 100) {
-                                maintainTypeCode = 2;
-                            } else if (powerLine.operationParameter.pullNewton > powerLine.standardOperationParameter.maxPullNewton) {
-                                var pullNewtonDiffUp = powerLine.operationParameter.pullNewton - powerLine.standardOperationParameter.minPullNewton;
-                                var pullNewtonDiffDown = powerLine.standardOperationParameter.maxPullNewton - powerLine.standardOperationParameter.minPullNewton;
-                                if (parseInt(pullNewtonDiffUp / pullNewtonDiffDown * 100) > 300) {
-                                    maintainTypeCode = 4;
+                var powerLineCount = 0;
+                async.whilst(
+                    function () { return powerLineCount < powerLines.length },
+                    function (_call6) {
+                        var powerLine = powerLines[powerLineCount];
+                        maintainDAO.find({
+                            maintainState: { code: { $ne: 4 } },
+                            maintain: { powerLine: powerLine._id }
+                        }, function(err, maintains) {
+                            if (!err && maintains.length == 0) {
+                                var maintainTypeCode = null;
+                                if (powerLine.operationParameter.pullNewton <= 0) {
+                                    maintainTypeCode = 1;
+                                } else if (powerLine.operationParameter.ampere <= 100 && powerLine.operationParameter.volt < 0) {
+                                    maintainTypeCode = 1;
+                                } else if (powerLine.operationParameter.ampere < 0 && powerLine.operationParameter.volt < 100) {
+                                    maintainTypeCode = 2;
+                                } else if (powerLine.operationParameter.pullNewton > powerLine.standardOperationParameter.maxPullNewton) {
+                                    var pullNewtonDiffUp = powerLine.operationParameter.pullNewton - powerLine.standardOperationParameter.minPullNewton;
+                                    var pullNewtonDiffDown = powerLine.standardOperationParameter.maxPullNewton - powerLine.standardOperationParameter.minPullNewton;
+                                    if (parseInt(pullNewtonDiffUp / pullNewtonDiffDown * 100) > 300) {
+                                        maintainTypeCode = 4;
+                                    }
+                                } else if (powerLine.operationParameter.ampere > powerLine.standardOperationParameter.maxAmpere) {
+                                    var ampereDiffUp = powerLine.operationParameter.ampere - powerLine.standardOperationParameter.minAmpere;
+                                    var ampereDiffDown = powerLine.standardOperationParameter.maxAmpere - powerLine.standardOperationParameter.minAmpere;
+                                    if (parseInt(ampereDiffUp / ampereDiffDown * 100) > 500) {
+                                        maintainTypeCode = 3;
+                                    }
+                                } else if (powerLine.operationParameter.volt > powerLine.standardOperationParameter.maxVolt) {
+                                    var voltDiffUp = powerLine.operationParameter.volt - powerLine.standardOperationParameter.minVolt;
+                                    var voltDiffDown = powerLine.standardOperationParameter.maxVolt - powerLine.standardOperationParameter.minVolt;
+                                    if (parseInt(voltDiffUp / voltDiffDown * 100) > 500) {
+                                        maintainTypeCode = 4;
+                                    }
+                                } else if (powerLine.operationParameter.celsius > powerLine.standardOperationParameter.maxCelsius) {
+                                    var celsiusDiffUp = powerLine.operationParameter.celsius - powerLine.standardOperationParameter.minCelsius;
+                                    var celsiusDiffDown = powerLine.standardOperationParameter.maxCelsius - powerLine.standardOperationParameter.minCelsius;
+                                    if (parseInt(celsiusDiffUp / celsiusDiffDown * 100) > 120) {
+                                        maintainTypeCode = 5;
+                                    }
+                                } else {
+                                    var nowDate = new Date();
+                                    
+                                    var serviceYearDiff = (nowDate.getFullYear() - powerLine.serviceDate.getFullYear()) - powerLine.designYear;
+                                    var repairDay = powerLine.repairDay;
+                                    var maintainDay = powerLine.maintainDay;
+                                    if (serviceYearDiff > 0) {
+                                        repairDay -= serviceYearDiff;
+                                        maintainDay -= serviceYearDiff;
+                                        if (repairDay < powerLine.repairDay / 2) {
+                                            repairDay = powerLine.repairDay / 2
+                                        }
+                                        if (maintainDay < powerLine.maintainDay / 2) {
+                                            maintainDay = powerLine.maintainDay / 2
+                                        }
+                                    }
+                                    
+                                    var repairDatyDiff = null;
+                                    var maintainDayDiff = null;
+                                    if (powerLine.lastRepairDate != null) {
+                                        repairDatyDiff = (nowDate.getTime() - powerLine.lastRepairDate.getTime()) / (1000 * 60 * 60 * 24) - repairDay;
+                                    } else {
+                                        repairDatyDiff = (nowDate.getTime() - powerLine.serviceDate.getTime()) / (1000 * 60 * 60 * 24) - repairDay;
+                                    }
+                                    if (powerLine.lastMaintainDate != null) {
+                                        maintainDayDiff = (nowDate.getTime() - powerLine.lastMaintainDate.getTime()) / (1000 * 60 * 60 * 24) - maintainDay;
+                                    } else {
+                                        maintainDayDiff = (nowDate.getTime() - powerLine.serviceDate.getTime()) / (1000 * 60 * 60 * 24) - maintainDay;
+                                    }
+                                    
+                                    if (repairDatyDiff > 0) {
+                                        maintainTypeCode = 7;
+                                    } else if (maintainDayDiff > 0) {
+                                        maintainTypeCode = 6;
+                                    }
                                 }
-                            } else if (powerLine.operationParameter.ampere > powerLine.standardOperationParameter.maxAmpere) {
-                                var ampereDiffUp = powerLine.operationParameter.ampere - powerLine.standardOperationParameter.minAmpere;
-                                var ampereDiffDown = powerLine.standardOperationParameter.maxAmpere - powerLine.standardOperationParameter.minAmpere;
-                                if (parseInt(ampereDiffUp / ampereDiffDown * 100) > 500) {
-                                    maintainTypeCode = 3;
-                                }
-                            } else if (powerLine.operationParameter.volt > powerLine.standardOperationParameter.maxVolt) {
-                                var voltDiffUp = powerLine.operationParameter.volt - powerLine.standardOperationParameter.minVolt;
-                                var voltDiffDown = powerLine.standardOperationParameter.maxVolt - powerLine.standardOperationParameter.minVolt;
-                                if (parseInt(voltDiffUp / voltDiffDown * 100) > 500) {
-                                    maintainTypeCode = 4;
-                                }
-                            } else if (powerLine.operationParameter.celsius > powerLine.standardOperationParameter.maxCelsius) {
-                                var celsiusDiffUp = powerLine.operationParameter.celsius - powerLine.standardOperationParameter.minCelsius;
-                                var celsiusDiffDown = powerLine.standardOperationParameter.maxCelsius - powerLine.standardOperationParameter.minCelsius;
-                                if (parseInt(celsiusDiffUp / celsiusDiffDown * 100) > 120) {
-                                    maintainTypeCode = 5;
+                                
+                                if (maintainTypeCode != null) {
+                                    maintainDAO.findMaintainType({ code: maintainTypeCode }, function (err, maintainTypes) {
+                                        if (!err && maintainTypes.length > 0) {
+                                            var maintainType = maintainTypes[0];
+                                            var i = 0;
+                                            async.whilst(function () {
+                                                return i < maintainType.powerLineOperation.length;
+                                            }, function (_call1) {
+                                                maintainDAO.operationPowerLine({
+                                                    _id: powerLine._id,
+                                                    code: maintainType.powerLineOperation[i].code,
+                                                    maintainTypeCode: maintainTypeCode
+                                                }, function (err, result) {
+                                                    i++;
+                                                    _call1(err, i);
+                                                });
+                                            }, function (err, n) { });
+                                            maintainDAO.findMaintainState({ code: 1 }, function(err, maintainStates) {
+                                                if (!err && maintainStates.length > 0) {
+                                                    var maintainIllustration = "";
+                                                    for (var j = 0; j < maintainType.powerLineOperation.length; j++) {
+                                                        maintainIllustration += (j + 1) + ". " + maintainType.powerLineOperation[j].nameCn + "<br/>";
+                                                    }
+                                                    var _maintain = new Maintain({
+                                                        powerLine: powerLine._id,
+                                                        maintainUser: null,
+                                                        createUser: null,
+                                                        createDate: new Date(),
+                                                        updateUser: null,
+                                                        updateDate: null,
+                                                        maintainState: maintainStates[0]._id,
+                                                        maintainType: maintainType._id,
+                                                        maintainIllustration: maintainIllustration.substring(0, maintainIllustration.length - 5),
+                                                        maintainCompleteIllustration: null,
+                                                        status: 1,
+                                                        operationParameterSnapshot: {
+                                                            volt: powerLine.operationParameter.volt,
+                                                            ampere: powerLine.operationParameter.ampere,
+                                                            ohm: powerLine.operationParameter.ohm,
+                                                            celsius: powerLine.operationParameter.celsius,
+                                                            pullNewton: powerLine.operationParameter.pullNewton
+                                                        }
+                                                    });
+                                                    maintainDAO.add(_maintain, function(err) {
+                                                        _call6(err, ++powerLineCount);
+                                                    });
+                                                } else {
+                                                    _call6(err, ++powerLineCount);
+                                                }
+                                            });
+                                        } else {
+                                            _call6(err, ++powerLineCount);
+                                        }
+                                    });
+                                } else {
+                                    _call6(err, ++powerLineCount);
                                 }
                             } else {
-                                var nowDate = new Date();
-                                
-                                var serviceYearDiff = (nowDate.getFullYear() - powerLine.serviceDate.getFullYear()) - powerLine.designYear;
-                                var repairDay = powerLine.repairDay;
-                                var maintainDay = powerLine.maintainDay;
-                                if (serviceYearDiff > 0) {
-                                    repairDay -= serviceYearDiff;
-                                    maintainDay -= serviceYearDiff;
-                                    if (repairDay < powerLine.repairDay / 2) {
-                                        repairDay = powerLine.repairDay / 2
-                                    }
-                                    if (maintainDay < powerLine.maintainDay / 2) {
-                                        maintainDay = powerLine.maintainDay / 2
-                                    }
-                                }
-                                
-                                var repairDatyDiff = null;
-                                var maintainDayDiff = null;
-                                if (powerLine.lastRepairDate != null) {
-                                    repairDatyDiff = (nowDate.getTime() - powerLine.lastRepairDate.getTime()) / (1000 * 60 * 60 * 24) - repairDay;
-                                } else {
-                                    repairDatyDiff = (nowDate.getTime() - powerLine.serviceDate.getTime()) / (1000 * 60 * 60 * 24) - repairDay;
-                                }
-                                if (powerLine.lastMaintainDate != null) {
-                                    maintainDayDiff = (nowDate.getTime() - powerLine.lastMaintainDate.getTime()) / (1000 * 60 * 60 * 24) - maintainDay;
-                                } else {
-                                    maintainDayDiff = (nowDate.getTime() - powerLine.serviceDate.getTime()) / (1000 * 60 * 60 * 24) - maintainDay;
-                                }
-                                
-                                if (repairDatyDiff > 0) {
-                                    maintainTypeCode = 7;
-                                } else if (maintainDayDiff > 0) {
-                                    maintainTypeCode = 6;
-                                }
+                                _call6(err, ++powerLineCount);
                             }
-                            
-                            if (maintainTypeCode != null) {
-                                maintainDAO.findMaintainType({ code: maintainTypeCode }, function (err, maintainTypes) {
-                                    if (!err && maintainTypes.length > 0) {
-                                        var maintainType = maintainTypes[0];
-                                        var i = 0;
-                                        async.whilst(function () {
-                                            return i < maintainType.powerLineOperation.length;
-                                        }, function (_callback) {
-                                            maintainDAO.operationPowerLine({
-                                                _id: powerLine._id,
-                                                code: maintainType.powerLineOperation[i].code,
-                                                maintainTypeCode: maintainTypeCode
-                                            }, function (err, result) {
-                                                i++;
-                                                _callback(err, i);
-                                            });
-                                        }, function (err, n) { });
-                                        maintainDAO.findMaintainState({ code: 1 }, function(err, maintainStates) {
-                                            if (!err && maintainStates.length > 0) {
-                                                var maintainIllustration = "";
-                                                for (var j = 0; j < maintainType.powerLineOperation.length; j++) {
-                                                    maintainIllustration += (j + 1) + ". " + maintainType.powerLineOperation[j].nameCn + "<br/>";
-                                                }
-                                                var _maintain = new Maintain({
-                                                    powerLine: powerLine._id,
-                                                    maintainUser: null,
-                                                    createUser: null,
-                                                    createDate: new Date(),
-                                                    updateUser: null,
-                                                    updateDate: null,
-                                                    maintainState: maintainStates[0]._id,
-                                                    maintainType: maintainType._id,
-                                                    maintainIllustration: maintainIllustration.substring(0, maintainIllustration.length - 5),
-                                                    maintainCompleteIllustration: null,
-                                                    status: 1,
-                                                    operationParameterSnapshot: {
-                                                        volt: powerLine.operationParameter.volt,
-                                                        ampere: powerLine.operationParameter.ampere,
-                                                        ohm: powerLine.operationParameter.ohm,
-                                                        celsius: powerLine.operationParameter.celsius,
-                                                        pullNewton: powerLine.operationParameter.pullNewton
-                                                    }
-                                                });
-                                                maintainDAO.add(_maintain, function(err) { });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    });
-                    _callback(true);
-                });
+                        });
+                    },
+                    function (err, n) {
+                        _callback(true);
+                    }
+                );
             } else {
                 _callback(false);
             }
@@ -269,12 +286,12 @@ exports.maintainAnalyze = function (time, callback) {
     };
     
     func(callback);
-    setInterval(function () {
-        func(callback);
-    }, time);
+    // setInterval(function () {
+    //     func(callback);
+    // }, time);
 };
 
-exports.maintainArrange = function (time, callback) {
+exports.maintainArrange = function (callback) {
     var func = function (_callback) {
         maintainDAO.find({
             maintainState: { code: 1 }
@@ -294,52 +311,71 @@ exports.maintainArrange = function (time, callback) {
                                 }, function (err, _users) {
                                     var users = [];
                                     if (!err) {
-                                        _users.forEach(function (user) {
-                                            if (((new Date()).getTime() - user.lastLoginDate.getTime()) <= 1000 * 60 * 60 * 24 * 30) {
-                                                var logDiff = maintain.powerLine.location.startLongitude - user.lastLocation.longitude;
-                                                var latDiff = maintain.powerLine.location.startLatitude - user.lastLocation.latitude;
-                                                user.distance = logDiff * logDiff + latDiff * latDiff;
-                                                async.series([
-                                                    function (_call3) {
-                                                        maintainDAO.findUserMaintainNumber(user._id, function (err, number) {
-                                                            user.maintainNumber = number;
-                                                            _call3(null, '');
-                                                        });
-                                                    }
-                                                ], function (err, results) {
-                                                    users.push(user);
-                                                });
+                                        var i = 0;
+                                        async.whilst(
+                                            function () { return i < _users.length },
+                                            function (_call4) {
+                                                var user = _users[i];
+                                                if (((new Date()).getTime() - user.lastLoginDate.getTime()) <= 1000 * 60 * 60 * 24 * 30) {
+                                                    var logDiff = maintain.powerLine.location.startLongitude - user.lastLocation.longitude;
+                                                    var latDiff = maintain.powerLine.location.startLatitude - user.lastLocation.latitude;
+                                                    user.distance = logDiff * logDiff + latDiff * latDiff;
+                                                    maintainDAO.findUserMaintainNumber(user._id, function (err, number) {
+                                                        user.maintainNumber = number;
+                                                        users.push(user);
+                                                        i++;
+                                                        _call4(null, i);
+                                                    });
+                                                } else {
+                                                    i++;
+                                                    _call4(null, i);
+                                                }
+                                            },
+                                            function (err, n) {
+                                                if (n == _users.length) {
+                                                    _call2(null, users);
+                                                }
                                             }
-                                        });
+                                        );
+                                    } else {
+                                        _call2(null, users);
                                     }
-                                    _call2(null, users);
                                 });
                             }
                         ], function (err, result) {
                             var users = result[0];
                             if (users.length > 0) {
                                 users.sort(function (a, b) {
-                                    return a.distance > b.distance;
+                                    var aRate = a.distance * 0.7 + a.maintainNumber * 0.3;
+                                    var bRate = b.distance * 0.7 + b.maintainNumber * 0.3;
+                                    return aRate > bRate;
                                 });
-                                users.forEach(function (user) {
-                                    // 寻找user的正在做的维修机了
-                                    // 如果不超过5个就安排给他。
-                                    // 如果大家都很忙，就安排任务相对少的的但是比较近的那个
-                                    maintainDAO.find({
-                                        maintain: {
-                                            maintainUser: user._id
-                                        }
-                                    }, function (err, _maintains) {
-                                        if (!err) {
-                                            user.maintainNumber = _maintains.length;
-                                            if (user.maintainNumber < 5) {
-                                                
-                                            }
-                                        }
+                                var userId = null;
+                                for (var i = 0; i < users.length; i++) {
+                                    if (users[i].maintainNumber < 5) {
+                                        userId = users[0]._id;
+                                        break;
+                                    }
+                                }
+                                if (userId == null) {
+                                    users.sort(function (a, b) {
+                                        return a.maintainNumber > b.maintainNumber;
                                     });
+                                    userId = users[0]._id;
+                                }
+                                maintainDAO.update({
+                                    query: {
+                                        _id: maintain._id
+                                    },
+                                    set: {
+                                        $set: { maintainUser: userId }
+                                    }
+                                }, {
+                                     maintainState: { code: 2 }
+                                }, function (err, result) {
+                                    count++;
+                                    _call1(null, count);
                                 });
-                                count++;
-                                _call1(null, count);
                             } else {
                                 count++;
                                 _call1(null, count);
@@ -347,9 +383,7 @@ exports.maintainArrange = function (time, callback) {
                         });
                     },
                     function (err, n) {
-                        if (n == maintains.length) {
-                            
-                        }
+                        _callback(true);
                     }
                 );
             } else {
@@ -359,7 +393,50 @@ exports.maintainArrange = function (time, callback) {
     };
     
     func(callback);
-    setInterval(function () {
-        func(callback);
-    }, time);
+    // setInterval(function () {
+    //     func(callback);
+    // }, time);
 };
+
+var runSwitch = true;
+var intervals = [];
+exports.run = function () {
+    async.whilst(
+        function () { return runSwitch; },
+        function (callback1) {
+            async.parallel([
+                function (callback2) {
+                    exports.maintainAnalyze(function (result) {
+                        callback2(null);
+                    });
+                },
+                function (callback2) {
+                    exports.maintainArrange(function (result) {
+                        callback2(null);
+                    });
+                }
+            ], function (err) {
+                callback1(null);
+            });
+        },
+        function (err) { }
+    );
+    
+    exports.updateEnvironment(function (result) {});
+    intervals.push(setInterval(function () {
+        exports.updateEnvironment(function (result) {});
+    }, 1000 * 60));
+    
+    exports.randomOperationParameter(function (result) {});
+    intervals.push(setInterval(function () {
+        exports.randomOperationParameter(function (result) {});
+    }, 1000));
+};
+
+exports.stop = function () {
+    runSwitch = false;
+    intervals.forEach(function (interval) {
+        clearInterval(interval);
+    });
+    intervals = [];
+}
