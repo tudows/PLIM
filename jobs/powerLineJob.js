@@ -234,7 +234,7 @@ exports.maintainAnalyze = function (callback) {
                                                 if (!err && maintainStates.length > 0) {
                                                     var maintainIllustration = "";
                                                     for (var j = 0; j < maintainType.powerLineOperation.length; j++) {
-                                                        maintainIllustration += (j + 1) + ". " + maintainType.powerLineOperation[j].nameCn + "<br/>";
+                                                        maintainIllustration += (j + 1) + ". " + maintainType.powerLineOperation[j].nameCn + "\n";
                                                     }
                                                     var _maintain = new Maintain({
                                                         powerLine: powerLine._id,
@@ -245,7 +245,7 @@ exports.maintainAnalyze = function (callback) {
                                                         updateDate: null,
                                                         maintainState: maintainStates[0]._id,
                                                         maintainType: maintainType._id,
-                                                        maintainIllustration: maintainIllustration.substring(0, maintainIllustration.length - 5),
+                                                        maintainIllustration: maintainIllustration,
                                                         maintainCompleteIllustration: null,
                                                         status: 1,
                                                         operationParameterSnapshot: {

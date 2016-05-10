@@ -32,3 +32,14 @@ exports.getProvinceGet = exports.getProvincePost = function(req, res) {
         }
     });
 };
+
+exports.getMaintainTypeGet = exports.getMaintainTypePost = function(req, res) {
+    baseDataService.findDbRef('MaintainType', req.body, 'powerLineOperation', function(maintainTypes) {
+        if (maintainTypes) {
+            res.json(maintainTypes);
+        }
+        else {
+            res.end();
+        }
+    });
+};

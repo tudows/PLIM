@@ -160,6 +160,10 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
         $scope.getDetail();
     }
     
+    $http.get("baseData/getMaintainType").success(function (result) {
+        $scope.maintainTypes = result;
+    });
+    
     $scope.timer = $interval($scope.getDetail, 10000);
 
     $scope.back = function () {
@@ -185,6 +189,13 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
             angular.element($event.target).html("更多信息");
         }
     }
+    
+    $scope.maintainPowerline = function () {
+        switch ($scope.maintain.maintainState.code) {
+            case 2: $scope.maintain.maintainState.code = 3; break;
+            case 3: $scope.maintain.maintainState.code = 4; break;
+        }
+    }
 
     $scope.$on("$destroy", function () {
         $interval.cancel($scope.timer);
@@ -193,9 +204,4 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
     $rootScope.$on('hasUser', function (event,data) {
         $scope.getDetail();
     });
-})
-.filter('to_trusted', ['$sce', function ($sce) {
-    return function (text) {
-        return $sce.trustAsHtml(text);
-    }
-}]);
+});

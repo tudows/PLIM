@@ -44,7 +44,7 @@ app.controller("AddPowerLineController", function ($rootScope, $scope, $http, $i
                             _callback(null, "");
                         }).error(function(err) {
                             _callback(null, "");
-                        });;
+                        });
                     },
                     function (_callback) {
                         $http.get("baseData/getRunningState").success(function(result) {
