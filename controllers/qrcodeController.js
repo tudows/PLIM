@@ -4,7 +4,7 @@ var converter = require('../utils/converterUtil');
 exports.analyseGet = function(req, res) {
     var qrcode = req.params.id;
     if (qrcode == null || qrcode == '') {
-        res.redirect('/#/app/powerline_maintain/list');
+        res.redirect('/#/app/maintain/list');
     }
     else {
         var type = qrcode.substring(0, 5);
@@ -13,7 +13,7 @@ exports.analyseGet = function(req, res) {
             // add powerline
             case('APLXX'): res.redirect('/#/app/addPowerLine/' + code);
             // get powerline
-            case('GPLXX'): res.redirect('/#/app/powerline_maintain/powerline/' + code);
+            case('GPLXX'): res.redirect('/#/app/powerline/powerline/' + code);
         }
     }
 };

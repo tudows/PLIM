@@ -1,4 +1,4 @@
-app.controller("PositionPowerLineController", function ($rootScope, $scope, PowerLine, NowPosition) {
+app.controller("PositionMaintainController", function ($rootScope, $scope, PowerLine, NowPosition) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[2];
 
     $rootScope.showLoading();
@@ -111,7 +111,7 @@ app.controller("PositionPowerLineController", function ($rootScope, $scope, Powe
     };
 
     $scope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
-        if (toState.name == "app.powerline_maintain.position" && fromState.name == "app.powerline_maintain.powerline") {
+        if (toState.name == "app.maintain.position" && fromState.name == "app.maintain.powerline") {
             if ($scope.map != null) {
                 $scope.map.clearOverlays();
                 $scope.showPowerline();

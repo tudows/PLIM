@@ -70,21 +70,23 @@ exports.removePost = function(req, res) {
     });
 };
 
-exports.positionGet = function(req, res) {
-    res.render('powerLine/position');
-};
-
-exports.listGet = function(req, res) {
-    res.render('powerLine/list');
-};
-
-exports.detailGet = function(req, res) {
-    res.render('powerLine/detail');
-};
-
 exports.updateOperationParameterPost = function (req, res) {
     powerLineService.updateOperationParameter(req.body, function(result) {
         res.send(result);
         res.end();
     });
 }
+
+exports.randomGet = function (req, res) {
+    require('../jobs/powerLineJob').randomOperationParameter(function (result) {
+        res.send('OK !!');
+    });
+}
+
+exports.listGet = function(req, res) {
+    res.render('powerline/list');
+};
+
+exports.detailGet = function(req, res) {
+    res.render('powerline/detail');
+};

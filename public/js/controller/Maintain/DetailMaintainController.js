@@ -1,9 +1,7 @@
 /// <reference path="../../../../typings/my/angular.d.ts" />
 
-app.controller("DetailPowerLineController", function ($filter, $rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory, $interval, radialIndicatorInstance, $ionicModal, User) {
-    $rootScope.activeLeftMenu = $rootScope.leftMenus[3];
-    
-    $scope.data = [12, 15, 4, 0];
+app.controller("DetailMaintainController", function ($filter, $rootScope, $scope, $stateParams, $http, $state, PowerLine, $ionicHistory, $interval, radialIndicatorInstance, $ionicModal, User) {
+    $rootScope.activeLeftMenu = $rootScope.leftMenus[2];
     
     $scope.indicatorOptionK = {
         radius: 20,
@@ -173,10 +171,56 @@ app.controller("DetailPowerLineController", function ($filter, $rootScope, $scop
 
     $scope.back = function () {
         if ($ionicHistory.backTitle() == null) {
-            $state.go("app.powerline.list", {});
+            $state.go("app.maintain.list", {});
             // $ionicHistory.clearCache();
         } else {
             $ionicHistory.goBack();
+        }
+    }
+
+    $scope.position = function () {
+        PowerLine.setPowerline($scope.powerline);
+        $state.go("app.maintain.position", {});
+    }
+    
+    $scope.maintainPowerline = function () {
+        $rootScope.showLoading();
+        var code = null;
+        var postData = null;
+        switch ($scope.maintain.maintainState.code) {
+            case 2:
+                code = 3;
+                postData = {
+                    maintanId: $scope.maintain._id,
+                    maintainStateCode: code,
+                    maintainTypeId: $scope.maintain.maintainType._id,
+                    powerLineId: $scope.powerline._id
+                };
+                break;
+            case 3:
+                code = 4;
+                postData = {
+                    maintanId: $scope.maintain._id,
+                    maintainStateCode: code,
+                    maintainCompleteIllustration: document.getElementsByName("maintainCompleteIllustration")[0].value,
+                    powerLineId: $scope.powerline._id
+                };
+                break;
+        }
+        if (code != null) {
+            // console.log(document.cookie);
+            $http.post("maintain/changeMaintain", postData).success(function (result) {
+                if (result) {
+                    $scope.maintain = result;
+                    $scope.maintainCompleteIllustration = $scope.maintain.maintainCompleteIllustration;
+                } else {
+                    $rootScope.closeLoading();
+                $rootScope.showError("出现错误，请重试");
+                }
+            }).error(function (result) {
+                $rootScope.closeLoading();
+                $rootScope.showError("出现错误，请重试");
+            });
         }
     }
 

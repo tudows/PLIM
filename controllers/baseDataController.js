@@ -43,3 +43,14 @@ exports.getMaintainTypeGet = exports.getMaintainTypePost = function(req, res) {
         }
     });
 };
+
+exports.getMaintainStateGet = exports.getMaintainStatePost = function(req, res) {
+    baseDataService.find('MaintainState', req.body, function(maintainStates) {
+        if (maintainStates) {
+            res.json(maintainStates);
+        }
+        else {
+            res.end();
+        }
+    });
+};

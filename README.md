@@ -233,6 +233,11 @@ Log
 * Add the stop of the job.
 * Add the smart arrange maintain worker.
 
+**2016-05-11**
+* Add the angular plugin -- "angular-chart".
+* Add the smart maintain suggestion.
+* Add powerline datum's statistics.
+
 
 License
 ------------------------------

@@ -15,6 +15,10 @@ app.controller("PLIMController", function ($rootScope, $scope, $http, $window, U
     $scope.refresh = function () {
         $window.location.reload();
     };
+    
+    $scope.random = function () {
+        $http.get("powerline/random");
+    };
 
     $rootScope.showError = function (text) {
         $ionicPopup.alert({

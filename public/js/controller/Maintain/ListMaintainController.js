@@ -1,10 +1,10 @@
-app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $ionicHistory, User) {
-    $rootScope.activeLeftMenu = $rootScope.leftMenus[3];
+app.controller("ListMaintainController", function ($rootScope, $scope, $http, $ionicHistory, User) {
+    $rootScope.activeLeftMenu = $rootScope.leftMenus[2];
 
     $ionicHistory.clearHistory();
 
     $scope.pullRefresh = function () {
-        $http.get("/powerLine/listPowerLine").success(function (result) {
+        $http.post("/maintain/listMainPowerLine", { userId: User.getUser()._id }).success(function (result) {
             $scope.powerlines = result;
         }).error(function (error) {
             $scope.powerlines = [];
@@ -17,7 +17,7 @@ app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $
     $rootScope.showLoading();
     
     if (User.getUser() != null) {
-        $http.get("/powerLine/listPowerLine").success(function (result) {
+        $http.post("/maintain/listMainPowerLine", { userId: User.getUser()._id }).success(function (result) {
             $scope.powerlines = result;
             $rootScope.closeLoading();
         }).error(function (error) {
@@ -27,7 +27,7 @@ app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $
     }
     
     $rootScope.$on('hasUser', function (event,data) {
-        $http.get("/powerLine/listPowerLine").success(function (result) {
+        $http.post("/maintain/listMainPowerLine", { userId: User.getUser()._id }).success(function (result) {
             $scope.powerlines = result;
             $rootScope.closeLoading();
         }).error(function (error) {

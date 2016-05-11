@@ -22,6 +22,8 @@
                         </button>
                     </ion-nav-buttons>
                     <ion-nav-buttons side="right">
+                        <button class="button button-icon button-clear ion-social-snapchat" ng-click="random()">
+                        </button>
                         <button class="button button-icon button-clear ion-android-refresh" ng-click="refresh()">
                         </button>
                     </ion-nav-buttons>
@@ -56,17 +58,17 @@
         </div>
     </script>
     
-    <script id="templates/powerline_maintain.html" type="text/ng-template">
+    <script id="templates/maintain.html" type="text/ng-template">
         <ion-view view-title="线路维修" hide-back-button=true>
             <ion-nav-buttons side="left">
                 <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
                 </button>
             </ion-nav-buttons>
             <ion-tabs class="tabs-icon-top tabs-stable">
-                <ion-tab title="维修列表" icon="ion-ios-paper-outline" href="#/app/powerline_maintain/list">
+                <ion-tab title="维修列表" icon="ion-ios-paper-outline" href="#/app/maintain/list">
                     <ion-nav-view name="list-tab"></ion-nav-view>
                 </ion-tab>
-                <ion-tab title="线路定位" icon="ion-location" href="#/app/powerline_maintain/position">
+                <ion-tab title="线路定位" icon="ion-location" href="#/app/maintain/position">
                     <ion-nav-view name="position-tab"></ion-nav-view>
                 </ion-tab>
             </ion-tabs>
@@ -76,6 +78,20 @@
     <script id="templates/user.html" type="text/ng-template">
         <ion-view view-title="用户信息">
             <ion-nav-view></ion-nav-view>
+        </ion-view>
+    </script>
+    
+    <script id="templates/powerline.html" type="text/ng-template">
+        <ion-view view-title="线路列表" hide-back-button=true>
+            <ion-nav-buttons side="left">
+                <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+                </button>
+            </ion-nav-buttons>
+            <ion-tabs class="tabs-icon-top tabs-stable">
+                <ion-tab title="线路列表" icon="ion-ios-paper-outline" href="#/app/powerline/list">
+                    <ion-nav-view name="list-tab"></ion-nav-view>
+                </ion-tab>
+            </ion-tabs>
         </ion-view>
     </script>
     

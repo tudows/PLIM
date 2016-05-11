@@ -89,7 +89,10 @@ exports.find = function(data, callback) {
         }
     ], function (err, results) {
         if (results.length == 6) {
-            Maintain.find(data.maintain)
+            if (data.sort == null) {
+                data.sort = { '_id': -1 };
+            }
+            Maintain.find(data.maintain).sort(data.sort)
             .populate('powerLine')
             .populate('maintainUser')
             .populate('createUser')

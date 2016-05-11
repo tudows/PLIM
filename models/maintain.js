@@ -33,6 +33,7 @@ var maintainSchema = new Schema({
         ref: 'MaintainType'
     },
     maintainIllustration: String,
+    maintainSuggestion: String,
     maintainCompleteIllustration: String,
     status: Number,
     operationParameterSnapshot: Schema.Types.Mixed

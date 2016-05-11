@@ -5,6 +5,7 @@ var RunningState = require('../models/runningState');
 var VoltageClass = require('../models/voltageClass');
 var VoltageClassUnit = require('../models/voltageClassUnit');
 var MaintainType = require('../models/maintainType');
+var MaintainState = require('../models/maintainState');
 
 exports.find = function(model, data, callback) {
     var model = eval(model);

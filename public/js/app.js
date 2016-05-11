@@ -1,6 +1,6 @@
 /// <reference path="../../typings/my/angular.d.ts" />
 
-var app = angular.module("plim", ["ionic", "radialIndicator", "ngAnimate"]);
+var app = angular.module("plim", ["ionic", "radialIndicator", "ngAnimate", "chart.js"]);
 app.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state("app", {
@@ -29,37 +29,62 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: "powerLine/add",
             controller: "AddPowerLineController"
         })
-        .state("app.powerline_maintain", {
-            url: "/powerline_maintain",
+        .state("app.powerline", {
+            url: "/powerline",
             abstract: true,
-            templateUrl: "templates/powerline_maintain.html"
+            templateUrl: "templates/powerline.html"
         })
-        .state("app.powerline_maintain.list", {
+        .state("app.powerline.list", {
             url: "/list",
             views: {
                 "list-tab": {
-                    templateUrl: "powerLine/list",
+                    templateUrl: "powerline/list",
                     controller: "ListPowerLineController"
                 }
             }
         })
-        .state("app.powerline_maintain.powerline", {
+        .state("app.powerline.powerline", {
             url: "/powerline/:no",
             views: {
                 "list-tab": {
                     templateUrl: function ($stateParams) {
-                        return "powerLine/detail/" + $stateParams.no;
+                        return "powerline/detail/" + $stateParams.no;
                     },
                     controller: "DetailPowerLineController"
                 }
             }
         })
-        .state("app.powerline_maintain.position", {
+        .state("app.maintain", {
+            url: "/maintain",
+            abstract: true,
+            templateUrl: "templates/maintain.html"
+        })
+        .state("app.maintain.list", {
+            url: "/list",
+            views: {
+                "list-tab": {
+                    templateUrl: "maintain/list",
+                    controller: "ListMaintainController"
+                }
+            }
+        })
+        .state("app.maintain.powerline", {
+            url: "/powerline/:no",
+            views: {
+                "list-tab": {
+                    templateUrl: function ($stateParams) {
+                        return "maintain/detail/" + $stateParams.no;
+                    },
+                    controller: "DetailMaintainController"
+                }
+            }
+        })
+        .state("app.maintain.position", {
             url: "/position",
             views: {
                 "position-tab": {
-                    templateUrl: "powerLine/position",
-                    controller: "PositionPowerLineController"
+                    templateUrl: "maintain/position",
+                    controller: "PositionMaintainController"
                 }
             }
         });
@@ -72,7 +97,8 @@ app.factory("LeftMenus", function () {
             return [
                 { "title": "用户中心", "href": "#/app/user" },
                 { "title": "线路录入", "href": "#/app/addPowerLine" },
-                { "title": "线路维修", "href": "#/app/powerline_maintain/list" }
+                { "title": "线路维修", "href": "#/app/maintain/list" },
+                { "title": "所有线路", "href": "#/app/powerline/list" }
             ];
         }
     }

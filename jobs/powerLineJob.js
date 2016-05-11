@@ -105,7 +105,7 @@ exports.randomOperationParameter = function (callback) {
                             ampere: (Math.random() * 1000).toFixed(4),
                             ohm: (Math.random() * 1000).toFixed(4),
                             celsius: (Math.random() * 1000).toFixed(4),
-                            pullNewton: (Math.random() * 1000).toFixed(4),
+                            pullNewton: (Math.random() * 200).toFixed(4),
                             updateDate: new Date()
                         }
                     }, function(err) {
@@ -132,7 +132,8 @@ exports.randomOperationParameter = function (callback) {
 exports.maintainAnalyze = function (callback) {
     var func = function (_callback) {
         powerLineDAO.find({
-            powerLine: { status: 1 }
+            powerLine: { status: 1 },
+            runningState: { code: 5 }
         }, function (err, powerLines) {
             if (!err) {
                 var powerLineCount = 0;
@@ -247,6 +248,7 @@ exports.maintainAnalyze = function (callback) {
                                                         maintainType: maintainType._id,
                                                         maintainIllustration: maintainIllustration,
                                                         maintainCompleteIllustration: null,
+                                                        maintainSuggestion: null,
                                                         status: 1,
                                                         operationParameterSnapshot: {
                                                             volt: powerLine.operationParameter.volt,
@@ -449,10 +451,10 @@ exports.run = function () {
         exports.updateEnvironment(function (result) {});
     }, 1000 * 60));
     
-    exports.randomOperationParameter(function (result) {});
-    intervals.push(setInterval(function () {
-        exports.randomOperationParameter(function (result) {});
-    }, 1000));
+    // exports.randomOperationParameter(function (result) {});
+    // intervals.push(setInterval(function () {
+    //     exports.randomOperationParameter(function (result) {});
+    // }, 1000));
 };
 
 exports.stop = function () {

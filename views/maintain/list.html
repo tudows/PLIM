@@ -1,13 +1,13 @@
-<ion-view view-title="所有线路列表">
+<ion-view view-title="维修线路列表">
     <ion-content>
         <ion-refresher pulling-text="下拉刷新" on-refresh="pullRefresh()"></ion-refresher>
         <ion-list>
             <div class="row" ng-if="powerlines.length == 0">
                 <div class="col col-100 text-center">
-                    <h4><i class="icon ion-outlet"></i> 没有线路</h4>
+                    <h4><i class="icon ion-outlet"></i> 没有维修线路</h4>
                 </div>
             </div>
-            <ion-item ng-repeat="powerline in (powerlines | orderBy : ['runningState.code','province.nameCn','voltageClass.voltage'])" href="#/app/powerline/powerline/{{powerline.encrypt}}">
+            <ion-item ng-repeat="powerline in (powerlines | orderBy : ['runningState.code','province.nameCn','voltageClass.voltage'])" href="#/app/maintain/powerline/{{powerline.encrypt}}">
                 <div class="row">
                     <div class="col col-10">
                         <i class="stateIcon icon" ng-class="{

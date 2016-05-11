@@ -12,7 +12,7 @@ exports.loginGet = exports.loginPost = function(req, res) {
     userService.findOne({uuid: req.body.uuid}, function(user) {
         if (user != null) {
             session.del(req, 'user');
-            session.set(req, 'user', user);
+            session.set(req, 'user', JSON.stringify(user));
             res.json(user);
         }
         else {
@@ -41,7 +41,7 @@ exports.registerPost = function (req, res) {
             userService.findOne({no: req.body.no}, function(user) {
                 if (user != null) {
                     session.del(req, 'user');
-                    session.set(req, 'user', user);
+                    session.set(req, 'user', JSON.stringify(user));
                     res.json(user);
                 }
                 else {
