@@ -422,6 +422,7 @@ exports.maintainArrange = function (callback) {
 var runSwitch = true;
 var intervals = [];
 exports.run = function () {
+    runSwitch = true;
     async.whilst(
         function () { return runSwitch; },
         function (callback1) {
