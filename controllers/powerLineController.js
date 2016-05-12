@@ -29,6 +29,18 @@ exports.addGet = function(req, res) {
                 startLatitude: dataList[9],
                 endLongitude: dataList[10],
                 endLatitude: dataList[11]
+            },
+            standardOperationParameter: {
+                minVolt: dataList[12],
+                maxVolt: dataList[13],
+                minAmpere: dataList[14],
+                maxAmpere: dataList[15],
+                minOhm: dataList[16],
+                maxOhm: dataList[17],
+                minCelsius: dataList[18],
+                maxCelsius: dataList[19],
+                minPullNewton: dataList[20],
+                maxPullNewton: dataList[21]
             }
         };
         res.json(powerLine);
