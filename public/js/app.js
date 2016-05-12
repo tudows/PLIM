@@ -38,7 +38,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             url: "/list",
             views: {
                 "list-tab": {
-                    templateUrl: "powerline/list",
+                    templateUrl: "powerLine/list",
                     controller: "ListPowerLineController"
                 }
             }
@@ -48,7 +48,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             views: {
                 "list-tab": {
                     templateUrl: function ($stateParams) {
-                        return "powerline/detail/" + $stateParams.no;
+                        return "powerLine/detail/" + $stateParams.no;
                     },
                     controller: "DetailPowerLineController"
                 }
