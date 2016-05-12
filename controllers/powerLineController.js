@@ -19,28 +19,28 @@ exports.addGet = function(req, res) {
             no: dataList[0],
             modelNo: dataList[1],
             voltageClass: dataList[2],
-            repairDay: dataList[3],
-            maintainDay: dataList[4],
-            designYear: dataList[5],
+            repairDay: parseInt(dataList[3]),
+            maintainDay: parseInt(dataList[4]),
+            designYear: parseInt(dataList[5]),
             runningState: dataList[6],
             province: dataList[7],
             location: {
-                startLongitude: dataList[8],
-                startLatitude: dataList[9],
-                endLongitude: dataList[10],
-                endLatitude: dataList[11]
+                startLongitude: parseFloat(dataList[8]),
+                startLatitude: parseFloat(dataList[9]),
+                endLongitude: parseFloat(dataList[10]),
+                endLatitude: parseFloat(dataList[11])
             },
             standardOperationParameter: {
-                minVolt: dataList[12],
-                maxVolt: dataList[13],
-                minAmpere: dataList[14],
-                maxAmpere: dataList[15],
-                minOhm: dataList[16],
-                maxOhm: dataList[17],
-                minCelsius: dataList[18],
-                maxCelsius: dataList[19],
-                minPullNewton: dataList[20],
-                maxPullNewton: dataList[21]
+                minVolt: parseFloat(dataList[12]),
+                maxVolt: parseFloat(dataList[13]),
+                minAmpere: parseFloat(dataList[14]),
+                maxAmpere: parseFloat(dataList[15]),
+                minOhm: parseFloat(dataList[16]),
+                maxOhm: parseFloat(dataList[17]),
+                minCelsius: parseFloat(dataList[18]),
+                maxCelsius: parseFloat(dataList[19]),
+                minPullNewton: parseFloat(dataList[20]),
+                maxPullNewton: parseFloat(dataList[21])
             }
         };
         res.json(powerLine);
