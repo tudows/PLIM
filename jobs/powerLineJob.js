@@ -497,12 +497,12 @@ exports.run = function () {
     exports.updateEnvironment(function (result) {});
     intervals.push(setInterval(function () {
         exports.updateEnvironment(function (result) {});
-    }, 1000 * 60));
+    }, 1000 * 60 * 10));
     
-    // exports.randomOperationParameter(function (result) {});
-    // intervals.push(setInterval(function () {
-    //     exports.randomOperationParameter(function (result) {});
-    // }, 1000));
+    exports.randomOperationParameter({}, function (result) {});
+    intervals.push(setInterval(function () {
+        exports.randomOperationParameter({}, function (result) {});
+    }, 1000 * 60 * 10));
 };
 
 exports.stop = function () {
