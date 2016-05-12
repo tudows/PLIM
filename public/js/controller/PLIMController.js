@@ -33,7 +33,7 @@ app.controller("PLIMController", function ($rootScope, $scope, $http, $window, U
                         if (multiple == null || multiple == "") {
                             e.preventDefault();
                         } else {
-                            $http.post("powerline/random", {
+                            $http.post("powerLine/random", {
                                 multiple: multiple,
                                 powerNo: powerNo == null || powerNo == "" ? null : powerNo
                             });
