@@ -89,11 +89,11 @@ exports.randomPost = function (req, res) {
 }
 
 exports.listGet = function(req, res) {
-    res.render('powerline/list');
+    res.render('powerLine/list');
 };
 
 exports.detailGet = function(req, res) {
-    res.render('powerline/detail');
+    res.render('powerLine/detail');
 };
 
 exports.maintainAnalysePost = function (req, res) {
