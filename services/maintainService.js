@@ -43,87 +43,111 @@ exports.getMaintainInfo = function (powerLineId, callback) {
 };
 
 exports.changeMaintain = function (data, callback) {
-    var _set = null
-    if (data.maintainStateCode == 3) {
-        _set = { $set: {
-            maintainType: data.maintainTypeId,
-            updateDate: new Date(),
-            updateUser: data.user._id
-        } };
-    } else if (data.maintainStateCode == 4) {
-        _set = { $set: {
-            maintainCompleteIllustration: data.maintainCompleteIllustration,
-            updateDate: new Date(),
-            updateUser: data.user._id
-        } };
-    }
-    
-    if (_set != null) {
-        maintainDAO.update({
-            query: { _id: data.maintanId },
-            set: _set
-        }, {
-            maintainState: { code: data.maintainStateCode }
-        }, function (err, result) {
-            if (!err) {
-                maintainDAO.find({
-                    maintain: { _id: data.maintanId }
-                }, function (err, maintains) {
-                    var maintain = maintains[0];
-                    if (!err) {
-                        async.series([
-                            function (_call1) {
-                                if (data.maintainStateCode == 3) {
-                                    maintainDAO.find({
-                                        maintain: {
-                                            powerLine: data.powerLineId,
-                                            maintainType: data.maintainTypeId
-                                        },
-                                        maintainState: { code: 4 }
-                                    }, function (err, _maintains) {
-                                        if (!err && _maintains.length > 0) {
-                                            var _maintainsDis = [];
-                                            _maintains.forEach(function (_maintain) {
-                                                // Euclidean Distance
-                                                var attrs = ['pullNewton', 'celsius', 'ohm', 'ampere', 'volt'];
-                                                var dis = 0;
-                                                attrs.forEach(function (attr) {
-                                                    var diff = _maintain.operationParameterSnapshot[attr] - maintain.operationParameterSnapshot[attr];
-                                                    dis += diff * diff;
+    if (data.user != null) {
+        var _set = null
+        if (data.maintainStateCode == 3) {
+            _set = { $set: {
+                maintainType: data.maintainTypeId,
+                updateDate: new Date(),
+                updateUser: data.user._id
+            } };
+        } else if (data.maintainStateCode == 4) {
+            _set = { $set: {
+                maintainCompleteIllustration: data.maintainCompleteIllustration,
+                updateDate: new Date(),
+                updateUser: data.user._id
+            } };
+        }
+        
+        if (_set != null) {
+            maintainDAO.update({
+                query: { _id: data.maintanId },
+                set: _set
+            }, {
+                maintainState: { code: data.maintainStateCode }
+            }, function (err, result) {
+                if (!err) {
+                    maintainDAO.find({
+                        maintain: { _id: data.maintanId }
+                    }, function (err, maintains) {
+                        if (!err) {
+                            var maintain = maintains[0];
+                            async.series([
+                                function (_call1) {
+                                    if (data.maintainStateCode == 3) {
+                                        maintainDAO.find({
+                                            maintain: {
+                                                powerLine: data.powerLineId,
+                                                maintainType: data.maintainTypeId
+                                            },
+                                            maintainState: { code: 4 }
+                                        }, function (err, _maintains) {
+                                            if (!err && _maintains.length > 0) {
+                                                var _maintainsDis = [];
+                                                _maintains.forEach(function (_maintain) {
+                                                    // Euclidean Distance
+                                                    var attrs = ['pullNewton', 'celsius', 'ohm', 'ampere', 'volt'];
+                                                    var dis = 0;
+                                                    attrs.forEach(function (attr) {
+                                                        var diff = _maintain.operationParameterSnapshot[attr] - maintain.operationParameterSnapshot[attr];
+                                                        dis += diff * diff;
+                                                    });
+                                                    _maintainsDis.push({
+                                                        maintainCompleteIllustration: _maintain.maintainCompleteIllustration,
+                                                        euclideanDistance: Math.sqrt(dis)
+                                                    });
                                                 });
-                                                _maintainsDis.push({
-                                                    maintainCompleteIllustration: _maintain.maintainCompleteIllustration,
-                                                    euclideanDistance: Math.sqrt(dis)
+                                                _maintainsDis.sort(function (a, b) {
+                                                    return a.euclideanDistance > b.euclideanDistance;
                                                 });
-                                            });
-                                            _maintainsDis.sort(function (a, b) {
-                                                return a.euclideanDistance > b.euclideanDistance;
-                                            });
-                                            maintain.maintainSuggestion = _maintainsDis[0].maintainCompleteIllustration;
-                                            maintainDAO.update({
-                                                query: { _id: maintain._id },
-                                                set: { $set: { maintainSuggestion: maintain.maintainSuggestion } }
-                                            }, {}, function (err, result) { });
-                                            _call1(null, '');
+                                                maintain.maintainSuggestion = _maintainsDis[0].maintainCompleteIllustration;
+                                                maintainDAO.update({
+                                                    query: { _id: maintain._id },
+                                                    set: { $set: { maintainSuggestion: maintain.maintainSuggestion } }
+                                                }, {}, function (err, result) { });
+                                                _call1(null, '');
+                                            } else {
+                                                _call1(null, '');
+                                            }
+                                        });
+                                    } else if (data.maintainStateCode == 4) {
+                                        var _set = {};
+                                        if (maintain.maintainType.code == 6) {
+                                            _set = {
+                                                lastMaintainDate: new Date(),
+                                                lastMaintainNo: data.user._id.toString()
+                                            };
                                         } else {
-                                            _call1(null, '');
+                                            _set = {
+                                                lastRepairDate: new Date(),
+                                                lastRepairNo: data.user._id.toString()
+                                            };
                                         }
-                                    });
-                                } else {
-                                    _call1(null, '');
+                                        powerLineDAO.update({
+                                            query: { _id: maintain.powerLine },
+                                            set: { $set: _set }
+                                        }, {
+                                            runningState: { code: 2 }
+                                        }, function (err, result) { });
+                                        _call1(null, '');
+                                    } else {
+                                        _call1(null, '');
+                                    }
                                 }
-                            }
-                        ], function (err, results) {
-                            callback(maintain);
-                        });
-                    } else {
-                        callback(null);
-                    }
-                });
-            } else {
-                callback(null);
-            }
-        });
+                            ], function (err, results) {
+                                callback(maintain);
+                            });
+                        } else {
+                            callback(null);
+                        }
+                    });
+                } else {
+                    callback(null);
+                }
+            });
+        } else {
+            callback(null);
+        }
     } else {
         callback(null);
     }

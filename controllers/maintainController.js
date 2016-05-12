@@ -25,7 +25,9 @@ exports.getMaintainInfoPost = function (req, res) {
 exports.changeMaintainPost = function (req, res) {
     session.get(req, 'user', function (err, user) {
         if (!err) {
-            req.body.user = JSON.parse(user);
+            if (user != null) {
+                req.body.user = JSON.parse(user);
+            }
             maintainService.changeMaintain(req.body, function (result) {
                 res.send(result);
                 res.end();
@@ -34,7 +36,6 @@ exports.changeMaintainPost = function (req, res) {
             res.end();
         }
     });
-            
 };
 
 exports.positionGet = function(req, res) {

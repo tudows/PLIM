@@ -6,6 +6,7 @@ var userDAO = require('../dao/userDAO');
 var Maintain = require('../models/maintain');
 var request = require('request');
 var async = require('async');
+var mongoose = require('mongoose');
 
 exports.updateEnvironment = function (callback) {
     var func = function (_callback) {
@@ -61,15 +62,15 @@ exports.updateEnvironment = function (callback) {
                                         windDirection: windDirection,
                                         weather: _weather.weather,
                                         date: new Date(weatherDate.setDate(weatherDate.getDate() + 1)),
-                                        dayPictureUrl: _weather.dayPictureUrl,
-                                        nightPictureUrl: _weather.nightPictureUrl,
+                                        dayPictureUrl: _weather.dayPictureUrl.replace('http://', 'https://'),
+                                        nightPictureUrl: _weather.nightPictureUrl.replace('http://', 'https://'),
                                         updateDate: new Date()
                                     };
                                     environments.push(environment);
                                 }
                                 
                                 powerLineDAO.updateOperationParameter({
-                                    _id: powerLine.operationParameter._id
+                                    powerLineNo: powerLine.no
                                 }, {
                                     $set: {environment: environments}
                                 }, function (err) {});
@@ -90,22 +91,30 @@ exports.updateEnvironment = function (callback) {
     // }, time);
 };
 
-exports.randomOperationParameter = function (callback) {
+exports.randomOperationParameter = function (data, callback) {
+    if (data.multiple == null) {
+        data.multiple = 1;
+    }
+    if (data.powerNo == null) {
+        data.powerNo = {status: 1};
+    } else {
+        data.powerNo = { no: data.powerNo, status: 1 };
+    }
     var func = function (_callback) {
         powerLineDAO.find({
-            powerLine: {status: 1}
+            powerLine: data.powerNo
         }, function(err, result) {
             if (!err) {
                 result.forEach(function (powerLine) {
                     powerLineDAO.updateOperationParameter({
-                        _id: powerLine.operationParameter._id
+                        powerLineNo: powerLine.no
                     }, {
                         $set: {
-                            volt: (Math.random() * 1000).toFixed(4),
-                            ampere: (Math.random() * 1000).toFixed(4),
-                            ohm: (Math.random() * 1000).toFixed(4),
-                            celsius: (Math.random() * 1000).toFixed(4),
-                            pullNewton: (Math.random() * 200).toFixed(4),
+                            volt: ((Math.random() * 100).toFixed(4) + 300) * data.multiple,
+                            ampere: ((Math.random() * 100).toFixed(4) + 300) * data.multiple,
+                            ohm: ((Math.random() * 50).toFixed(4) + 100) * data.multiple,
+                            celsius: (Math.random() * 100).toFixed(4) * data.multiple,
+                            pullNewton: (Math.random() * 40).toFixed(4) * data.multiple,
                             updateDate: new Date()
                         }
                     }, function(err) {
@@ -141,125 +150,164 @@ exports.maintainAnalyze = function (callback) {
                     function () { return powerLineCount < powerLines.length },
                     function (_call6) {
                         var powerLine = powerLines[powerLineCount];
+                        var start = new Date();
+                        start.setMinutes(start.getMinutes() - 30);
                         maintainDAO.find({
-                            maintainState: { code: { $ne: 4 } },
-                            maintain: { powerLine: powerLine._id }
+                            maintain: { $and: [
+                                { powerLine: powerLine._id },
+                                { $or: [
+                                    { maintainState: { $ne: mongoose.Types.ObjectId('573035613982d8481f73dca5') } },
+                                    { updateDate: { $gte: start } }
+                                ] }
+                            ] }
                         }, function(err, maintains) {
                             if (!err && maintains.length == 0) {
                                 var maintainTypeCode = null;
-                                if (powerLine.operationParameter.pullNewton <= 0) {
-                                    maintainTypeCode = 1;
-                                } else if (powerLine.operationParameter.ampere <= 100 && powerLine.operationParameter.volt < 0) {
-                                    maintainTypeCode = 1;
-                                } else if (powerLine.operationParameter.ampere < 0 && powerLine.operationParameter.volt < 100) {
-                                    maintainTypeCode = 2;
-                                } else if (powerLine.operationParameter.pullNewton > powerLine.standardOperationParameter.maxPullNewton) {
-                                    var pullNewtonDiffUp = powerLine.operationParameter.pullNewton - powerLine.standardOperationParameter.minPullNewton;
-                                    var pullNewtonDiffDown = powerLine.standardOperationParameter.maxPullNewton - powerLine.standardOperationParameter.minPullNewton;
-                                    if (parseInt(pullNewtonDiffUp / pullNewtonDiffDown * 100) > 300) {
-                                        maintainTypeCode = 4;
-                                    }
-                                } else if (powerLine.operationParameter.ampere > powerLine.standardOperationParameter.maxAmpere) {
-                                    var ampereDiffUp = powerLine.operationParameter.ampere - powerLine.standardOperationParameter.minAmpere;
-                                    var ampereDiffDown = powerLine.standardOperationParameter.maxAmpere - powerLine.standardOperationParameter.minAmpere;
-                                    if (parseInt(ampereDiffUp / ampereDiffDown * 100) > 500) {
-                                        maintainTypeCode = 3;
-                                    }
-                                } else if (powerLine.operationParameter.volt > powerLine.standardOperationParameter.maxVolt) {
-                                    var voltDiffUp = powerLine.operationParameter.volt - powerLine.standardOperationParameter.minVolt;
-                                    var voltDiffDown = powerLine.standardOperationParameter.maxVolt - powerLine.standardOperationParameter.minVolt;
-                                    if (parseInt(voltDiffUp / voltDiffDown * 100) > 500) {
-                                        maintainTypeCode = 4;
-                                    }
-                                } else if (powerLine.operationParameter.celsius > powerLine.standardOperationParameter.maxCelsius) {
-                                    var celsiusDiffUp = powerLine.operationParameter.celsius - powerLine.standardOperationParameter.minCelsius;
-                                    var celsiusDiffDown = powerLine.standardOperationParameter.maxCelsius - powerLine.standardOperationParameter.minCelsius;
-                                    if (parseInt(celsiusDiffUp / celsiusDiffDown * 100) > 120) {
-                                        maintainTypeCode = 5;
-                                    }
-                                } else {
-                                    var nowDate = new Date();
-                                    
-                                    var serviceYearDiff = (nowDate.getFullYear() - powerLine.serviceDate.getFullYear()) - powerLine.designYear;
-                                    var repairDay = powerLine.repairDay;
-                                    var maintainDay = powerLine.maintainDay;
-                                    if (serviceYearDiff > 0) {
-                                        repairDay -= serviceYearDiff;
-                                        maintainDay -= serviceYearDiff;
-                                        if (repairDay < powerLine.repairDay / 2) {
-                                            repairDay = powerLine.repairDay / 2
+                                var avgOperationParameter = null;
+                                var start = new Date();
+                                start.setMinutes(start.getMinutes() - 30);
+                                var attrs = ['volt', 'ampere', 'pullNewton', 'celsius', 'ohm' ];
+                                powerLineDAO.findHistoryOperationParameter({
+                                    powerLine: powerLine._id,
+                                    updateDate: {$gte: start}
+                                }, function (historyOperationParameters) {
+                                    if (historyOperationParameters != null && historyOperationParameters.length > 0) {
+                                        var _sum = [0, 0, 0, 0];
+                                        var _number = 0;
+                                        historyOperationParameters.forEach(function (historyOperationParameter) {
+                                            for (var i = 0; i < attrs.length; i++) {
+                                                _sum[i] += parseFloat(historyOperationParameter[attrs[i]]);
+                                            }
+                                            _number++;
+                                        });
+                                        for (var i = 0; i < _sum.length; i++) {
+                                            _sum[i] = _sum[i] / _number;
                                         }
-                                        if (maintainDay < powerLine.maintainDay / 2) {
-                                            maintainDay = powerLine.maintainDay / 2
+                                        avgOperationParameter = {
+                                            volt: _sum[0],
+                                            ampere: _sum[1],
+                                            pullNewton: _sum[2],
+                                            celsius: _sum[3],
+                                            ohm: _sum[4]
+                                        };
+                                        
+                                        if (avgOperationParameter.pullNewton <= 0) {
+                                            maintainTypeCode = 1;
+                                        } else if (avgOperationParameter.ampere <= 100 && avgOperationParameter.volt < 0) {
+                                            maintainTypeCode = 1;
+                                        } else if (avgOperationParameter.ampere < 0 && avgOperationParameter.volt < 100) {
+                                            maintainTypeCode = 2;
+                                        } else if (avgOperationParameter.pullNewton > powerLine.standardOperationParameter.maxPullNewton) {
+                                            var pullNewtonDiffUp = avgOperationParameter.pullNewton - powerLine.standardOperationParameter.minPullNewton;
+                                            var pullNewtonDiffDown = powerLine.standardOperationParameter.maxPullNewton - powerLine.standardOperationParameter.minPullNewton;
+                                            if (parseInt(pullNewtonDiffUp / pullNewtonDiffDown * 100) > 300) {
+                                                maintainTypeCode = 4;
+                                            }
+                                        } else if (avgOperationParameter.ampere > powerLine.standardOperationParameter.maxAmpere) {
+                                            var ampereDiffUp = avgOperationParameter.ampere - powerLine.standardOperationParameter.minAmpere;
+                                            var ampereDiffDown = powerLine.standardOperationParameter.maxAmpere - powerLine.standardOperationParameter.minAmpere;
+                                            if (parseInt(ampereDiffUp / ampereDiffDown * 100) > 500) {
+                                                maintainTypeCode = 3;
+                                            }
+                                        } else if (avgOperationParameter.volt > powerLine.standardOperationParameter.maxVolt) {
+                                            var voltDiffUp = avgOperationParameter.volt - powerLine.standardOperationParameter.minVolt;
+                                            var voltDiffDown = powerLine.standardOperationParameter.maxVolt - powerLine.standardOperationParameter.minVolt;
+                                            if (parseInt(voltDiffUp / voltDiffDown * 100) > 500) {
+                                                maintainTypeCode = 4;
+                                            }
+                                        } else if (avgOperationParameter.celsius > powerLine.standardOperationParameter.maxCelsius) {
+                                            var celsiusDiffUp = avgOperationParameter.celsius - powerLine.standardOperationParameter.minCelsius;
+                                            var celsiusDiffDown = powerLine.standardOperationParameter.maxCelsius - powerLine.standardOperationParameter.minCelsius;
+                                            if (parseInt(celsiusDiffUp / celsiusDiffDown * 100) > 120) {
+                                                maintainTypeCode = 5;
+                                            }
+                                        } else {
+                                            var nowDate = new Date();
+                                            
+                                            var serviceYearDiff = (nowDate.getFullYear() - powerLine.serviceDate.getFullYear()) - powerLine.designYear;
+                                            var repairDay = powerLine.repairDay;
+                                            var maintainDay = powerLine.maintainDay;
+                                            if (serviceYearDiff > 0) {
+                                                repairDay -= serviceYearDiff;
+                                                maintainDay -= serviceYearDiff;
+                                                if (repairDay < powerLine.repairDay / 2) {
+                                                    repairDay = powerLine.repairDay / 2
+                                                }
+                                                if (maintainDay < powerLine.maintainDay / 2) {
+                                                    maintainDay = powerLine.maintainDay / 2
+                                                }
+                                            }
+                                            
+                                            var repairDatyDiff = null;
+                                            var maintainDayDiff = null;
+                                            if (powerLine.lastRepairDate != null) {
+                                                repairDatyDiff = (nowDate.getTime() - powerLine.lastRepairDate.getTime()) / (1000 * 60 * 60 * 24) - repairDay;
+                                            } else {
+                                                repairDatyDiff = (nowDate.getTime() - powerLine.serviceDate.getTime()) / (1000 * 60 * 60 * 24) - repairDay;
+                                            }
+                                            if (powerLine.lastMaintainDate != null) {
+                                                maintainDayDiff = (nowDate.getTime() - powerLine.lastMaintainDate.getTime()) / (1000 * 60 * 60 * 24) - maintainDay;
+                                            } else {
+                                                maintainDayDiff = (nowDate.getTime() - powerLine.serviceDate.getTime()) / (1000 * 60 * 60 * 24) - maintainDay;
+                                            }
+                                            
+                                            if (repairDatyDiff > 0) {
+                                                maintainTypeCode = 7;
+                                            } else if (maintainDayDiff > 0) {
+                                                maintainTypeCode = 6;
+                                            }
                                         }
-                                    }
-                                    
-                                    var repairDatyDiff = null;
-                                    var maintainDayDiff = null;
-                                    if (powerLine.lastRepairDate != null) {
-                                        repairDatyDiff = (nowDate.getTime() - powerLine.lastRepairDate.getTime()) / (1000 * 60 * 60 * 24) - repairDay;
-                                    } else {
-                                        repairDatyDiff = (nowDate.getTime() - powerLine.serviceDate.getTime()) / (1000 * 60 * 60 * 24) - repairDay;
-                                    }
-                                    if (powerLine.lastMaintainDate != null) {
-                                        maintainDayDiff = (nowDate.getTime() - powerLine.lastMaintainDate.getTime()) / (1000 * 60 * 60 * 24) - maintainDay;
-                                    } else {
-                                        maintainDayDiff = (nowDate.getTime() - powerLine.serviceDate.getTime()) / (1000 * 60 * 60 * 24) - maintainDay;
-                                    }
-                                    
-                                    if (repairDatyDiff > 0) {
-                                        maintainTypeCode = 7;
-                                    } else if (maintainDayDiff > 0) {
-                                        maintainTypeCode = 6;
-                                    }
-                                }
-                                
-                                if (maintainTypeCode != null) {
-                                    maintainDAO.findMaintainType({ code: maintainTypeCode }, function (err, maintainTypes) {
-                                        if (!err && maintainTypes.length > 0) {
-                                            var maintainType = maintainTypes[0];
-                                            var i = 0;
-                                            async.whilst(function () {
-                                                return i < maintainType.powerLineOperation.length;
-                                            }, function (_call1) {
-                                                maintainDAO.operationPowerLine({
-                                                    _id: powerLine._id,
-                                                    code: maintainType.powerLineOperation[i].code,
-                                                    maintainTypeCode: maintainTypeCode
-                                                }, function (err, result) {
-                                                    i++;
-                                                    _call1(err, i);
-                                                });
-                                            }, function (err, n) { });
-                                            maintainDAO.findMaintainState({ code: 1 }, function(err, maintainStates) {
-                                                if (!err && maintainStates.length > 0) {
-                                                    var maintainIllustration = "";
-                                                    for (var j = 0; j < maintainType.powerLineOperation.length; j++) {
-                                                        maintainIllustration += (j + 1) + ". " + maintainType.powerLineOperation[j].nameCn + "\n";
-                                                    }
-                                                    var _maintain = new Maintain({
-                                                        powerLine: powerLine._id,
-                                                        maintainUser: null,
-                                                        createUser: null,
-                                                        createDate: new Date(),
-                                                        updateUser: null,
-                                                        updateDate: null,
-                                                        maintainState: maintainStates[0]._id,
-                                                        maintainType: maintainType._id,
-                                                        maintainIllustration: maintainIllustration,
-                                                        maintainCompleteIllustration: null,
-                                                        maintainSuggestion: null,
-                                                        status: 1,
-                                                        operationParameterSnapshot: {
-                                                            volt: powerLine.operationParameter.volt,
-                                                            ampere: powerLine.operationParameter.ampere,
-                                                            ohm: powerLine.operationParameter.ohm,
-                                                            celsius: powerLine.operationParameter.celsius,
-                                                            pullNewton: powerLine.operationParameter.pullNewton
+                                        
+                                        if (maintainTypeCode != null) {
+                                            maintainDAO.findMaintainType({ code: maintainTypeCode }, function (err, maintainTypes) {
+                                                if (!err && maintainTypes.length > 0) {
+                                                    var maintainType = maintainTypes[0];
+                                                    var i = 0;
+                                                    async.whilst(function () {
+                                                        return i < maintainType.powerLineOperation.length;
+                                                    }, function (_call1) {
+                                                        maintainDAO.operationPowerLine({
+                                                            _id: powerLine._id,
+                                                            code: maintainType.powerLineOperation[i].code,
+                                                            maintainTypeCode: maintainTypeCode
+                                                        }, function (err, result) {
+                                                            i++;
+                                                            _call1(err, i);
+                                                        });
+                                                    }, function (err, n) { });
+                                                    maintainDAO.findMaintainState({ code: 1 }, function(err, maintainStates) {
+                                                        if (!err && maintainStates.length > 0) {
+                                                            var maintainIllustration = "";
+                                                            for (var j = 0; j < maintainType.powerLineOperation.length; j++) {
+                                                                maintainIllustration += (j + 1) + ". " + maintainType.powerLineOperation[j].nameCn + "\n";
+                                                            }
+                                                            var _maintain = new Maintain({
+                                                                powerLine: powerLine._id,
+                                                                maintainUser: null,
+                                                                createUser: null,
+                                                                createDate: new Date(),
+                                                                updateUser: null,
+                                                                updateDate: null,
+                                                                maintainState: maintainStates[0]._id,
+                                                                maintainType: maintainType._id,
+                                                                maintainIllustration: maintainIllustration,
+                                                                maintainCompleteIllustration: null,
+                                                                maintainSuggestion: null,
+                                                                status: 1,
+                                                                operationParameterSnapshot: {
+                                                                    volt: avgOperationParameter.volt,
+                                                                    ampere: avgOperationParameter.ampere,
+                                                                    ohm: avgOperationParameter.ohm,
+                                                                    celsius: avgOperationParameter.celsius,
+                                                                    pullNewton: avgOperationParameter.pullNewton
+                                                                }
+                                                            });
+                                                            maintainDAO.add(_maintain, function(err) {
+                                                                _call6(err, ++powerLineCount);
+                                                            });
+                                                        } else {
+                                                            _call6(err, ++powerLineCount);
                                                         }
-                                                    });
-                                                    maintainDAO.add(_maintain, function(err) {
-                                                        _call6(err, ++powerLineCount);
                                                     });
                                                 } else {
                                                     _call6(err, ++powerLineCount);
@@ -268,10 +316,10 @@ exports.maintainAnalyze = function (callback) {
                                         } else {
                                             _call6(err, ++powerLineCount);
                                         }
-                                    });
-                                } else {
-                                    _call6(err, ++powerLineCount);
-                                }
+                                    } else {
+                                        _call6(err, ++powerLineCount);
+                                    }
+                                });
                             } else {
                                 _call6(err, ++powerLineCount);
                             }

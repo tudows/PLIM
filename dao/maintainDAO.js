@@ -104,7 +104,7 @@ exports.find = function(data, callback) {
                     PowerLineOperation.populate(maintains, {
                         path: 'maintainType.powerLineOperation'
                     }, function (_err, _maintains) {
-                        if (!err) {
+                        if (!_err) {
                             callback(null, _maintains);
                         } else {
                             callback(_err, null);
@@ -277,13 +277,38 @@ exports.update = function(data, populateSet, callback) {
 
 exports.findMaintainPowerLine = function (maintainUserId, callback) {
     Maintain.aggregate([
-        { $match:  { maintainUser: maintainUserId } },
+        { $match:  { maintainUser: maintainUserId, maintainState: { $ne: mongoose.Types.ObjectId('573035613982d8481f73dca5') } } },
         { $project: { _id: '$powerLine' } }
     ]).exec(function (err, powerLineIds) {
         if (!err) {
             callback(powerLineIds);
         } else {
             callback([]);
+        }
+    });
+};
+
+exports.findPowerLineMaintainNumber = function(powerLineId, callback) {
+    Maintain.aggregate([
+        { $match:  { powerLine: powerLineId, maintainState: mongoose.Types.ObjectId('573035613982d8481f73dca5') }},
+        { $project: { maintainType: 1, maintainNumber: 1 } },
+        { $group:  {
+            _id: '$maintainType',
+            maintainNumber: { $sum: 1 },
+        }}
+    ]).exec(function (err, maintains) {
+        if (!err) {
+            MaintainType.populate(maintains, {
+                path: '_id'
+            }, function (_err, _maintains) {
+                if (!_err) {
+                    callback(_maintains);
+                } else {
+                    callback(null);
+                }
+            });
+        } else {
+            callback(null);
         }
     });
 };

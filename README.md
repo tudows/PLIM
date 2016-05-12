@@ -76,7 +76,7 @@ Decrypt the date by the rsa and return the trsult
 > * Only receive post
 > * the data as follow: <br/>
 {<br/>
-&#160; &#160; &#160; &#160;_id: _id,<br/>
+&#160; &#160; &#160; &#160;powerLineNo: powerLineNo,<br/>
 &#160; &#160; &#160; &#160;volt: volt,<br/>
 &#160; &#160; &#160; &#160;ampere: ampere,<br/>
 &#160; &#160; &#160; &#160;ohm: ohm,<br/>
@@ -236,7 +236,14 @@ Log
 **2016-05-11**
 * Add the angular plugin -- "angular-chart".
 * Add the smart maintain suggestion.
+* Add history operation parameters record.
 * Add powerline datum's statistics.
+
+**2016-05-12**
+* Add "moment" module.
+* Optimize the maintain analyse.
+* Add the more detail information about the maintain powerline.
+* Add the more detail information about the normal powerline.
 
 
 License

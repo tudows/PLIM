@@ -77,8 +77,21 @@
                 </button>
             </div>
             <div class="col col-50">
-                <button class="button button-block button-calm" ng-click="maintainInfoModal.show()">
-                    维修情况
+                <button class="button button-block button-calm" ng-click="maintainInfoModalShow()">
+                    维修情况分析
+                </button>
+            </div>
+        </div>
+        <div class="row" ng-if="powerline.runningState.code == 2 || powerline.runningState.code == 5">
+            <div class="col col-100">
+                <button class="button button-block"
+                ng-class="{
+                    'button-balanced': powerline.runningState.code == 2,
+                    'button-assertive': powerline.runningState.code == 5
+                }"
+                ng-click="switchPowerLine()">
+                    <span ng-if="powerline.runningState.code == 2">启动线路</span>
+                    <span ng-if="powerline.runningState.code == 5">停止线路</span>
                 </button>
             </div>
         </div>
@@ -156,15 +169,23 @@
 <script id="maintainInfo.html" type="text/ng-template">
     <ion-modal-view>
         <ion-header-bar>
-            <h1 class="title">维修情况</h1>
+            <h1 class="title">维修情况分析</h1>
             <button class="button button-clear" ng-click="maintainInfoModal.hide()">关闭</button>
         </ion-header-bar>
         <ion-content>
             <div class="row">
                 <div class="col col-100 text-center">
                     <h5 class="text-bold">维修类型分布情况</h5>
-                    <canvas class="chart chart-doughnut" chart-data="data"
-                        chart-labels="['电压', '电流', '拉力', '温度']" chart-legend="true"></canvas>
+                    <canvas class="chart chart-doughnut" chart-data="doughnutData"
+                        chart-labels="['断路', '短路', '负荷过高', '拉力过高', '温度过高']" chart-legend="true"></canvas>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-100 text-center">
+                    <h5 class="text-bold">最近参数走势</h5>
+                    <canvas class="chart chart-line" chart-data="lineData"
+                    chart-labels="lineLabels" chart-legend="true"
+                    chart-series="['电压', '电流', '拉力', '温度']"></canvas> 
                 </div>
             </div>
         </ion-content>

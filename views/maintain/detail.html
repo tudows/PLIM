@@ -71,21 +71,26 @@
             </div>
         </div>
         <div class="row">
-            <div class="col col-50">
-                <button class="button button-block button-positive" ng-click="moreInfoModal.show()">
+            <div class="col col-33">
+                <button class="button button-block button-positive no-margin" ng-click="moreInfoModal.show()">
                     详细信息
                 </button>
             </div>
-            <div class="col col-50">
-                <button class="button button-block button-calm" ng-click="maintainInfoModal.show()">
-                    维修信息
+            <div class="col col-33">
+                <button class="button button-block button-balanced no-margin" ng-click="position()">
+                    定位
+                </button>
+            </div>
+            <div class="col col-33">
+                <button class="button button-block button-royal no-margin" ng-click="weatherModal.show()">
+                    线路天气情况
                 </button>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <button class="button button-block button-balanced" ng-click="position()">
-                    定位
+        <div class="row" style="margin-top: 10px;">
+            <div class="col col-100">
+                <button class="button button-block button-calm no-margin" ng-click="maintainInfoModal.show()">
+                    维修单
                 </button>
             </div>
         </div>
@@ -171,7 +176,7 @@
 <script id="maintainInfo.html" type="text/ng-template">
     <ion-modal-view>
         <ion-header-bar>
-            <h1 class="title">维修信息</h1>
+            <h1 class="title">维修单</h1>
             <button class="button button-clear" ng-click="maintainInfoModal.hide()">关闭</button>
         </ion-header-bar>
         <ion-content>
@@ -211,6 +216,67 @@
                     </button>
                 </div>
             </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+
+<script id="weather.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar>
+            <h1 class="title">天气情况</h1>
+            <button class="button button-clear" ng-click="weatherModal.hide()">关闭</button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="row">
+                <div class="col col-100">
+                    {{powerline.operationParameter.environment[0].updateDate | date:'yyyy-MM-dd HH:mm:ss'}} 更新
+                </div>
+            </div>
+            <ion-item ng-repeat="environment in (powerline.operationParameter.environment)">
+                <div class="row">
+                    <div class="col col-67 text-large text-bold">
+                        {{environment.date | date:'yyyy-MM-dd'}}
+                        <span ng-if="environment.nowTemperature != null"> (今日)</span>
+                    </div>
+                    <div class="col col-33">
+                        <img ng-src="{{environment.dayPictureUrl}}" />
+                        <img ng-src="{{environment.nightPictureUrl}}" />
+                    </div>
+                </div>
+                <div class="row" ng-if="environment.nowTemperature != null">
+                    <div class="col col-25">当前温度</div>
+                    <div class="col col-25">
+                        {{environment.nowTemperature}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-25">天气</div>
+                    <div class="col col-25">
+                        {{environment.weather}}
+                    </div>
+                    <div class="col col-25">温度</div>
+                    <div class="col col-25">
+                        {{environment.minTemperature}}
+                        ~
+                        {{environment.maxTemperature}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-25">风向</div>
+                    <div class="col col-25">
+                        {{environment.windDirection}}
+                    </div>
+                    <div class="col col-25">风速</div>
+                    <div class="col col-25" ng-if="environment.minWindSpeed != null">
+                        {{environment.minWindSpeed}}
+                        ~
+                        {{environment.maxWindSpeed}}
+                    </div>
+                    <div class="col col-75" ng-if="environment.minWindSpeed == null">
+                        微风
+                    </div>
+                </div>
+            </ion-item>
         </ion-content>
     </ion-modal-view>
 </script>

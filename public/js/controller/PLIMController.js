@@ -17,31 +17,65 @@ app.controller("PLIMController", function ($rootScope, $scope, $http, $window, U
     };
     
     $scope.random = function () {
-        $http.get("powerline/random");
+        $ionicPopup.show({
+            template: "<input id='multiple' class='text-center' type='number' placeholder='倍率'>" + 
+                "<input id='powerNo' class='text-center' type='number' placeholder='线路编号'>",
+            title: "随机参数",
+            scope: $scope,
+            buttons: [
+                { text: "Cancel" },
+                {
+                    text: "<b>Save</b>",
+                    type: "button-positive",
+                    onTap: function (e) {
+                        var multiple = document.getElementById("multiple").value;
+                        var powerNo = document.getElementById("powerNo").value;
+                        if (multiple == null || multiple == "") {
+                            e.preventDefault();
+                        } else {
+                            $http.post("powerline/random", {
+                                multiple: multiple,
+                                powerNo: powerNo == null || powerNo == "" ? null : powerNo
+                            });
+                        }
+                    }
+                },
+            ]
+        });
     };
 
     $rootScope.showError = function (text) {
-        $ionicPopup.alert({
-            title: "错误",
-            template: text
-        });
+        if ($rootScope.errorPopup == null) {
+            $rootScope.errorPopup = $ionicPopup.alert({
+                title: "错误",
+                template: text
+            }).then(function (res) {
+                $rootScope.errorPopup = null;
+            });
+        }
     };
 
     $rootScope.showSuccess = function (text) {
-        $ionicPopup.alert({
-            title: "成功",
-            template: text
-        });
+        if ($rootScope.successPopup == null) {
+            $rootScope.successPopup = $ionicPopup.alert({
+                title: "成功",
+                template: text
+            }).then(function (res) {
+                $rootScope.successPopup = null;
+            });
+        }
     };
 
     $rootScope.showLoading = function (text) {
-        if (text == null) {
-            text = "正在加载中...";
+        if ($rootScope.loadingPopup == null) {
+            if (text == null) {
+                text = "正在加载中...";
+            }
+            $rootScope.loadingPopup = $ionicPopup.show({
+                templateUrl: "loading.html",
+                title: text
+            });
         }
-        $rootScope.loadingPopup = $ionicPopup.show({
-            templateUrl: "loading.html",
-            title: text
-        });
     };
 
     $rootScope.closeLoading = function () {

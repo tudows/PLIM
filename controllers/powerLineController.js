@@ -71,15 +71,20 @@ exports.removePost = function(req, res) {
 };
 
 exports.updateOperationParameterPost = function (req, res) {
+    req.body.powerLineNo = crypto.rsaPrivateDecrypt(
+        converter.stringToBuffer(
+            converter.urlToBase64(req.body.powerLineNo),
+            'base64'
+        ), 'ascii');
     powerLineService.updateOperationParameter(req.body, function(result) {
         res.send(result);
         res.end();
     });
 }
 
-exports.randomGet = function (req, res) {
-    require('../jobs/powerLineJob').randomOperationParameter(function (result) {
-        res.send('OK !!');
+exports.randomPost = function (req, res) {
+    require('../jobs/powerLineJob').randomOperationParameter(req.body, function (result) {
+        res.end();
     });
 }
 
@@ -89,4 +94,16 @@ exports.listGet = function(req, res) {
 
 exports.detailGet = function(req, res) {
     res.render('powerline/detail');
+};
+
+exports.maintainAnalysePost = function (req, res) {
+    powerLineService.maintainAnalyse(req.body.powerLineId, function (result) {
+        res.json(result);
+    });
+};
+
+exports.updatePost = function (req, res) {
+    powerLineService.update(req.body, function (result) {
+        res.json(result);
+    });
 };

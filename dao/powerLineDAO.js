@@ -4,10 +4,12 @@ var PowerLine = require('../models/powerLine');
 var VoltageClassUnit = require('../models/voltageClassUnit');
 var VoltageClass = require('../models/voltageClass');
 var OperationParameter = require('../models/operationParameter');
+var HistoryOperationParameter = require('../models/historyOperationParameter');
 var StandardOperationParameter = require('../models/standardOperationParameter');
 var RunningState = require('../models/runningState');
 var Province = require('../models/province');
 var async = require('async');
+var mongoose = require('mongoose');
 
 exports.find = function(data, callback) {
     if (data.powerLine == null) {
@@ -150,9 +152,29 @@ exports.remove = function(data, callback) {
 };
 
 exports.updateOperationParameter = function(query, set, callback) {
-     OperationParameter.update(query, set, function (err) {
-        if(!err) {
-            callback(null);
+    PowerLine.findOne({ no: query.powerLineNo }).populate('operationParameter').exec(function (err, powerline) {
+        if (!err) {
+            if (set.$set.updateDate != null) {
+                var historyOperationParameter = new HistoryOperationParameter({
+                    healthy: powerline.operationParameter.healthy,
+                    volt: powerline.operationParameter.volt,
+                    ampere: powerline.operationParameter.ampere,
+                    ohm: powerline.operationParameter.ohm,
+                    celsius: powerline.operationParameter.celsius,
+                    pullNewton: powerline.operationParameter.pullNewton,
+                    updateDate: powerline.operationParameter.updateDate,
+                    powerLine: powerline._id
+                });
+                historyOperationParameter.save(function(err, result) { });
+            }
+            
+            OperationParameter.update({ _id: powerline.operationParameter._id }, set, function (err) {
+                if(!err) {
+                    callback(null);
+                } else {
+                    callback(err);
+                }
+            });
         } else {
             callback(err);
         }
@@ -184,5 +206,15 @@ exports.update = function (data, populateSet, callback) {
                 callback(err, null);
             }
         });
+    });
+};
+
+exports.findHistoryOperationParameter = function (data, callback) {
+    HistoryOperationParameter.find(data).sort({ updateDate: 1 }).exec(function (err, historyOperationParameters) {
+        if (!err) {
+            callback(historyOperationParameters);
+        } else {
+            callback(null);
+        }
     });
 };
