@@ -84,6 +84,15 @@ Decrypt the date by the rsa and return the trsult
 &#160; &#160; &#160; &#160;pullNewton: pullNewton<br/>
 }
 
+**About Hadoop**
+* The hadoop code is in the "hadoop/java". And the code is written by java.
+* The method of call the hadoop is by the nodejs module "child_process" to run the shell in the "shell/".
+* If you want to use, please:<br/>
+    1. modify the hadoop java code and compile by "mvn assembly:assembly". (At least modify the database's information)
+    2. rename the "hadoop-defalut.sh" to "hadoop.sh".
+    3. modify the hadoop.sh. (At least modify the root password and the hadoop's location)
+
+
 Known Bug
 ------------------------------
 1. When update the GPS information on the map, the map will not be very smooth.
@@ -244,6 +253,10 @@ Log
 * Optimize the maintain analyse.
 * Add the more detail information about the maintain powerline.
 * Add the more detail information about the normal powerline.
+
+**2016-05-12**
+* Add the hadoop shell to run the hadoop.
+* Add the run-shell module.
 
 
 License

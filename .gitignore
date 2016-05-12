@@ -13,3 +13,5 @@
 .project
 .settings
 /hadoop/java/hadoop/target
+npm-debug.log
+/shell/hadoop.sh

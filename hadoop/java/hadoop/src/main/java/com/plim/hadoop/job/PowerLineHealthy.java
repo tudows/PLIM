@@ -30,7 +30,7 @@ import com.mongodb.hadoop.util.MongoTool;
 
 public class PowerLineHealthy extends MongoTool {
 	
-	public static MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://rabbit:zhengran14@192.168.1.101:27017/PLIM"));
+	public static MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://username:password@ip:27017/PLIM"));
 	public static MongoDatabase plim = mongo.getDatabase("PLIM");
 	
 	public PowerLineHealthy() {
@@ -39,14 +39,14 @@ public class PowerLineHealthy extends MongoTool {
 			MongoConfig config = new MongoConfig(conf);
 			setConf(conf);
 			config.setInputFormat(MongoInputFormat.class);
-			config.setInputURI("mongodb://rabbit:zhengran14@192.168.1.101:27017/PLIM.operationparameters");
+			config.setInputURI("mongodb://username:password@ip:27017/PLIM.operationparameters");
 			config.setMapper(PowerLineHealthyMapper.class);
 			config.setReducer(PowerLineHealthyReducer.class);
 			config.setMapperOutputKey(Text.class);
 			config.setMapperOutputValue(Text.class);
 			config.setOutputKey(Text.class);
 			config.setOutputValue(BSONWritable.class);
-			config.setOutputURI("mongodb://rabbit:zhengran14@192.168.1.101:27017/PLIM.operationparameters");
+			config.setOutputURI("mongodb://username:password@ip:27017/PLIM.operationparameters");
 			config.setOutputFormat(MongoOutputFormat.class);
 		} catch (Exception e) {
 			e.printStackTrace();
