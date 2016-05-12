@@ -96,7 +96,7 @@ var serverHttps = https.createServer(options, app).listen(config.httpsPort, func
 
 var powerLineJob = require('./jobs/powerLineJob');
 powerLineJob.run();
-var hadoopJob = require('./jobs/hadoopJob');
-hadoopJob.run();
+// var hadoopJob = require('./jobs/hadoopJob');
+// hadoopJob.run();
 
 // require('./dao/initDAO').user();

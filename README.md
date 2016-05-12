@@ -91,6 +91,7 @@ Decrypt the date by the rsa and return the trsult
     1. modify the hadoop java code and compile by "mvn assembly:assembly". (At least modify the database's information)
     2. rename the "hadoop-defalut.sh" to "hadoop.sh".
     3. modify the hadoop.sh. (At least modify the root password and the hadoop's location)
+    4. run the shell in the server.
 
 
 Known Bug
@@ -256,7 +257,7 @@ Log
 
 **2016-05-12**
 * Add the hadoop shell to run the hadoop.
-* Add the run-shell module.
+* Add the run-shell module (not finish).
 
 
 License
