@@ -31,7 +31,7 @@ Leap.loop(controllerOptions, function (frame) {
         var rollRadians = direction[2];
 
         if (radius > 50) {
-            if (palmNormal[1] > 0.8) {
+            if (palmNormal[1] > 0.7) {
                 if (!block) {
                     block = true;
                     if (type == 1) {
@@ -39,7 +39,7 @@ Leap.loop(controllerOptions, function (frame) {
                             scale = 15 + (height - palm[1]) / 100 * 7.5;
                             map.centerAndZoom(map.getCenter(), scale);
                             block = false;
-                        }, 5000);
+                        }, 3000);
                     } else {
                         scale = 15 + (height - palm[1]) / 100 * 7.5;
                         map.centerAndZoom(map.getCenter(), scale);
@@ -73,7 +73,7 @@ Leap.loop(controllerOptions, function (frame) {
                 }
 
                 if (type == 0) {
-                    setTimeout(func, 5000);
+                    setTimeout(func, 3000);
                 } else {
                     func();
                 }
