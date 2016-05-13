@@ -39,7 +39,7 @@ Leap.loop(controllerOptions, function (frame) {
                             scale = 15 + (height - palm[1]) / 100 * 7.5;
                             map.centerAndZoom(map.getCenter(), scale);
                             block = false;
-                        }, 3000);
+                        }, 1000);
                     } else {
                         scale = 15 + (height - palm[1]) / 100 * 7.5;
                         map.centerAndZoom(map.getCenter(), scale);
@@ -68,7 +68,7 @@ Leap.loop(controllerOptions, function (frame) {
                         map.panBy(pitchRadians * 10, yawRadians * 10);
                         setTimeout(function () {
                             block = false;
-                        }, 1000);
+                        }, 700);
                     }
                 }
 
