@@ -76,3 +76,9 @@ exports.unBindDeviceGet = exports.unBindDevicePost = function (req, res) {
         res.end();
     });
 };
+
+exports.listUserGet = function (req, res) {
+    userService.find(function (result) {
+        res.json(result);
+    });
+};

@@ -1,0 +1,12 @@
+<ion-view view-title="管理">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon" ng-click="toggleLeftMenu()">
+            <i class="icon ion-navicon"></i>
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <button class="button button-block button-assertive" ng-click="removePowerLine()">
+            清除所有线路
+        </button>
+    </ion-content>
+</ion-view>

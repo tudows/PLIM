@@ -142,3 +142,13 @@ exports.findOne = function(data, callback) {
 //         }
 //     });
 // };
+
+exports.find = function (callback) {
+    userDAO.find({}, function (err, users) {
+        if (!err) {
+            callback(users);
+        } else {
+            callback([]);
+        }
+    });
+};

@@ -259,6 +259,9 @@ Log
 * Add the hadoop shell to run the hadoop.
 * Add the run-shell module (not finish).
 
+**2016-05-13**
+* Add leap motion support. You can use leap motion to move the map to view the powerline and users' position.
+
 
 License
 ------------------------------
