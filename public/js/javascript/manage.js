@@ -31,8 +31,7 @@ Leap.loop(controllerOptions, function (frame) {
         var rollRadians = direction[2];
 
         if (radius > 50) {
-            console.log(palmNormal[1]);
-            if (palmNormal[1] > 0.5) {
+            if (palmNormal[1] > 0.9) {
                 if (!block) {
                     block = true;
                     if (type == 1) {
@@ -48,7 +47,7 @@ Leap.loop(controllerOptions, function (frame) {
                     }
                     type = 0;
                 }
-            } else if (palmNormal[1] < -0.80) {
+            } else if (palmNormal[1] < -0.6) {
                 var func = function () {
                     if (pitchRadians >= 0) {
                         pitchRadians = Math.abs(pitchRadians) * -1;
