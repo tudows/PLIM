@@ -31,7 +31,7 @@ Leap.loop(controllerOptions, function (frame) {
         var rollRadians = direction[2];
 
         if (radius > 50) {
-            if (palmNormal[1] > 0.9) {
+            if (palmNormal[1] > 0.7) {
                 if (!block) {
                     block = true;
                     if (type == 1) {
