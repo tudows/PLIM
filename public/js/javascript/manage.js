@@ -34,17 +34,23 @@ Leap.loop(controllerOptions, function (frame) {
             if (palmNormal[1] > 0.7) {
                 if (!block) {
                     block = true;
-                    if (type == 1) {
-                        setTimeout(function () {
-                            scale = 15 + (height - palm[1]) / 100 * 7.5;
-                            map.centerAndZoom(map.getCenter(), scale);
-                            block = false;
-                        }, 1000);
-                    } else {
-                        scale = 15 + (height - palm[1]) / 100 * 7.5;
-                        map.centerAndZoom(map.getCenter(), scale);
-                        block = false;
-                    }
+                    // if (height > palm[1]) {
+                    //     $("#map").trigger("mousewheel", [120]);
+                    // } else if (height < palm[1]) {
+                    //     $("#map").trigger("mousewheel", [-120]);
+                    // }
+                    scale = 15 + parseInt((height - palm[1]) / 20) * 20 / 100 * 7.5;
+                    map.centerAndZoom(map.getCenter(), scale);
+                    console.log(scale);
+                    // var h = parseInt((height - palm[1]) / 20);
+                    // console.log(height - palm[1]);
+                    // if (h > 0) {
+                    //     map.zoomIn();
+                    // } else if (h < 0) {
+                    //     map.zoomOut();
+                    // }
+                    // height = palm[1];
+                    block = false;
                     type = 0;
                 }
             } else if (palmNormal[1] < -0.6) {
@@ -54,26 +60,26 @@ Leap.loop(controllerOptions, function (frame) {
                     } else {
                         pitchRadians = Math.abs(pitchRadians);
                     }
-                    pitchRadians = parseInt(pitchRadians * 100);
+                    pitchRadians = parseInt(pitchRadians * 100 / 20) * 20;
 
                     if (yawRadians >= 0) {
                         yawRadians = Math.abs(yawRadians);
                     } else {
                         yawRadians = Math.abs(yawRadians) * -1;
                     }
-                    yawRadians = parseInt(yawRadians * 100);
+                    yawRadians = parseInt(yawRadians * 100 / 20) * 20;
 
                     if (!block) {
                         block = true;
                         map.panBy(pitchRadians * 10, yawRadians * 10);
                         setTimeout(function () {
                             block = false;
-                        }, 700);
+                        }, 500);
                     }
                 }
 
                 if (type == 0) {
-                    setTimeout(func, 3000);
+                    setTimeout(func, 5000);
                 } else {
                     func();
                 }
@@ -182,25 +188,41 @@ function showPowerLine() {
     }
 }
 
-var pointCollection = null;
+var points = [];
+var opts1 = {
+    width: 250,
+    height: 80,
+    title: "人员信息",
+    enableMessage: true
+};
+function addClickHandler1(content, marker) {
+    marker.addEventListener("click", function (e) {
+        var p = e.target;
+        var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+        var infoWindow = new BMap.InfoWindow(content, opts1);
+        map.openInfoWindow(infoWindow, point);
+    });
+}
 function showUser() {
     if (!showBlock2) {
         if (!isShow2) {
             showBlock2 = true;
             $.get("user/listUser", function (data, status) {
-                var points = [];
                 data.forEach(function (user) {
                     if (user.lastLocation != null) {
-                        points.push(new BMap.Point(user.lastLocation.longitude, user.lastLocation.latitude));
+                        var point = new BMap.Marker(new BMap.Point(user.lastLocation.longitude, user.lastLocation.latitude), {
+                            icon: new BMap.Symbol(BMap_Symbol_SHAPE_CIRCLE, {
+                                scale: 5,
+                                strokeWeight: 1,
+                                fillColor: '#d340c3',
+                                fillOpacity: 0.8
+                            })
+                        });
+                        points.push(point);
+                        map.addOverlay(point);
+                        addClickHandler1(user.name, point);
                     }
                 });
-                var options = {
-                    size: BMAP_POINT_SIZE_NORMAL,
-                    shape: BMap_Symbol_SHAPE_POINT,
-                    color: '#d340c3'
-                }
-                pointCollection = new BMap.PointCollection(points, options);
-                map.addOverlay(pointCollection);
                 setTimeout(function() {
                     showBlock2 = false;
                     isShow2 = true;
@@ -208,9 +230,10 @@ function showUser() {
             });
         } else {
             showBlock2 = true;
-            if (pointCollection != null) {
-                map.removeControl(pointCollection);
-            }
+            points.forEach(function (point) {
+                map.removeControl(point);
+            });
+            points = [];
             setTimeout(function() {
                 isShow2 = false;
                 showBlock2 = false;
