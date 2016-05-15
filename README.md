@@ -262,6 +262,9 @@ Log
 **2016-05-13**
 * Add leap motion support. You can use leap motion to move the map to view the powerline and users' position.
 
+**2016-05-15**
+* Add the online video surveillance.(the project is a independent project in "webRTC/")
+
 
 License
 ------------------------------

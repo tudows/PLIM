@@ -15,3 +15,4 @@
 /hadoop/java/hadoop/target
 npm-debug.log
 /shell/hadoop.sh
+/webRTC/node_modules/
