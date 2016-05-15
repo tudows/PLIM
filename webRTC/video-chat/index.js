@@ -1,11 +1,13 @@
 var Hapi = require('hapi');
 var server = new Hapi.Server()
 server.connection({
+  'host': '127.0.0.1',
   'port': 3000
 });
 var socketio = require("socket.io");
 var io = socketio(server.listener);
-var twilio = require('twilio')('rrabbit', 'rabbit');
+// var twilio = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+var twilio = require('twilio')('rrabbit', 'rrabbit');
 
 // Serve static assets
 server.route({

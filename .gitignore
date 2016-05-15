@@ -15,4 +15,6 @@
 /hadoop/java/hadoop/target
 npm-debug.log
 /shell/hadoop.sh
-/webRTC/node_modules/
+/webRTC/easyrtc/node_modules/
+/webRTC/easyrtc/server_example/node_modules/
+/webRTC/video-chat/node_modules/

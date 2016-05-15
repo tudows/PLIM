@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PLIM实验室</title>
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+          aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+        <a class="navbar-brand" href="/">PLIM实验室</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="https://rrabbit.xyz:8088/manage">体感地图 <span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="http://localhost:3000">在线监控 <span class="sr-only"></span></a></li>
+        </ul>
+      </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row text-center">
+      <h2>在线监控</h2>
+    </div>
+    <div class="row text-center">
+      <div style="width: 666px; height: 500px; border: 1px solid black; margin: auto;">
+        <video id="local-video" height="500" autoplay></video>
+      </div>
+      <video id="remote-video" height="300" autoplay style="display: none"></video>
+    </div>
+    <div class="row text-center" style="margin-top: 10px;">
+      <button id="get-video" type="button" class="btn btn-success">获取视频</button>
+    </div>
+  </div>
+
+
+  <div style="display: none">
+    <!--<button id="get-video">Get Video</button>-->
+    <button id="call" disabled style="display: none">Call</button>
+  </div>
+
+  <script src="/jquery.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/adapter.js"></script>
+  <script src="/app.js"></script>
+</body>
+
+</html>
