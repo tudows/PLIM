@@ -16,6 +16,19 @@ app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $
         });
     }
     
+    $scope.search = function () {
+        $http.get("/manage/searchPowerLine?keyWord=" + document.getElementById("keyWord").value).success(function (result) {
+            $scope.powerlines = result;
+            $rootScope.closeLoading();
+        }).error(function (error) {
+            $scope.powerlines = [];
+            $rootScope.closeLoading();
+            $rootScope.showError("出现错误，请重试");
+        }).finally(function () {
+            $scope.$broadcast("scroll.refreshComplete");
+        });
+    }
+    
     $rootScope.showLoading();
     
     if (User.getUser() != null) {
