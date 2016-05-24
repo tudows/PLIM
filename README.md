@@ -265,6 +265,10 @@ Log
 **2016-05-15**
 * Add the online video surveillance.(the project is a independent project in "webRTC/")
 
+**2016-05-24**
+* Add "segment" module.(A chinese word split module)
+* Add smart power line search.
+
 
 License
 ------------------------------
