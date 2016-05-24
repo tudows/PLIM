@@ -53,12 +53,12 @@ exports.searchPowerLineGet = function(req, res) {
                     meaning[2]++;
                     break;
                 case '了':
-                    if (words.length >= 2 && words[index + 1].w == '的') {
+                    if (words.length >= 2 && (words[index + 1].w == '的' || words[index + 1].w == '得')) {
                         meaning[3]++;
                     }
                     break;
                 case '过':
-                    if (words.length >= 2 && words[index + 1].w == '的') {
+                    if (words.length >= 2 && (words[index + 1].w == '的' || words[index + 1].w == '得')) {
                         meaning[3]++;
                     }
                     break;
