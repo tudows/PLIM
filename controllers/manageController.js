@@ -31,7 +31,7 @@ exports.searchPowerLineGet = function(req, res) {
     // 正在
     // 维修/保养
     // 了/过
-    // 的
+    // 的/得
     // 线路
     // 编号
     // 数字
@@ -63,6 +63,9 @@ exports.searchPowerLineGet = function(req, res) {
                     }
                     break;
                 case '的':
+                    meaning[4]++;
+                    break;
+                case '得':
                     meaning[4]++;
                     break;
                 case '线路':
