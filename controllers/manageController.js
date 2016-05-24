@@ -13,6 +13,6 @@ exports.searchGet = function(req, res) {
 var Segment = require('segment');
 var segment = new Segment();
 segment.useDefault();
-exports.searchPowerLineGet = function(req, res) {
-    res.json(segment.doSegment(req.params.keyWord));
+exports.splitGet = function(req, res) {
+    res.json(segment.doSegment(req.query.keyWord));
 }

@@ -84,6 +84,10 @@ Decrypt the date by the rsa and return the trsult
 &#160; &#160; &#160; &#160;pullNewton: pullNewton<br/>
 }
 
+**Chinese word split Interface**
+> **Usage** "/manage/searchPowerLine?keyWord="<br/>
+> * Only receive get
+
 **About Hadoop**
 * The hadoop code is in the "hadoop/java". And the code is written by java.
 * The method of call the hadoop is by the nodejs module "child_process" to run the shell in the "shell/".
@@ -268,6 +272,7 @@ Log
 **2016-05-24**
 * Add "segment" module.(A chinese word split module)
 * Add smart power line search.
+* Open the chinese word split interface.
 
 
 License
