@@ -1,0 +1,195 @@
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>EasyRTC - Server Root</title>
+    <script type="text/javascript">
+        function forward(){ window.location = "/demos/";}
+    </script>
+</head>
+<body onload="setTimeout('forward()', 10000)">
+    <h1>You have installed EasyRTC!</h1>
+
+    <h2>This is your server's Web Root</h2>
+
+    <p>This is the easiest location to put your own static html files for developing WebRTC applications.</p>
+
+    <p>In the meantime we'll forward you to <a href="/demos/">the EasyRTC Demo page</a>...</p>
+
+    <a href="http://www.easyrtc.com/"><img src="/easyrtc/img/powered_by_easyrtc.png" width="200" height="60" alt="Powered by EasyRTC"></a>
+</body>
+</html>-->
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PLIM实验室</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <!-- Assumes global locations for socket.io.js and easyrtc.js -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/easyrtc/easyrtc.js"></script>
+    <script type="text/javascript" src="js/demo_audio_video_simple.js"></script>
+    
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+    <!--<style>
+        #demoContainer {
+        position:relative;
+        }
+        #connectControls {
+        float:left;
+        width:250px;
+        text-align:center;
+        border: 2px solid black;
+        }
+        #otherClients {
+        height:200px;
+        overflow-y:scroll;
+        }
+        #selfVideo {
+        height:225px;
+        width:300px;
+        float:left;
+        border:1px solid gray;
+        margin-left:10px;
+        }
+        #callerVideo {
+        height:225px;
+        width:300px;
+        border:1px solid gray;
+        margin-left:10px;
+        }
+    </style>-->
+ 
+  </head>
+  <body onload="connect();">
+        <!--<div id="demoContainer">
+          <div id="connectControls" style="display: none;">
+            <div id="iam">Not yet connected...</div>
+            <br />
+            <strong>Connected users:</strong>
+            <div id="otherClients"></div>
+          </div>
+          <div id="videos">
+            <video autoplay="autoplay" class="easyrtcMirror" id="selfVideo" muted="muted" volume="0"  style="display: none;"></video>
+            <div style="position:relative;float:left;">
+            <video autoplay="autoplay" id="callerVideo"></video>
+            </div>
+          </div>
+        </div>-->
+        
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+                <a class="navbar-brand" href="/">PLIM实验室</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                <li><a href="https://rrabbit.xyz:8088/manage">体感地图 <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="http://localhost:3000">在线监控 <span class="sr-only"></span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row text-center">
+            <h2>在线监控</h2>
+            </div>
+            <div class="row text-center">
+            <!--<div style="width: 666px; height: 500px; border: 1px solid black; margin: auto;">
+                <video id="local-video" height="500" autoplay></video>
+            </div>-->
+            
+            <div id="demoContainer">
+                <div id="connectControls" style="display: none;">
+                    <div id="iam">Not yet connected...</div>
+                    <br />
+                    <strong>Connected users:</strong>
+                    <div id="otherClients"></div>
+                </div>
+                <div id="videos" style="width: 666px; height: 500px; border: 1px solid black; margin: auto;">
+                    <video autoplay="autoplay" class="easyrtcMirror" id="selfVideo" muted="muted" volume="0" style="display: none;"></video>
+                    <video autoplay="autoplay" id="callerVideo" height="500"></video>
+                </div>
+            </div>
+            
+            </div>
+            <div class="row text-center" style="margin-top: 10px;">
+            <button id="get-video" type="button" class="btn btn-success" disabled>获取视频</button>
+            </div>
+        </div>
+        
+        <script>
+            var selfEasyrtcid = "";
+            
+            
+            function connect() {
+            easyrtc.setVideoDims(640,480);
+            easyrtc.setRoomOccupantListener(convertListToButtons);
+            easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", ["callerVideo"], loginSuccess, loginFailure);
+            }
+            
+            
+            function clearConnectList() {
+            var otherClientDiv = document.getElementById("otherClients");
+            while (otherClientDiv.hasChildNodes()) {
+                otherClientDiv.removeChild(otherClientDiv.lastChild);
+            }
+            }
+            
+            
+            function convertListToButtons (roomName, data, isPrimary) {
+            clearConnectList();
+            var otherClientDiv = document.getElementById("otherClients");
+            for(var easyrtcid in data) {
+                var button = document.getElementById("get-video");
+                button.onclick = function(easyrtcid) {
+                return function() {
+                    performCall(easyrtcid);
+                };
+                }(easyrtcid);
+                
+                button.disabled = false;
+            
+                // var label = document.createTextNode(easyrtc.idToName(easyrtcid));
+                // button.appendChild(label);
+                // otherClientDiv.appendChild(button);
+            }
+            }
+            
+            
+            function performCall(otherEasyrtcid) {
+            easyrtc.hangupAll();
+            
+            var successCB = function() {};
+            var failureCB = function() {};
+            easyrtc.call(otherEasyrtcid, successCB, failureCB);
+            }
+            
+            
+            function loginSuccess(easyrtcid) {
+            selfEasyrtcid = easyrtcid;
+            document.getElementById("iam").innerHTML = "I am " + easyrtc.cleanId(easyrtcid);
+            }
+            
+            
+            function loginFailure(errorCode, message) {
+            easyrtc.showError(errorCode, message);
+            }
+        </script>
+  </body>
+</html>

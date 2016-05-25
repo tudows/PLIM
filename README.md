@@ -274,6 +274,9 @@ Log
 * Add smart power line search.
 * Open the chinese word split interface.
 
+**2016-05-25**
+* Add the easyrtc.(in "webRTC")
+
 
 License
 ------------------------------

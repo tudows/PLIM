@@ -52,12 +52,23 @@
     <!--<button id="get-video">Get Video</button>-->
     <button id="call" disabled style="display: none">Call</button>
   </div>
+  
+  <!--<canvas id="inputCanvas" width="666px" height="500px"></canvas>-->
 
   <script src="/jquery.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/adapter.js"></script>
   <script src="/app.js"></script>
+  
+  <!--<script src="/headtrackr.min.js"></script>
+  <script>
+    var videoInput = document.getElementById('local-video');
+    var canvasInput = document.getElementById('inputCanvas');
+    var htracker = new headtrackr.Tracker();
+    htracker.init(videoInput, canvasInput);
+    htracker.start();
+  </script>-->
 </body>
 
 </html>
