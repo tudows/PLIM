@@ -17,4 +17,5 @@ npm-debug.log
 /shell/hadoop.sh
 /webRTC/easyrtc/node_modules/
 /webRTC/easyrtc/server_example/node_modules/
+/webRTC/easyrtc/server_example/bower_components/
 /webRTC/video-chat/node_modules/
