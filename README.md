@@ -279,6 +279,7 @@ Log
 
 **2016-05-25**
 * Adjust the interface of the smart search.(adapt the app)
+* Add the phone project in the "app/".
 
 
 License
