@@ -277,6 +277,9 @@ Log
 **2016-05-25**
 * Add the easyrtc.(in "webRTC")
 
+**2016-05-25**
+* Adjust the interface of the smart search.(adapt the app)
+
 
 License
 ------------------------------

@@ -1,10 +1,17 @@
-app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $ionicHistory, User) {
+app.controller("ListPowerLineController", function ($rootScope, $scope, $http, $ionicHistory, User, $stateParams) {
     $rootScope.activeLeftMenu = $rootScope.leftMenus[3];
 
     $ionicHistory.clearHistory();
 
     $scope.pullRefresh = function () {
-        $http.get("/powerLine/listPowerLine").success(function (result) {
+        var url = "";
+        if ($stateParams.keyWord != null) {
+            url = "/manage/searchPowerLine?keyWord=" + $stateParams.keyWord;
+            $scope.keyWord = $stateParams.keyWord;
+        } else {
+            url = "/powerLine/listPowerLine";
+        }
+        $http.get(url).success(function (result) {
             $scope.powerlines = result;
             $rootScope.closeLoading();
         }).error(function (error) {

@@ -43,6 +43,15 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state("app.powerline.search", {
+            url: "/list/:keyWord",
+            views: {
+                "list-tab": {
+                    templateUrl: "powerLine/list",
+                    controller: "ListPowerLineController"
+                }
+            }
+        })
         .state("app.powerline.powerline", {
             url: "/powerline/:no",
             views: {
