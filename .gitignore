@@ -19,3 +19,10 @@ npm-debug.log
 /webRTC/easyrtc/server_example/node_modules/
 /webRTC/easyrtc/server_example/bower_components/
 /webRTC/video-chat/node_modules/
+/app/xamarin/browser/packages
+/app/xamarin/browser/browser/bin
+/app/xamarin/browser/browser/obj
+/app/xamarin/browser/Droid/bin
+/app/xamarin/browser/Droid/obj
+/app/xamarin/browser/IOS/bin
+/app/xamarin/browser/IOS/obj
