@@ -5,7 +5,7 @@
 	    <Grid.RowDefinitions>
 	        <RowDefinition Height="*" />
 	    </Grid.RowDefinitions>
-	    <WebView Source="https://rrabbit.xyz:8078" Grid.Row="0" />
+	    <WebView Source="http://rrabbit.xyz:8077" Grid.Row="0" />
 	</Grid>
 	</ContentPage.Content>
 </ContentPage>
