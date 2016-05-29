@@ -282,6 +282,9 @@ Log
 * Add the iphone native project in the "app/".
 * Add the Xmamrin.Forms project in the "app/".
 
+**2016-05-29**
+* Add the tingyun performance monitor.(More detail [http://www.tingyun.com/](http://www.tingyun.com/))
+
 
 License
 ------------------------------
