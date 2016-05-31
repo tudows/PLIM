@@ -18,7 +18,37 @@ exports.listMainPowerLine = function(userId, callback) {
                 powerLine: { _id: { $in: powerLineIds }
             } }, function (err, result) {
                 if (!err) {
-                    callback(result);
+                    // callback(result);
+                    var count = 0;
+                    var maintains = [];
+                    async.whilst(
+                        function () { return count < result.length; },
+                        function (_call4) {
+                            var _powerLine = result[count];
+                            async.series([
+                                function (_call3) {
+                                    maintainDAO.find({
+                                        maintain: {
+                                            powerLine: _powerLine._id,
+                                            maintainState: { $ne: mongoose.Types.ObjectId('573035613982d8481f73dca5') }
+                                        }
+                                    }, function (err, _maintain) {
+                                        _call3(err, _maintain);
+                                    });
+                                }
+                            ], function (err, result) {
+                                maintains.push(result[0][0]);
+                                count++;
+                                _call4(null);
+                            });
+                        },
+                        function (err) {
+                            callback({
+                                powerLines: result,
+                                maintains: maintains
+                            });
+                        }
+                    );
                 } else {
                     callback([]);
                 }

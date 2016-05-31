@@ -1,6 +1,6 @@
 /// <reference path="typings/my/node&express.d.ts" />
 
-require('tingyun');
+// require('tingyun');
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');

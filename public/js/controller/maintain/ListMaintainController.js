@@ -5,7 +5,8 @@ app.controller("ListMaintainController", function ($rootScope, $scope, $http, $i
 
     $scope.pullRefresh = function () {
         $http.post("/maintain/listMainPowerLine", { userId: User.getUser()._id }).success(function (result) {
-            $scope.powerlines = result;
+            $scope.powerlines = result.powerLines;
+            $scope.maintains = result.maintains;
             $rootScope.closeLoading();
         }).error(function (error) {
             $scope.powerlines = [];

@@ -9,7 +9,8 @@ var maintainTypeSchema = new Schema({
     powerLineOperation: [{
         type: Schema.Types.ObjectId,
         ref: 'PowerLineOperation'
-    }]
+    }],
+    level: Number
 });
 
 module.exports = mongoose.model('MaintainType', maintainTypeSchema);
