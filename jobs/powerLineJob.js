@@ -19,7 +19,7 @@ exports.updateEnvironment = function (callback) {
                         powerLine.operationParameter.environment.length == 0 ||
                         powerLine.operationParameter.environment[0].updateDate == null ||
                         ((new Date()).getTime() - powerLine.operationParameter.environment[0].updateDate.getTime()) >= 1000 * 60 * 60) {
-                        request.get('http://api.map.baidu.com/telematics/v3/weather?location=' + encodeURI(powerLine.province.nameCn) + '&output=json&ak=hDMeBeFR3ccORh6CsKzOGIsc', function (error, response, body) {
+                        request.get('http://api.map.baidu.com/telematics/v3/weather?location=' + encodeURI(powerLine.province.nameCn) + '&output=json&ak=xxxIsc', function (error, response, body) {
                             if (!error && response.statusCode == 200 && JSON.parse(body).error == 0) {
                                 var weather = JSON.parse(body);
                                 var environments = [];

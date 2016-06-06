@@ -105,8 +105,8 @@ if (cluster.isMaster) {
         // })
         // data = {
         //     coords: '114.21892734521,29.575429778924;114.21892734521,29.575429778924',
-        //     sn: 'eWCqKxtRe4wef5V4t7HeVRdXDgf0oQpq',
-        //     ak: 'pYy1xlv85GnjPlmsCb0hl5v21e6jYtVV'};
+        //     sn: 'xxxQpq',
+        //     ak: 'xxxYtVV'};
         // req.write(require('querystring').stringify(data));
         // req.end();
     });

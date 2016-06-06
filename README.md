@@ -13,6 +13,7 @@ Usage
 2. Please rename the "config/xxxConfig - example.json" to "config/xxxConfig.json"
 3. Edit the database's ip, port, database, username and password to your owen in the mongodbConfig.json and redisConfig.json
 4. If be necessary, you can change the site port in the globalConfig.json
+5. Please apply the Baidu Map key and replace the key. Where need to replace please search 'api.map.baidu.com'.
 
 **About Debug & Develop**
 * If you want to debug by vscode, please move the http method out of the cluster(like the annotation).
