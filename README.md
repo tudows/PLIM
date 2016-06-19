@@ -284,11 +284,14 @@ Log
 * Add the Xmamrin.Forms project in the "app/".
 
 **2016-05-29**
-* Add the tingyun performance monitor.(More detail [http://www.tingyun.com/](http://www.tingyun.com/))\
+* Add the tingyun performance monitor.(More detail [http://www.tingyun.com/](http://www.tingyun.com/))
 
 **2016-05-31**
 * Add the level to the maintain type.
 * Adjust the maintain list UI.
+
+**2016-06-19**
+* All finished, thanks everyone :) .
 
 
 License

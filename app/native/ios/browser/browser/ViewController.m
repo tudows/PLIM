@@ -44,10 +44,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    // NSURL *url = [NSURL URLWithString:@"https://rrabbit.xyz:8078"];
+    // NSURL *url = [NSURL URLWithString:@"https://xxx"];
     
     if (_url == nil)
-        _url = [NSURL URLWithString:@"https://rrabbit.xyz:8078"];
+        _url = [NSURL URLWithString:@"https://xxx"];
     
 //    NSURLRequest *request = [NSURLRequest requestWithURL:_url];
 //    [webView_ loadRequest:request];
@@ -88,7 +88,7 @@
     [super viewDidAppear:YES];
     
     NSString *urlStr = [_url absoluteString];
-    if ([urlStr isEqualToString:@"https://rrabbit.xyz:8078/#/app/powerline/list"]) {
+    if ([urlStr isEqualToString:@"https://xxx/#/app/powerline/list"]) {
         [_voiceView setHidden:NO];
     }
     else {
@@ -157,7 +157,7 @@
         [result appendFormat:@"%@",key];
     }
 //    NSLog(@"%@",result);
-    [self setUrl:[NSURL URLWithString:[@"https://rrabbit.xyz:8078/#/app/powerline/list/" stringByAppendingString:[result stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
+    [self setUrl:[NSURL URLWithString:[@"https://xxx/#/app/powerline/list/" stringByAppendingString:[result stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
     [_iflyRecognizerView cancel]; //取消识别
 //    [_iflyRecognizerView setDelegate:nil];
 //    [_iflyRecognizerView setParameter:@"" forKey:[IFlySpeechConstant PARAMS]];
@@ -198,7 +198,7 @@
 
 - (void)setValue:(NSString *)value {
 //    NSLog(value);
-    _url = [NSURL URLWithString:[@"https://rrabbit.xyz:8078/qrcode/analyse/" stringByAppendingString:value]];
+    _url = [NSURL URLWithString:[@"https://xxx/qrcode/analyse/" stringByAppendingString:value]];
 //    NSURLRequest *request = [NSURLRequest requestWithURL:_url];
 //    [webView_ loadRequest:request];
     
@@ -211,7 +211,7 @@
 //    NSURLRequest *request = [NSURLRequest requestWithURL:url];
 //    [webView_ loadRequest:request];
     NSString *urlStr = [_url absoluteString];
-    if ([urlStr isEqualToString:@"https://rrabbit.xyz:8078/#/app/powerline/list"]) {
+    if ([urlStr isEqualToString:@"https://xxx/#/app/powerline/list"]) {
         [_voiceView setHidden:NO];
     }
     else {

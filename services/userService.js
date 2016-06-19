@@ -41,7 +41,7 @@ exports.addUuid = function(data, callback) {
     //     }
     // });
     
-    var uuid = crypto.sha256(data.uuid, 'rrabbit', 'hex');
+    var uuid = crypto.sha256(data.uuid, 'xxx', 'hex');
     userDAO.findOne({
         no: data.no,
         uuid: {$nin: [uuid]}
@@ -68,7 +68,7 @@ exports.addUuid = function(data, callback) {
 };
 
 exports.removeUuid = function(data, callback) {
-    var uuid = crypto.sha256(data.uuid, 'rrabbit', 'hex');
+    var uuid = crypto.sha256(data.uuid, 'xxx', 'hex');
     userDAO.update({
         key: {
             no: data.no,
@@ -91,7 +91,7 @@ exports.updateLastInfo = function(data, callback) {
             $set: {
                 lastLoginDate: data.lastLoginDate,
                 lastLocation: data.lastLocation,
-                lastDevice: crypto.sha256(data.lastDevice, 'rrabbit', 'hex')
+                lastDevice: crypto.sha256(data.lastDevice, 'xxx', 'hex')
             }
         }
     }, function(err, result) {
@@ -109,7 +109,7 @@ exports.findOne = function(data, callback) {
         _user.no = data.no;
     }
     if (data.uuid != null && data.uuid != '') {
-        _user.uuid = {$in: [crypto.sha256(data.uuid, 'rrabbit', 'hex')]};
+        _user.uuid = {$in: [crypto.sha256(data.uuid, 'xxx', 'hex')]};
     }
     if (data.name != null && data.name != '') {
         _user.name = data.name;

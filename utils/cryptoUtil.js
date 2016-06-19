@@ -10,7 +10,7 @@ var keys = {
 module.exports.rsaPrivateDecrypt = function(buffer, encode) {
     var dedata = crypto.privateDecrypt({
         key: keys.privateKey,
-        passphrase: 'rrabbit',
+        passphrase: 'xxx',
         padding: crypto.RSA_PKCS1_PADDING
     }, buffer);
     if (encode == null) {

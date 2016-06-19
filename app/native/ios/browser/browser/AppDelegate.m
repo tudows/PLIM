@@ -24,7 +24,7 @@
     //打开输出在console的log开关
     [IFlySetting showLogcat:NO];
     
-    NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@",@"57444bf8"];
+    NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@",@"xxxxxxx"];
     [IFlySpeechUtility createUtility:initString];
     
     return YES;
@@ -59,12 +59,12 @@
         [self.window.rootViewController presentViewController:qrcodeScanVC animated:YES completion:nil];
     }
     else {
-        NSURL *url = [NSURL URLWithString:@"https://rrabbit.xyz:8078"];
+        NSURL *url = [NSURL URLWithString:@"https://xxx"];
         if([shortcutItem.type isEqualToString:@"3DTouch.showPowerline"]) {
-            url = [NSURL URLWithString:@"https://rrabbit.xyz:8078/#/app/maintain/list"];
+            url = [NSURL URLWithString:@"https://xxx/#/app/maintain/list"];
         }
         else if ([shortcutItem.type isEqualToString:@"3DTouch.voice"]) {
-            url = [NSURL URLWithString:@"https://rrabbit.xyz:8078/#/app/powerline/list"];
+            url = [NSURL URLWithString:@"https://xxx/#/app/powerline/list"];
         }
         //    NSArray *arr = @[@"hello 3D Touch"];
         //    UIActivityViewController *vc = [[UIActivityViewController alloc]initWithActivityItems:arr applicationActivities:nil];

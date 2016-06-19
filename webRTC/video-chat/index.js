@@ -7,7 +7,7 @@ server.connection({
 var socketio = require("socket.io");
 var io = socketio(server.listener);
 // var twilio = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
-var twilio = require('twilio')('rrabbit', 'rrabbit');
+var twilio = require('twilio')('xxx', 'xxx');
 
 // Serve static assets
 server.route({
